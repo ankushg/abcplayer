@@ -43,7 +43,16 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-PLUS     : '+';
+fragment SPACE : ' '*;
+fragment DIGIT : [0-9];
+fragment INTEGER : DIGIT+;
+fragment STRING : .+;
+
+TRACK_NUMBER : ^'X:' SPACE INTEGER;
+COMPOSER : ^'C:' SPACE STRING;
+TITLE : ^'T:' SPACE STRING;
+
+WHITESPACE : ' '+ -> skip;
 
 
 /*
