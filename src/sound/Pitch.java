@@ -2,16 +2,17 @@ package sound;
 
 /**
  * Pitch represents the frequency of a musical note.
+ * 
  * Standard music notation represents pitches by letters: A, B, C, ..., G.
  * Pitches can be sharp or flat, or whole octaves up or down from these
  * primitive generators.
- *
- * For example:
- *   new Pitch('C') makes middle C.
- *   new Pitch('C').transpose(1) makes C-sharp.
- *   new Pitch('F').transpose(-2) makes E-flat.
- *   new Pitch('C').transpose(OCTAVE) makes high C.
- *   new Pitch('C').transpose(-OCTAVE) makes low C.
+ * 
+ * For example: <br/>
+ * new Pitch('C') makes middle C. <br/>
+ * new Pitch('C').transpose(1) makes C-sharp. <br/>
+ * new Pitch('F').transpose(-2) makes E-flat. <br/>
+ * new Pitch('C').transpose(OCTAVE) makes high C. <br/>
+ * new Pitch('C').transpose(-OCTAVE) makes low C. <br/>
  */
 public class Pitch {
     private final int value;
@@ -20,25 +21,24 @@ public class Pitch {
 
     /*
      * Rep invariant:
-     *   value in {0, 2, 4, 5, 7, 9, 11}
-     *
+     * value in {0, 2, 4, 5, 7, 9, 11}
+     * 
      * Abstraction function AF(value, accidental, octave):
-     *   AF(scale[C], 0, 0), AF(scale[D], 0, 0), ..., AF(scale[B], 0, 0)
-     *     map to middle C, D, E, F, G, A, B respectively
-     *   AF(x, y, 0) maps to y sharps applied to A(x, 0, 0)
-     *   AF(x, -y, 0) maps to y flats applied to A(x, 0, 0)
-     *   AF(x, y, n) maps to n octaves above middle AF(x, y, 0)
-     *   AF(x, y, -n) maps to n octaves below AF(x, y, 0)
+     * AF(scale[C], 0, 0), AF(scale[D], 0, 0), ..., AF(scale[B], 0, 0)
+     * map to middle C, D, E, F, G, A, B respectively
+     * AF(x, y, 0) maps to y sharps applied to A(x, 0, 0)
+     * AF(x, -y, 0) maps to y flats applied to A(x, 0, 0)
+     * AF(x, y, n) maps to n octaves above middle AF(x, y, 0)
+     * AF(x, y, -n) maps to n octaves below AF(x, y, 0)
      */
 
-    private static final int[] scale = {
-        9,  // A
-        11, // B
-        0,  // C
-        2,  // D
-        4,  // E
-        5,  // F
-        7   // G
+    private static final int[] scale = { 9, // A
+            11, // B
+            0, // C
+            2, // D
+            4, // E
+            5, // F
+            7 // G
     };
 
     private Pitch(int value, int accidental, int octave) {
@@ -50,9 +50,11 @@ public class Pitch {
 
     /**
      * Make a Pitch.
-     * @param c a note in {'A',...,'G'}
+     * 
+     * @param c
+     *            a note in {'A',...,'G'}
      * @return Pitch named c in the middle octave of the piano keyboard.
-     * For example, new Pitch('C') constructs middle C.
+     *         For example, new Pitch('C') constructs middle C.
      */
     public Pitch(char c) {
         int index = c - 'A';
@@ -72,9 +74,9 @@ public class Pitch {
 
     /**
      * @return pitch made by adding semitonesUp sharps to this pitch,
-     * if the argument is positive, or -semitonesUp flats, if the
-     * argument is negative.  For example, E transposed by -1
-     * semitone is E flat; E transposed by 1 semitone is E sharp.
+     *         if the argument is positive, or -semitonesUp flats, if the
+     *         argument is negative. For example, E transposed by -1
+     *         semitone is E flat; E transposed by 1 semitone is E sharp.
      */
     public Pitch accidentalTranspose(int semitonesUp) {
         return new Pitch(value, accidental + semitonesUp, octave);
@@ -82,8 +84,8 @@ public class Pitch {
 
     /**
      * @return pitch made by transposing this pitch by octavesUp
-     * octaves up.  For example, transposing E up by 1 octave produces
-     * E' ; transposing E down by 1 octave produces E, .
+     *         octaves up. For example, transposing E up by 1 octave produces
+     *         E' ; transposing E down by 1 octave produces E, .
      */
     public Pitch octaveTranspose(int octavesUp) {
         return new Pitch(value, accidental, octave + octavesUp);
@@ -91,9 +93,9 @@ public class Pitch {
 
     /**
      * @return pitch made by transposing this pitch up by semitonesUp
-     * semitones, as if on a minor scale starting at this pitch. For
-     * example, transposing E up by 3 semitones will produce G;
-     * transposing F up by 5 semitones will produce B flat.
+     *         semitones, as if on a minor scale starting at this pitch. For
+     *         example, transposing E up by 3 semitones will produce G;
+     *         transposing F up by 5 semitones will produce B flat.
      */
     public Pitch transpose(int semitonesUp) {
         int newValue = value + semitonesUp;
@@ -112,10 +114,7 @@ public class Pitch {
 
         if (!isValid(newValue)) {
             int interval = semitonesUp % OCTAVE;
-            if (interval == 3
-                    || interval == 5
-                    || interval == 8
-                    || interval == 10) {
+            if (interval == 3 || interval == 5 || interval == 8 || interval == 10) {
                 newValue++;
                 newAccidental--;
             } else {
@@ -129,20 +128,19 @@ public class Pitch {
 
     /**
      * @return number of semitones between this and that; i.e., n such
-     * that that.transpose(n).toMidiNote() == this.toMidiNote().
+     *         that that.transpose(n).toMidiNote() == this.toMidiNote().
      */
     public int difference(Pitch that) {
         return this.toMidiNote() - that.toMidiNote();
     }
 
     /**
-     *
+     * 
      * @return the midi note of this pitch
      */
     public int toMidiNote() {
         return this.value + this.accidental + (OCTAVE * this.octave) + 60;
     }
-
 
     /**
      * @return true iff this pitch is lower than that pitch
@@ -158,9 +156,7 @@ public class Pitch {
         if (obj.getClass() != this.getClass())
             return false;
         Pitch that = (Pitch) obj;
-        return this.value == that.value
-            && this.accidental == that.accidental
-            && this.octave == that.octave;
+        return this.value == that.value && this.accidental == that.accidental && this.octave == that.octave;
     }
 
     @Override
@@ -170,7 +166,7 @@ public class Pitch {
 
     /**
      * @return this pitch in abc music notation
-     *   (see http://www.walshaw.plus.com/abc/examples/)
+     *         (see http://www.walshaw.plus.com/abc/examples/)
      */
     @Override
     public String toString() {
@@ -201,7 +197,8 @@ public class Pitch {
         }
 
         String name = valToString[v];
-        if (oct == 1) name = name.toLowerCase();
+        if (oct == 1)
+            name = name.toLowerCase();
 
         return prefix + name + suffix;
     }
@@ -210,12 +207,9 @@ public class Pitch {
         assert isValid(value) : "value should be valid";
     }
 
-    private static final String[] valToString = {
-        "C", null, "D", null, "E", "F", null, "G", null, "A", null, "B"
-    };
+    private static final String[] valToString = { "C", null, "D", null, "E", "F", null, "G", null, "A", null, "B" };
 
     private static final boolean isValid(int value) {
-        return value == 0 || value == 2 || value == 4 || value == 5
-            || value == 7 || value == 9 || value == 11;
+        return value == 0 || value == 2 || value == 4 || value == 5 || value == 7 || value == 9 || value == 11;
     }
 }

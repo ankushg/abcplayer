@@ -6,13 +6,14 @@ package player;
 public class Main {
 
     /**
-     * Plays the input file using Java MIDI API and displays
-     * header information to the standard output stream.
+     * Plays the input file using Java MIDI API and displays header information
+     * to the standard output stream.
      * 
      * (Your code should not exit the application abnormally using
      * System.exit().)
      * 
-     * @param file the name of input abc file
+     * @param file
+     *            the name of input abc file
      */
     public static void play(String file) {
         // YOUR CODE HERE
