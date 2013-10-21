@@ -6,7 +6,7 @@ import javax.sound.midi.MidiUnavailableException;
 import org.junit.Test;
 
 public class SequencePlayerTest {
-    @Test
+    // @Test
     public void testPiece1() {
         SequencePlayer player;
         try {
@@ -83,6 +83,67 @@ public class SequencePlayerTest {
 
     @Test
     public void testPiece2() {
+
+        SequencePlayer player;
+        try {
+            LyricListener listener = new LyricListener() {
+                public void processLyricEvent(String text) {
+                    // do nothing
+                }
+            };
+
+            // each beat is a 1/4 note
+            player = new SequencePlayer(200, 12, listener);
+
+            // Measure 1
+            player.addNote(new Pitch('F').transpose(1).toMidiNote(), 0, 6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 0, 6);
+
+            player.addNote(new Pitch('F').transpose(1).toMidiNote(), 6, 6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 6, 6);
+
+            player.addNote(new Pitch('F').transpose(1).toMidiNote(), 18, 6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 18,
+                    6);
+
+            player.addNote(new Pitch('F').transpose(1).toMidiNote(), 30, 6);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 30,
+                    6);
+
+            player.addNote(new Pitch('F').transpose(1).toMidiNote(), 36, 12);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 36,
+                    12);
+
+            // Measure 2
+            player.addNote(new Pitch('G').toMidiNote(), 48, 12);
+            player.addNote(new Pitch('B').toMidiNote(), 48, 12);
+            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 48,
+                    12);
+
+            // rest
+            player.addNote(new Pitch('G').toMidiNote(), 72, 12);
+            // rest
+
+            // Measure 3
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 84,
+                    18);
+            player.addNote(new Pitch('G').toMidiNote(), 102, 6);
+
+            // rest
+            player.addNote(new Pitch('E').toMidiNote(), 108, 12);
+
+            // Measure 4
+            player.addNote(new Pitch('E').toMidiNote(), 120, 6);
+            player.addNote(new Pitch('A').octaveTranspose(1).toMidiNote(), 84,
+                    18);
+
+            player.play();
+
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
 
     }
 }
