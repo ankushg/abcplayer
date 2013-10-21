@@ -46,8 +46,9 @@ public class SequencePlayer {
      * @throws MidiUnavailableException
      * @throws InvalidMidiDataException
      */
-    public SequencePlayer(int beatsPerMinute, int ticksPerBeat, final LyricListener listener)
-            throws MidiUnavailableException, InvalidMidiDataException {
+    public SequencePlayer(int beatsPerMinute, int ticksPerBeat,
+            final LyricListener listener) throws MidiUnavailableException,
+            InvalidMidiDataException {
         this.sequencer = MidiSystem.getSequencer();
         MetaEventListener metaListener = new MetaEventListener() {
             @Override
@@ -79,7 +80,8 @@ public class SequencePlayer {
      * @param tick
      *            the tick of the event; must be >= 0
      */
-    private void addMidiEvent(int eventType, int note, int tick) throws InvalidMidiDataException {
+    private void addMidiEvent(int eventType, int note, int tick)
+            throws InvalidMidiDataException {
         ShortMessage msg = new ShortMessage();
         msg.setMessage(eventType, DEFAULT_CHANNEL, note, DEFAULT_VELOCITY);
         MidiEvent event = new MidiEvent(msg, tick);
@@ -131,8 +133,8 @@ public class SequencePlayer {
             addMidiEvent(ShortMessage.NOTE_OFF, note, startTick + numTicks);
         } catch (InvalidMidiDataException e) {
             String msg = MessageFormat.format(
-                    "Cannot add note with the pitch {0} at tick {1} " + "for duration of {2}", note, startTick,
-                    numTicks);
+                    "Cannot add note with the pitch {0} at tick {1} "
+                            + "for duration of {2}", note, startTick, numTicks);
             throw new RuntimeException(msg, e);
         }
     }
@@ -182,7 +184,8 @@ public class SequencePlayer {
                     commandType = "NOTE_ON ";
                 }
 
-                msgString = "Event: " + commandType + " Pitch: " + smg.getData1() + " ";
+                msgString = "Event: " + commandType + " Pitch: "
+                        + smg.getData1() + " ";
             } else {
                 msgString = "***** End of track *****  ";
             }
@@ -227,7 +230,8 @@ public class SequencePlayer {
             player.addNote(new Pitch('G').toMidiNote(), 4, 1);
             player.addNote(new Pitch('A').toMidiNote(), 5, 1);
             player.addNote(new Pitch('B').toMidiNote(), 6, 1);
-            player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(), 7, 1);
+            player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(),
+                    7, 1);
             player.addLyricEvent("Down!", 8);
             player.addNote(new Pitch('B').toMidiNote(), 8, 1);
             player.addNote(new Pitch('A').toMidiNote(), 9, 1);
