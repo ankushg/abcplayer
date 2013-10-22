@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class SequencePlayerTest {
 
-    // @Test
+    @Test
     public void testPiece1() {
         SequencePlayer player;
         try {
@@ -58,8 +58,6 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('D').toMidiNote(), 165, 3);
             player.addNote(new Pitch('C').toMidiNote(), 168, 24);
 
-            // TODO this isn't the whole piece
-
             System.out.println(player);
 
             // play!
@@ -82,7 +80,7 @@ public class SequencePlayerTest {
         }
     }
 
-    // @Test
+    @Test
     public void testPiece2() {
 
         SequencePlayer player;
