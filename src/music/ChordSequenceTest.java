@@ -37,7 +37,7 @@ public class ChordSequenceTest {
             cs.add(tuplet);
             cs.addAll(chords);
 
-            ChordSequence measure = new SimpleRepeatMeasure(new Measure(cs));
+            ChordSequence measure = new Repeat(new Measure(cs));
 
             List<Chord> finalChords = measure.getChords();
             int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
