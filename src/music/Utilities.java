@@ -1,9 +1,19 @@
 package music;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Utilities {
+    public static <T> List<T> copyList(List<T> list) {
+        return Collections.unmodifiableList(new ArrayList<>(list));
+    }
+
+    public static <T> List<T> arrayToList(T[] array) {
+        return copyList(Arrays.asList(array));
+    }
+
     public static int gcd(int a, int b) {
         if (a < b) {
             int c = a;
@@ -20,7 +30,7 @@ public class Utilities {
         return (a * b) / gcd(a, b);
     }
 
-    public static List<Chord> flatten(List<ChordSequence> chordSequences) {
+    public static List<Chord> flatten(List<? extends ChordSequence> chordSequences) {
         List<Chord> chords = new ArrayList<>();
         for (ChordSequence cs : chordSequences) {
             chords.addAll(cs.getChords());

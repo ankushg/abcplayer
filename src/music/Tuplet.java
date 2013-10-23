@@ -10,7 +10,11 @@ public class Tuplet implements ChordSequence {
     public Tuplet(int length, List<Chord> chords) {
         assert chords.size() == length;
         this.type = TupletType.getByLength(length);
-        this.chords = chords;
+        this.chords = Utilities.copyList(chords);
+    }
+
+    public Tuplet(int length, Chord... chords) {
+        this(length, Utilities.arrayToList(chords));
     }
 
     @Override
@@ -25,6 +29,7 @@ public class Tuplet implements ChordSequence {
     private static enum TupletType {
         DUPLET(2, 3, 2), TRIPLET(3, 2, 3), QUADRUPLET(4, 3, 4);
 
+        @SuppressWarnings("unused")
         public int length;
         public int numerator, denominator;
 

@@ -15,7 +15,11 @@ public class Repeat implements ChordSequence {
 
     public Repeat(ChordSequence common, List<ChordSequence> endings) {
         this.common = common;
-        this.endings = Collections.unmodifiableList(endings);
+        this.endings = Utilities.copyList(endings);
+    }
+
+    public Repeat(ChordSequence common, ChordSequence... endings) {
+        this(common, Utilities.arrayToList(endings));
     }
 
     private static List<ChordSequence> getListOfEmptyChordSequences(int n) {

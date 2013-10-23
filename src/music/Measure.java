@@ -6,7 +6,11 @@ public class Measure implements ChordSequence {
     private List<ChordSequence> chordSequences;
 
     public Measure(List<ChordSequence> chordSequences) {
-        this.chordSequences = chordSequences;
+        this.chordSequences = Utilities.copyList(chordSequences);
+    }
+
+    public Measure(ChordSequence... chordSequences) {
+        this(Utilities.arrayToList(chordSequences));
     }
 
     @Override
