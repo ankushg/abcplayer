@@ -25,11 +25,11 @@ public class ChordSequenceTest {
             };
 
             List<Chord> chords = new ArrayList<>();
-            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('C'), new Duration(1, 4))), new Duration(
+            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('C'), new Fraction(1, 4))), new Fraction(
                     1, 4)));
-            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('F'), new Duration(1, 1))), new Duration(
+            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('F'), new Fraction(1, 1))), new Fraction(
                     1, 1)));
-            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('A'), new Duration(2, 1))), new Duration(
+            chords.add(new Chord(Collections.singletonList(new Note(new Pitch('A'), new Fraction(2, 1))), new Fraction(
                     1, 1)));
             Tuplet tuplet = new Tuplet(3, chords);
             List<ChordSequence> cs = new ArrayList<>();

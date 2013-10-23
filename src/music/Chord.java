@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Chord implements ChordSequence {
     public final List<Note> notes;
-    public final Duration duration;
+    public final Fraction duration;
 
-    public Chord(List<Note> notes, Duration duration) {
+    public Chord(List<Note> notes, Fraction duration) {
         this.notes = Collections.unmodifiableList(notes);
         this.duration = duration;
     }

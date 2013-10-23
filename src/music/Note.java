@@ -4,9 +4,9 @@ import sound.Pitch;
 
 public class Note {
     public final Pitch pitch;
-    public final Duration duration;
+    public final Fraction duration;
 
-    public Note(Pitch pitch, Duration duration) {
+    public Note(Pitch pitch, Fraction duration) {
         this.pitch = pitch;
         this.duration = duration;
     }

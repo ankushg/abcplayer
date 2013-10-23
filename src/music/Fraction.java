@@ -1,17 +1,16 @@
 package music;
 
-public class Duration {
+public class Fraction {
     public final int numerator;
     public final int denominator;
 
-    public Duration(int numerator, int denominator) {
+    public Fraction(int numerator, int denominator) {
         int gcd = Utilities.gcd(numerator, denominator);
         this.numerator = numerator / gcd;
         this.denominator = denominator / gcd;
     }
 
-    public Duration multiply(int numerator, int denominator) {
-        return new Duration(this.numerator * numerator, this.denominator * denominator);
+    public Fraction multiply(int numerator, int denominator) {
+        return new Fraction(this.numerator * numerator, this.denominator * denominator);
     }
-
 }
