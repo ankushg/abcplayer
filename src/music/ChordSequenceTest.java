@@ -33,6 +33,7 @@ public class ChordSequenceTest {
             List<ChordSequence> cs = new ArrayList<>();
             cs.addAll(chords);
             cs.add(tuplet);
+            cs.add(new Chord(new Fraction(4, 1))); // this is how you do a rest
             cs.addAll(chords);
 
             // repeat with alternate endings (a high note and a low note)
