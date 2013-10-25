@@ -55,7 +55,7 @@ public class Main {
 
         // Generate the parse tree using the starter rule.
         ParseTree tree;
-        tree = parser.line(); // "line" is the starter rule.
+        tree = parser.root();
 
         // Display the tree graph - uncomment before git pushing
         try {
@@ -82,6 +82,6 @@ public class Main {
      *            it must be the path to a valid abc file
      */
     public static void main(String[] args) {
-        play(args[0]);
+        play("/Users/ankush/Sites/6.005/abcplayer/sample_abc/piece1.abc");
     }
 }

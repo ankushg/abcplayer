@@ -43,16 +43,82 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-fragment SPACE : ' '*;
-fragment DIGIT : [0-9];
-fragment INTEGER : DIGIT+;
-fragment STRING : .+;
+SPACE 			: ' '+;
+fragment DIGIT 			: [0-9];
+fragment INTEGER 		: DIGIT+;
+fragment STRING 		: ('A'..'Z' | 'a'..'z' | '.' | SPACE | INTEGER)+;
+NEWLINE 				: ('\r'|'\n')+;
+COMMENT 				: '%' STRING NEWLINE;
+fragment EOL			: COMMENT
+						| NEWLINE;
 
-TRACK_NUMBER : ^'X:' SPACE INTEGER;
-COMPOSER : ^'C:' SPACE STRING;
-TITLE : ^'T:' SPACE STRING;
+// Header lexer rules
+FIELD_TRACK_NUMBER 		: 'X:' SPACE? INTEGER EOL;
+FIELD_TITLE 			: 'T:' SPACE? STRING EOL;
+FIELD_KEY 				: 'K:' SPACE? KEY EOL;
+
+OTHER_FIELD 			: FIELD_COMPOSER
+						| FIELD_DEFAULT_LENGTH
+						| FIELD_METER
+						| FIELD_TEMPO
+						| FIELD_VOICE
+						| COMMENT;
+						
+FIELD_COMPOSER 			: 'C:' SPACE? STRING EOL;
+FIELD_DEFAULT_LENGTH 	: 'L:' SPACE? NOTE_LENGTH_STRICT EOL;
+FIELD_METER 			: 'M:' SPACE? METER EOL;
+FIELD_TEMPO 			: 'Q:' SPACE? TEMPO EOL;
+FIELD_VOICE 			: 'V:' SPACE? STRING EOL;
 
 WHITESPACE : ' '+ -> skip;
+
+KEY 					: 	KEYNOTE MODEMINOR?;
+KEYNOTE 				:	BASENOTE KEY_ACCIDENTAL?;
+KEY_ACCIDENTAL			:	'#' | 'b';
+MODEMINOR 				: 	'm';
+
+METER 					: 	'C'
+						|	'C|'
+						|	METER_FRACTION;
+METER_FRACTION 			: 	INTEGER '/' INTEGER;
+TEMPO 					: 	METER_FRACTION '=' INTEGER;
+
+
+
+NOTE_ELEMENT			:	NOTE
+						|	MULTI_NOTE;
+NOTE					:	NOTE_OR_REST NOTE_LENGTH?;
+NOTE_OR_REST			:	PITCH  |	REST;
+PITCH                           : ACCIDENTAL? BASENOTE OCTAVE?;
+
+OCTAVE					:	'\''+
+						|	','+;
+fragment NOTE_LENGTH	:	INTEGER? ('/' INTEGER?)?;
+NOTE_LENGTH_STRICT		:	INTEGER '/' INTEGER;
+
+ACCIDENTAL				: '^' | '^^' | '=' | '_' | '__';
+
+fragment BASENOTE				: [A-Ga-g];
+fragment REST					: 'z';
+
+TUPLET_ELEMENT			:	TUPLET_SPEC NOTE_ELEMENT+;
+TUPLET_SPEC				:	'(' DIGIT;
+
+MULTI_NOTE				:	'[' NOTE+ ']';
+
+BAR_LINE				:	'|'
+						|	'||'
+						|	'[|'
+						|	'|]'
+						|	':|'
+						|	'|:';
+NTH_REPEAT				:	'[1'
+						|	'[2';
+						
+
+LYRIC					:	'w:' SPACE LYRICAL_ELEMENT*;
+LYRICAL_ELEMENT			:	' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | LYRIC_TEXT;
+LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
 
 
 /*
@@ -66,4 +132,16 @@ WHITESPACE : ' '+ -> skip;
  * For more information, see
  * http://www.antlr.org/wiki/display/ANTLR4/Parser+Rules#ParserRules-StartRulesandEOF
  */
-line     : PLUS EOF;
+root 		: abc_tune EOF;
+abc_tune 	: abc_header abc_music;
+abc_header 	: FIELD_TRACK_NUMBER COMMENT* FIELD_TITLE OTHER_FIELD* FIELD_KEY;
+abc_music   : abc_line+;
+abc_line 	: element+ NEWLINE (LYRIC NEWLINE)?
+			| mid_tune_field
+			| COMMENT;
+element 	: NOTE_ELEMENT | TUPLET_ELEMENT | BAR_LINE | NTH_REPEAT | SPACE;
+mid_tune_field :	FIELD_VOICE;
+
+
+
+

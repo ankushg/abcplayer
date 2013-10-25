@@ -9,8 +9,26 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.ErrorNode;
 
 public class ABCMusicBaseListener implements ABCMusicListener {
-	@Override public void enterLine(ABCMusicParser.LineContext ctx) { }
-	@Override public void exitLine(ABCMusicParser.LineContext ctx) { }
+	@Override public void enterElement(ABCMusicParser.ElementContext ctx) { }
+	@Override public void exitElement(ABCMusicParser.ElementContext ctx) { }
+
+	@Override public void enterMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx) { }
+	@Override public void exitMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx) { }
+
+	@Override public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
+	@Override public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
+
+	@Override public void enterRoot(ABCMusicParser.RootContext ctx) { }
+	@Override public void exitRoot(ABCMusicParser.RootContext ctx) { }
+
+	@Override public void enterAbc_header(ABCMusicParser.Abc_headerContext ctx) { }
+	@Override public void exitAbc_header(ABCMusicParser.Abc_headerContext ctx) { }
+
+	@Override public void enterAbc_line(ABCMusicParser.Abc_lineContext ctx) { }
+	@Override public void exitAbc_line(ABCMusicParser.Abc_lineContext ctx) { }
+
+	@Override public void enterAbc_tune(ABCMusicParser.Abc_tuneContext ctx) { }
+	@Override public void exitAbc_tune(ABCMusicParser.Abc_tuneContext ctx) { }
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) { }
 	@Override public void exitEveryRule(ParserRuleContext ctx) { }
