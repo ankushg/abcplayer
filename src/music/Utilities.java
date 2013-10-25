@@ -49,19 +49,20 @@ public class Utilities {
         return lcm;
     }
 
-    public static List<ReadyToAddNote> process(List<Chord> chords) {
+    public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords) {
         int ticksPerBeat = computeTicksPerBeat(chords);
 
-        List<ReadyToAddNote> notes = new ArrayList<>();
+        List<ReadyToAddItem> items = new ArrayList<>();
         int tick = 0;
-        for (Chord c : chords) {
-            for (Note n : c.notes) {
-                notes.add(new ReadyToAddNote(n.pitch.toMidiNote(), tick, n.duration.numerator * ticksPerBeat
+        for (Chord chord : chords) {
+            for (Note n : chord.notes) {
+                items.add(new ReadyToAddNote(n.pitch.toMidiNote(), tick, n.duration.numerator * ticksPerBeat
                         / n.duration.denominator));
             }
-            tick += c.duration.numerator * ticksPerBeat / c.duration.denominator;
+            items.add(new ReadyToAddLyric(chord.lyric, tick));
+            tick += chord.duration.numerator * ticksPerBeat / chord.duration.denominator;
         }
 
-        return notes;
+        return items;
     }
 }

@@ -37,18 +37,17 @@ public class ChordSequenceTest {
             cs.addAll(chords);
 
             // repeat with alternate endings (a high note and a low note)
-            ChordSequence measure = new Repeat(new ChordSequenceList(cs), new Chord(new Fraction(6, 1), new Note(
+            ChordSequence chordSequence = new Repeat(new ChordSequenceList(cs), new Chord(new Fraction(6, 1), new Note(
                     new Pitch('D').octaveTranspose(1), new Fraction(6, 1))), new Chord(new Fraction(6, 1), new Note(
                     new Pitch('D').octaveTranspose(-1), new Fraction(6, 1))));
 
-            List<Chord> finalChords = measure.getChords();
+            List<Chord> finalChords = chordSequence.getChords();
             int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
-            List<ReadyToAddNote> notes = Utilities.process(finalChords);
+            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
 
             player = new SequencePlayer(140, ticksPerBeat, listener);
-            for (ReadyToAddNote n : notes) {
-                player.addNote(n.midiNote, n.startTick, n.numTicks);
-                System.out.println(n.numTicks);
+            for (ReadyToAddItem item : items) {
+                item.addTo(player);
             }
 
             System.out.println(player);
