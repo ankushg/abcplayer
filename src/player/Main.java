@@ -83,6 +83,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // Replace the filepath with an actual .abc file.
-        play("/Users/ankush/Sites/6.005/abcplayer/sample_abc/piece1.abc");
+        play("sample_abc/piece1.abc");
     }
 }
