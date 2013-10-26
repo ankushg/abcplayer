@@ -22,7 +22,7 @@ package grammar;
  * parser throw errors if they encounter invalid input. Do not change these
  * lines unless you know what you're doing.
  */
-@members {	
+@members {
     // This method makes the lexer or parser stop running if it encounters
     // invalid input and throw a RuntimeException.
     public void reportErrorsAsExceptions() {
@@ -43,85 +43,77 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-fragment BASENOTE				: ('A'..'G' | 'a'..'g');
-fragment REST					: 'z';
-fragment SPACE 			: [ \t]+;
-fragment DIGIT 			: [0-9];
-fragment INTEGER 		: DIGIT+;
-fragment STRING 		: (BASENOTE | REST | 'H'..'Z' | 'h'..'y' | '.' | SPACE | INTEGER)+;
-NEWLINE 				: ('\r'|'\n')+;
-COMMENT 				: '%' STRING NEWLINE;
-fragment EOL			: (COMMENT
-						| NEWLINE);
-WHITESPACE 	: [ \t]+ -> skip;
+WHITESPACE        : [ \t]+ -> skip;
+BASENOTE          : ('A'..'G' | 'a'..'g');
+REST              : 'z';
+fragment DIGIT    : [0-9];
+INTEGER           : DIGIT+;
+NEWLINE           : ('\r'|'\n')+;
+STRING            : (BASENOTE | REST | 'H'..'Z' | 'h'..'y' | '.')+;
+
+EQUALS            : '=';
+OVER              : '/';
 
 // Header lexer rules
-FIELD_TRACK_NUMBER 		: 'X:' SPACE? INTEGER EOL;
-FIELD_TITLE 			: 'T:' SPACE? STRING EOL;
-FIELD_KEY 				: 'K:' SPACE? KEY EOL;
+TRACK_NUMBER_START      : 'X:';
+TITLE_START             : 'T:';
+KEY_START               : 'K:';
+COMPOSER_START          : 'C:';
+DEFAULT_LENGTH_START    : 'L:';
+METER_START             : 'M:';
+TEMPO_START             : 'Q:';
+VOICE_START             : 'V:';
 
-OTHER_FIELD 			: FIELD_COMPOSER
-						| FIELD_DEFAULT_LENGTH
-						| FIELD_METER
-						| FIELD_TEMPO
-						| FIELD_VOICE
-						| COMMENT;
-						
-FIELD_COMPOSER 			: 'C:' SPACE? STRING EOL;
-FIELD_DEFAULT_LENGTH 	: 'L:' SPACE? NOTE_LENGTH_STRICT EOL;
-FIELD_METER 			: 'M:' SPACE? METER EOL;
-FIELD_TEMPO 			: 'Q:' SPACE? TEMPO EOL;
-FIELD_VOICE 			: 'V:' SPACE? STRING EOL;
 
-fragment KEY 			: 	(KEYNOTE MODEMINOR?);
-fragment KEYNOTE 				:	(BASENOTE KEY_ACCIDENTAL?);
-KEY_ACCIDENTAL			:	('#' | 'b');
-MODEMINOR 				: 	('m');
+KEY_ACCIDENTAL           :    ('#' | 'b');
+MODEMINOR                :    'm';
 
-fragment METER 					: 	'C'
-							|	'C|'
-							|	METER_FRACTION;
-fragment METER_FRACTION 	: 	INTEGER '/' INTEGER;
-TEMPO 						: 	METER_FRACTION '=' INTEGER;
+NON_FRACTION_METER       :    'C'
+                         |    'C|';
+
 
 
 // Music rules
-MEASURE_ELEMENT			:	NOTE_ELEMENT
-						|	TUPLET_ELEMENT;
-NOTE_ELEMENT			:	NOTE
-						|	MULTI_NOTE;
-NOTE					:	NOTE_OR_REST NOTE_LENGTH?;
-NOTE_OR_REST			:	PITCH  |	REST;
-PITCH                   : 	ACCIDENTAL? BASENOTE OCTAVE?;
+OCTAVE                  :    '\''+
+                        |    ','+;
 
-OCTAVE					:	'\''+
-						|	','+;
-fragment NOTE_LENGTH	:	INTEGER? ('/' INTEGER?)?;
-NOTE_LENGTH_STRICT		:	INTEGER '/' INTEGER;
+ACCIDENTAL_TYPE         : '^'
+                        | '^^'
+                        | '='
+                        | '_'
+                        | '__';
 
-ACCIDENTAL				: '^' | '^^' | '=' | '_' | '__';
+TUPLET_START            :    '(';
 
-TUPLET_ELEMENT			:	TUPLET_SPEC NOTE_ELEMENT+;
-TUPLET_SPEC				:	'(' DIGIT;
+OPEN_CHORD              :     '[';
+CLOSE_CHORD             :     ']';
 
-MULTI_NOTE				:	'[' NOTE+ ']';
 
-BAR_LINE				:	'|'
-						|	'||'
-						|	'[|'
-						|	'|]'
-						| OPEN_REPEAT
-						| CLOSE_REPEAT;
-OPEN_REPEAT				: 	'|:';
-CLOSE_REPEAT			:	':|';
-NTH_REPEAT				:	'[1'
-						|	'[2';
-						
+BAR_LINE                :    '|'
+                        |    '||'
+                        |    '[|'
+                        |    '|]'
+                        |     OPEN_REPEAT
+                        |     CLOSE_REPEAT;
 
-LYRIC					:	'w:' SPACE LYRICAL_ELEMENT*;
-fragment LYRICAL_ELEMENT			:	' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | LYRIC_TEXT;
-fragment LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
+OPEN_REPEAT             :     '|:';
+CLOSE_REPEAT            :    ':|';
 
+NTH_REPEAT              :    '[1'
+                        |    '[2';
+
+COMMENT_START           :    '%';
+
+LYRIC                    :    LYRIC_START LYRICAL_ELEMENT*;
+LYRIC_START              :    'w:';
+fragment LYRICAL_ELEMENT :    ' '+
+                         |    '-'
+                         |    '_'
+                         |    '*'
+                         |    '~'
+                         |    '\-'
+                         |    '|'
+                         |    STRING;
 
 /*
  * These are the parser rules. They define the structures used by the parser.
@@ -130,17 +122,49 @@ fragment LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
  * This is the "start rule". The start rule should end with the special
  * predefined token EOF so that it describes the entire input. Below, we've made
  * "line" the start rule.
- *
- * For more information, see
- * http://www.antlr.org/wiki/display/ANTLR4/Parser+Rules#ParserRules-StartRulesandEOF
  */
-abc_tune 		: abc_header abc_music EOF;
-abc_header 		: FIELD_TRACK_NUMBER COMMENT* FIELD_TITLE OTHER_FIELD* FIELD_KEY;
-abc_music   	: abc_line+;
-abc_line 		: element+ NEWLINE* (LYRIC NEWLINE)?
-				| mid_tune_field
-				| COMMENT;
-element 		: measure | repeat | NTH_REPEAT;
-measure			: (MEASURE_ELEMENT)* BAR_LINE;
-repeat			: (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
-mid_tune_field 	: FIELD_VOICE;
+
+
+comment         : COMMENT_START STRING;
+eol             : comment | NEWLINE;
+
+abc_tune        : abc_header abc_music EOF;
+abc_header      : field_track_number comment* field_title other_field* field_key;
+
+field_track_number         : TRACK_NUMBER_START INTEGER eol*;
+field_title                : TITLE_START (STRING|INTEGER)+ eol*;
+field_key                  : KEY_START key_signature eol*;
+
+
+field_composer          : COMPOSER_START STRING eol*;
+field_default_length    : DEFAULT_LENGTH_START fraction eol*;
+field_meter             : METER_START (NON_FRACTION_METER | fraction) eol*;
+field_tempo             : TEMPO_START tempo eol*;
+field_voice             : VOICE_START STRING eol*;
+tempo                   : fraction EQUALS INTEGER;
+other_field             : field_composer
+                        | field_default_length
+                        | field_meter
+                        | field_tempo
+                        | field_voice
+                        | comment;
+
+abc_music       : (abc_line NEWLINE*)+;
+abc_line        : element+ NEWLINE* (LYRIC NEWLINE)?
+                | field_voice
+                | comment;
+element         : measure | repeat | NTH_REPEAT;
+measure         : (chord | tuplet)+ BAR_LINE;
+repeat          : (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
+chord           : OPEN_CHORD note+ CLOSE_CHORD
+                | note;
+accidental      : ACCIDENTAL_TYPE;
+key_signature   : BASENOTE KEY_ACCIDENTAL? MODEMINOR?;
+note            : (pitch | REST) (INTEGER | fraction)?;
+fraction        : INTEGER? OVER INTEGER?;
+tuplet          : TUPLET_START INTEGER chord+;
+pitch           : accidental? BASENOTE OCTAVE?;
+
+//syllable      : ;
+//voice         : element+;
+//alt_ending	: ;
