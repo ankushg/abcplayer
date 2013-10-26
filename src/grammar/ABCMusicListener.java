@@ -12,6 +12,9 @@ public interface ABCMusicListener extends ParseTreeListener {
 	void enterMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx);
 	void exitMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx);
 
+	void enterMeasure(ABCMusicParser.MeasureContext ctx);
+	void exitMeasure(ABCMusicParser.MeasureContext ctx);
+
 	void enterAbc_music(ABCMusicParser.Abc_musicContext ctx);
 	void exitAbc_music(ABCMusicParser.Abc_musicContext ctx);
 
@@ -20,6 +23,9 @@ public interface ABCMusicListener extends ParseTreeListener {
 
 	void enterAbc_line(ABCMusicParser.Abc_lineContext ctx);
 	void exitAbc_line(ABCMusicParser.Abc_lineContext ctx);
+
+	void enterRepeat(ABCMusicParser.RepeatContext ctx);
+	void exitRepeat(ABCMusicParser.RepeatContext ctx);
 
 	void enterAbc_tune(ABCMusicParser.Abc_tuneContext ctx);
 	void exitAbc_tune(ABCMusicParser.Abc_tuneContext ctx);

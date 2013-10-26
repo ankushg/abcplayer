@@ -22,7 +22,7 @@ package grammar;
  * parser throw errors if they encounter invalid input. Do not change these
  * lines unless you know what you're doing.
  */
-@members {
+@members {	
     // This method makes the lexer or parser stop running if it encounters
     // invalid input and throw a RuntimeException.
     public void reportErrorsAsExceptions() {
@@ -43,16 +43,17 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-BASENOTE				: ('A'..'G' | 'a'..'g');
-REST					: 'z';
-SPACE 					: ' '+;
+fragment BASENOTE				: ('A'..'G' | 'a'..'g');
+fragment REST					: 'z';
+fragment SPACE 			: [ \t]+;
 fragment DIGIT 			: [0-9];
 fragment INTEGER 		: DIGIT+;
 fragment STRING 		: (BASENOTE | REST | 'H'..'Z' | 'h'..'y' | '.' | SPACE | INTEGER)+;
 NEWLINE 				: ('\r'|'\n')+;
 COMMENT 				: '%' STRING NEWLINE;
-fragment EOL			: COMMENT
-						| NEWLINE;
+fragment EOL			: (COMMENT
+						| NEWLINE);
+WHITESPACE 	: [ \t]+ -> skip;
 
 // Header lexer rules
 FIELD_TRACK_NUMBER 		: 'X:' SPACE? INTEGER EOL;
@@ -72,21 +73,21 @@ FIELD_METER 			: 'M:' SPACE? METER EOL;
 FIELD_TEMPO 			: 'Q:' SPACE? TEMPO EOL;
 FIELD_VOICE 			: 'V:' SPACE? STRING EOL;
 
-WHITESPACE 				: ' '+ -> skip;
+fragment KEY 			: 	(KEYNOTE MODEMINOR?);
+fragment KEYNOTE 				:	(BASENOTE KEY_ACCIDENTAL?);
+KEY_ACCIDENTAL			:	('#' | 'b');
+MODEMINOR 				: 	('m');
 
-KEY 					: 	KEYNOTE MODEMINOR?;
-KEYNOTE 				:	BASENOTE KEY_ACCIDENTAL?;
-KEY_ACCIDENTAL			:	'#' | 'b';
-MODEMINOR 				: 	'm';
-
-METER 					: 	'C'
-						|	'C|'
-						|	METER_FRACTION;
-METER_FRACTION 			: 	INTEGER '/' INTEGER;
-TEMPO 					: 	METER_FRACTION '=' INTEGER;
+fragment METER 					: 	'C'
+							|	'C|'
+							|	METER_FRACTION;
+fragment METER_FRACTION 	: 	INTEGER '/' INTEGER;
+TEMPO 						: 	METER_FRACTION '=' INTEGER;
 
 
-
+// Music rules
+MEASURE_ELEMENT			:	NOTE_ELEMENT
+						|	TUPLET_ELEMENT;
 NOTE_ELEMENT			:	NOTE
 						|	MULTI_NOTE;
 NOTE					:	NOTE_OR_REST NOTE_LENGTH?;
@@ -109,8 +110,10 @@ BAR_LINE				:	'|'
 						|	'||'
 						|	'[|'
 						|	'|]'
-						|	':|'
-						|	'|:';
+						| OPEN_REPEAT
+						| CLOSE_REPEAT;
+OPEN_REPEAT				: 	'|:';
+CLOSE_REPEAT			:	':|';
 NTH_REPEAT				:	'[1'
 						|	'[2';
 						
@@ -137,9 +140,7 @@ abc_music   	: abc_line+;
 abc_line 		: element+ NEWLINE* (LYRIC NEWLINE)?
 				| mid_tune_field
 				| COMMENT;
-element 		: NOTE_ELEMENT | TUPLET_ELEMENT | BAR_LINE | NTH_REPEAT | SPACE;
-mid_tune_field 	:	FIELD_VOICE;
-
-
-
-
+element 		: measure | repeat | NTH_REPEAT;
+measure			: (MEASURE_ELEMENT)* BAR_LINE;
+repeat			: (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
+mid_tune_field 	: FIELD_VOICE;

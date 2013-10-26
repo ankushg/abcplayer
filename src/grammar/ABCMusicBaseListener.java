@@ -15,6 +15,9 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx) { }
 	@Override public void exitMid_tune_field(ABCMusicParser.Mid_tune_fieldContext ctx) { }
 
+	@Override public void enterMeasure(ABCMusicParser.MeasureContext ctx) { }
+	@Override public void exitMeasure(ABCMusicParser.MeasureContext ctx) { }
+
 	@Override public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 	@Override public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 
@@ -23,6 +26,9 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 
 	@Override public void enterAbc_line(ABCMusicParser.Abc_lineContext ctx) { }
 	@Override public void exitAbc_line(ABCMusicParser.Abc_lineContext ctx) { }
+
+	@Override public void enterRepeat(ABCMusicParser.RepeatContext ctx) { }
+	@Override public void exitRepeat(ABCMusicParser.RepeatContext ctx) { }
 
 	@Override public void enterAbc_tune(ABCMusicParser.Abc_tuneContext ctx) { }
 	@Override public void exitAbc_tune(ABCMusicParser.Abc_tuneContext ctx) { }
