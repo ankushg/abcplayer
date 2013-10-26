@@ -116,8 +116,8 @@ NTH_REPEAT				:	'[1'
 						
 
 LYRIC					:	'w:' SPACE LYRICAL_ELEMENT*;
-LYRICAL_ELEMENT			:	' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | LYRIC_TEXT;
-LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
+fragment LYRICAL_ELEMENT			:	' '+ | '-' | '_' | '*' | '~' | '\-' | '|' | LYRIC_TEXT;
+fragment LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
 
 
 /*

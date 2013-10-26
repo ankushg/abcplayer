@@ -5,11 +5,13 @@ import grammar.ABCMusicLexer;
 import grammar.ABCMusicParser;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -47,6 +49,11 @@ public class Main {
         // Feed the tokens into the parser.
         ABCMusicLexer lexer = new ABCMusicLexer(stream);
         lexer.reportErrorsAsExceptions();
+        List<? extends Token> allTokens = lexer.getAllTokens();
+        for (Token t : allTokens) {
+            System.out.format("<<<%s===%s>>>%n", t.getText(), ABCMusicLexer.tokenNames[t.getType()]);
+        }
+        lexer.reset();
         TokenStream tokens = new CommonTokenStream(lexer);
 
         // Feed the tokens into the parser.
