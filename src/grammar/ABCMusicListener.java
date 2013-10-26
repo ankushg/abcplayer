@@ -15,9 +15,6 @@ public interface ABCMusicListener extends ParseTreeListener {
 	void enterAbc_music(ABCMusicParser.Abc_musicContext ctx);
 	void exitAbc_music(ABCMusicParser.Abc_musicContext ctx);
 
-	void enterRoot(ABCMusicParser.RootContext ctx);
-	void exitRoot(ABCMusicParser.RootContext ctx);
-
 	void enterAbc_header(ABCMusicParser.Abc_headerContext ctx);
 	void exitAbc_header(ABCMusicParser.Abc_headerContext ctx);
 

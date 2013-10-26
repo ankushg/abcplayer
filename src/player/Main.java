@@ -51,11 +51,11 @@ public class Main {
 
         // Feed the tokens into the parser.
         ABCMusicParser parser = new ABCMusicParser(tokens);
-        parser.reportErrorsAsExceptions();
+        // parser.reportErrorsAsExceptions();
 
         // Generate the parse tree using the starter rule.
         ParseTree tree;
-        tree = parser.root();
+        tree = parser.abc_tune();
 
         // Display the tree graph - uncomment before git pushing
         try {
@@ -82,6 +82,7 @@ public class Main {
      *            it must be the path to a valid abc file
      */
     public static void main(String[] args) {
+        // Replace the filepath with an actual .abc file.
         play("/Users/ankush/Sites/6.005/abcplayer/sample_abc/piece1.abc");
     }
 }

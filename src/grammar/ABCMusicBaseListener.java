@@ -18,9 +18,6 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 	@Override public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 
-	@Override public void enterRoot(ABCMusicParser.RootContext ctx) { }
-	@Override public void exitRoot(ABCMusicParser.RootContext ctx) { }
-
 	@Override public void enterAbc_header(ABCMusicParser.Abc_headerContext ctx) { }
 	@Override public void exitAbc_header(ABCMusicParser.Abc_headerContext ctx) { }
 

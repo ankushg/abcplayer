@@ -43,10 +43,12 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-SPACE 			: ' '+;
+BASENOTE				: ('A'..'G' | 'a'..'g');
+REST					: 'z';
+SPACE 					: ' '+;
 fragment DIGIT 			: [0-9];
 fragment INTEGER 		: DIGIT+;
-fragment STRING 		: ('A'..'Z' | 'a'..'z' | '.' | SPACE | INTEGER)+;
+fragment STRING 		: (BASENOTE | REST | 'H'..'Z' | 'h'..'y' | '.' | SPACE | INTEGER)+;
 NEWLINE 				: ('\r'|'\n')+;
 COMMENT 				: '%' STRING NEWLINE;
 fragment EOL			: COMMENT
@@ -70,7 +72,7 @@ FIELD_METER 			: 'M:' SPACE? METER EOL;
 FIELD_TEMPO 			: 'Q:' SPACE? TEMPO EOL;
 FIELD_VOICE 			: 'V:' SPACE? STRING EOL;
 
-WHITESPACE : ' '+ -> skip;
+WHITESPACE 				: ' '+ -> skip;
 
 KEY 					: 	KEYNOTE MODEMINOR?;
 KEYNOTE 				:	BASENOTE KEY_ACCIDENTAL?;
@@ -89,7 +91,7 @@ NOTE_ELEMENT			:	NOTE
 						|	MULTI_NOTE;
 NOTE					:	NOTE_OR_REST NOTE_LENGTH?;
 NOTE_OR_REST			:	PITCH  |	REST;
-PITCH                           : ACCIDENTAL? BASENOTE OCTAVE?;
+PITCH                   : 	ACCIDENTAL? BASENOTE OCTAVE?;
 
 OCTAVE					:	'\''+
 						|	','+;
@@ -97,9 +99,6 @@ fragment NOTE_LENGTH	:	INTEGER? ('/' INTEGER?)?;
 NOTE_LENGTH_STRICT		:	INTEGER '/' INTEGER;
 
 ACCIDENTAL				: '^' | '^^' | '=' | '_' | '__';
-
-fragment BASENOTE				: [A-Ga-g];
-fragment REST					: 'z';
 
 TUPLET_ELEMENT			:	TUPLET_SPEC NOTE_ELEMENT+;
 TUPLET_SPEC				:	'(' DIGIT;
@@ -132,15 +131,14 @@ LYRIC_TEXT				:	~[LYRICAL_ELEMENT]+;
  * For more information, see
  * http://www.antlr.org/wiki/display/ANTLR4/Parser+Rules#ParserRules-StartRulesandEOF
  */
-root 		: abc_tune EOF;
-abc_tune 	: abc_header abc_music;
-abc_header 	: FIELD_TRACK_NUMBER COMMENT* FIELD_TITLE OTHER_FIELD* FIELD_KEY;
-abc_music   : abc_line+;
-abc_line 	: element+ NEWLINE (LYRIC NEWLINE)?
-			| mid_tune_field
-			| COMMENT;
-element 	: NOTE_ELEMENT | TUPLET_ELEMENT | BAR_LINE | NTH_REPEAT | SPACE;
-mid_tune_field :	FIELD_VOICE;
+abc_tune 		: abc_header abc_music EOF;
+abc_header 		: FIELD_TRACK_NUMBER COMMENT* FIELD_TITLE OTHER_FIELD* FIELD_KEY;
+abc_music   	: abc_line+;
+abc_line 		: element+ NEWLINE* (LYRIC NEWLINE)?
+				| mid_tune_field
+				| COMMENT;
+element 		: NOTE_ELEMENT | TUPLET_ELEMENT | BAR_LINE | NTH_REPEAT | SPACE;
+mid_tune_field 	:	FIELD_VOICE;
 
 
 
