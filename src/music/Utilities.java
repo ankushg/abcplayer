@@ -5,15 +5,47 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Utilities.
+ */
 public class Utilities {
+
+    /**
+     * Copy list.
+     * 
+     * @param <T>
+     *            the generic type
+     * @param list
+     *            the list
+     * @return the list
+     */
     public static <T> List<T> copyList(List<T> list) {
         return Collections.unmodifiableList(new ArrayList<>(list));
     }
 
+    /**
+     * Array to list.
+     * 
+     * @param <T>
+     *            the generic type
+     * @param array
+     *            the array
+     * @return the list
+     */
     public static <T> List<T> arrayToList(T[] array) {
         return copyList(Arrays.asList(array));
     }
 
+    /**
+     * Gcd.
+     * 
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     * @return the int
+     */
     public static int gcd(int a, int b) {
         if (a < b) {
             int c = a;
@@ -26,10 +58,26 @@ public class Utilities {
         return gcd(b, a % b);
     }
 
+    /**
+     * Lcm.
+     * 
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     * @return the int
+     */
     public static int lcm(int a, int b) {
         return (a * b) / gcd(a, b);
     }
 
+    /**
+     * Flatten.
+     * 
+     * @param chordSequences
+     *            the chord sequences
+     * @return the list
+     */
     public static List<Chord> flatten(List<? extends ChordSequence> chordSequences) {
         List<Chord> chords = new ArrayList<>();
         for (ChordSequence cs : chordSequences) {
@@ -38,6 +86,13 @@ public class Utilities {
         return chords;
     }
 
+    /**
+     * Compute ticks per beat.
+     * 
+     * @param chords
+     *            the chords
+     * @return the int
+     */
     public static int computeTicksPerBeat(List<Chord> chords) {
         int lcm = 1;
         for (Chord c : chords) {
@@ -49,6 +104,13 @@ public class Utilities {
         return lcm;
     }
 
+    /**
+     * Gets the ready to add items.
+     * 
+     * @param chords
+     *            the chords
+     * @return the ready to add items
+     */
     public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords) {
         int ticksPerBeat = computeTicksPerBeat(chords);
 

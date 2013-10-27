@@ -1,3 +1,6 @@
+#### JavaDoc Files ####
+doc/
+
 #### Java Files ####
 *.class
 

@@ -7,15 +7,36 @@ import java.util.Map;
 
 import sound.Pitch;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Key.
+ */
 public class Key {
+
+    /** The key signature. */
     private final KeySignature keySignature;
+
+    /** The accidentals. */
     private final Map<Pitch, Accidental> accidentals;
 
+    /**
+     * Instantiates a new key.
+     * 
+     * @param keySignature
+     *            the key signature
+     */
     public Key(KeySignature keySignature) {
         this.keySignature = keySignature;
         this.accidentals = new HashMap<>();
     }
 
+    /**
+     * Process.
+     * 
+     * @param chord
+     *            the chord
+     * @return the chord
+     */
     public Chord process(Chord chord) {
         List<Note> processedNotes = new ArrayList<>();
         for (Note note : chord.notes) {
@@ -24,6 +45,13 @@ public class Key {
         return new Chord(chord.duration, processedNotes);
     }
 
+    /**
+     * Applies the current Key object to the
+     * 
+     * @param note
+     *            the note
+     * @return the note
+     */
     private Note process(Note note) {
         if (note.unappliedAccidental.type != AccidentalType.NONE) {
             accidentals.put(note.pitch, note.unappliedAccidental);

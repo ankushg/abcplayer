@@ -3,24 +3,53 @@ package music;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class KeySignature.
+ */
 public class KeySignature {
+
+    /** The Constant DEFAULT. */
     public static final KeySignature DEFAULT = new KeySignature();
 
+    /** The key. */
     private final Map<Character, Integer> key;
 
+    /**
+     * Instantiates a new key signature.
+     */
     public KeySignature() {
         this.key = new HashMap<>();
     }
 
+    /**
+     * Instantiates a new key signature.
+     * 
+     * @param k
+     *            the k
+     */
     public KeySignature(KeyType k) {
         this.key = this.makeKey(k);
 
     }
 
+    /**
+     * Instantiates a new key signature.
+     * 
+     * @param key
+     *            the key
+     */
     public KeySignature(Map<Character, Integer> key) {
         this.key = new HashMap<>(key);
     }
 
+    /**
+     * Make key.
+     * 
+     * @param k
+     *            the k
+     * @return the map
+     */
     public Map<Character, Integer> makeKey(KeyType k) {
         Map<Character, Integer> map = new HashMap<Character, Integer>();
 
@@ -56,6 +85,13 @@ public class KeySignature {
         }
     }
 
+    /**
+     * Gets the.
+     * 
+     * @param note
+     *            the note
+     * @return the int
+     */
     public int get(char note) {
         Integer result = key.get(note);
         return result == null ? 0 : result;
