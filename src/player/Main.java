@@ -48,7 +48,7 @@ public class Main {
 
         // Feed the tokens into the parser.
         ABCMusicLexer lexer = new ABCMusicLexer(stream);
-        lexer.reportErrorsAsExceptions();
+        // lexer.reportErrorsAsExceptions();
         List<? extends Token> allTokens = lexer.getAllTokens();
         for (Token t : allTokens) {
             System.out.format("<<<%s===%s>>>%n", t.getText(), ABCMusicLexer.tokenNames[t.getType()]);
@@ -66,7 +66,7 @@ public class Main {
 
         // Display the tree graph - uncomment before git pushing
         try {
-            ((RuleContext) tree).inspect(parser).get();
+            ((RuleContext) tree).inspect(parser);
         } catch (Exception e) {
             e.printStackTrace();
         }

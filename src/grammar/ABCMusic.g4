@@ -49,7 +49,6 @@ REST              : 'z';
 fragment DIGIT    : [0-9];
 INTEGER           : DIGIT+;
 NEWLINE           : ('\r'|'\n')+;
-STRING            : (BASENOTE | REST | 'H'..'Z' | 'h'..'y' | '.')+;
 
 EQUALS            : '=';
 OVER              : '/';
@@ -71,8 +70,6 @@ MODEMINOR                :    'm';
 NON_FRACTION_METER       :    'C'
                          |    'C|';
 
-
-
 // Music rules
 OCTAVE                  :    '\''+
                         |    ','+;
@@ -83,7 +80,9 @@ ACCIDENTAL_TYPE         : '^'
                         | '_'
                         | '__';
 
-TUPLET_START            :    '(';
+DUPLET_START            :    '(2';
+TRIPLET_START            :    '(3';
+QUADRUPLET_START         :    '(4';
 
 OPEN_CHORD              :     '[';
 CLOSE_CHORD             :     ']';
@@ -104,16 +103,17 @@ NTH_REPEAT              :    '[1'
 
 COMMENT_START           :    '%';
 
-LYRIC                    :    LYRIC_START LYRICAL_ELEMENT*;
 LYRIC_START              :    'w:';
-fragment LYRICAL_ELEMENT :    ' '+
-                         |    '-'
-                         |    '_'
+LYRIC_MODIFIER           :    '_'
                          |    '*'
                          |    '~'
-                         |    '\-'
-                         |    '|'
-                         |    STRING;
+                         |    '\\-'
+                         |    '|';
+LYRIC_SEPARATOR          :    '-'
+                         |    ' ';                       
+NONBASENOTE              :    ('H'..'Z' | 'h'..'y');
+PUNCTUATION              :    '.';
+
 
 /*
  * These are the parser rules. They define the structures used by the parser.
@@ -124,23 +124,23 @@ fragment LYRICAL_ELEMENT :    ' '+
  * "line" the start rule.
  */
 
-
-comment         : COMMENT_START STRING;
+string          : (BASENOTE | REST | PUNCTUATION | NONBASENOTE | INTEGER)+;
+comment         : COMMENT_START string;
 eol             : comment | NEWLINE;
 
 abc_tune        : abc_header abc_music EOF;
 abc_header      : field_track_number comment* field_title other_field* field_key;
 
 field_track_number         : TRACK_NUMBER_START INTEGER eol*;
-field_title                : TITLE_START (STRING|INTEGER)+ eol*;
+field_title                : TITLE_START string eol*;
 field_key                  : KEY_START key_signature eol*;
 
 
-field_composer          : COMPOSER_START STRING eol*;
+field_composer          : COMPOSER_START string eol*;
 field_default_length    : DEFAULT_LENGTH_START fraction eol*;
 field_meter             : METER_START (NON_FRACTION_METER | fraction) eol*;
 field_tempo             : TEMPO_START tempo eol*;
-field_voice             : VOICE_START STRING eol*;
+field_voice             : VOICE_START string eol+;
 tempo                   : fraction EQUALS INTEGER;
 other_field             : field_composer
                         | field_default_length
@@ -149,22 +149,26 @@ other_field             : field_composer
                         | field_voice
                         | comment;
 
-abc_music       : (abc_line NEWLINE*)+;
-abc_line        : element+ NEWLINE* (LYRIC NEWLINE)?
-                | field_voice
+abc_music       : (field_voice? voice NEWLINE*)+;
+lyric_element   : (LYRIC_MODIFIER | BASENOTE | NONBASENOTE | PUNCTUATION | REST | WHITESPACE | MODEMINOR | ACCIDENTAL_TYPE)+ LYRIC_SEPARATOR? BAR_LINE?;
+lyric           : LYRIC_START lyric_element* eol+;
+voice           : (tune (eol lyric)?)+
                 | comment;
-element         : measure | repeat | NTH_REPEAT;
-measure         : (chord | tuplet)+ BAR_LINE;
-repeat          : (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
+// element         : tune | repeat | NTH_REPEAT;
+tune             : (chord | tuplet | BAR_LINE | NTH_REPEAT)+ eol*;
+// measure         : (chord | tuplet)+ BAR_LINE;
+// repeat          : (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
 chord           : OPEN_CHORD note+ CLOSE_CHORD
                 | note;
 accidental      : ACCIDENTAL_TYPE;
 key_signature   : BASENOTE KEY_ACCIDENTAL? MODEMINOR?;
 note            : (pitch | REST) (INTEGER | fraction)?;
 fraction        : INTEGER? OVER INTEGER?;
-tuplet          : TUPLET_START INTEGER chord+;
+tuplet          : duplet | triplet | quadruplet;
+duplet          : DUPLET_START chord chord;
+triplet         : TRIPLET_START chord chord chord;
+quadruplet      : QUADRUPLET_START chord chord chord chord;
 pitch           : accidental? BASENOTE OCTAVE?;
 
 //syllable      : ;
-//voice         : element+;
 //alt_ending	: ;
