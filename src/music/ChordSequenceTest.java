@@ -1,5 +1,7 @@
 package music;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import sound.Pitch;
 import sound.SequencePlayer;
 
 public class ChordSequenceTest {
-    // @Test
+    @Test
     public void testDatatype() {
         SequencePlayer player;
         try {
@@ -74,7 +76,7 @@ public class ChordSequenceTest {
 
     // Tests to see if an accidental is carried through the rest of a measure.
     // Test case currently fails.
-    // @Test
+    @Test
     public void testAccidental() {
         SequencePlayer player;
         try {
@@ -101,11 +103,11 @@ public class ChordSequenceTest {
                 item.addTo(player);
             }
 
+            assertEquals(
+                    "Event: NOTE_ON  Pitch: 60  Tick: 0\n***** End of track *****   Tick: 0\nEvent: NOTE_OFF Pitch: 60  Tick: 2\nEvent: NOTE_ON  Pitch: 61  Tick: 2\n***** End of track *****   Tick: 2\nEvent: NOTE_OFF Pitch: 61  Tick: 4\nEvent: NOTE_ON  Pitch: 61  Tick: 4\n***** End of track *****   Tick: 4\nEvent: NOTE_OFF Pitch: 61  Tick: 6\n***** End of track *****   Tick: 6\n",
+                    player.toString());
+
             System.out.println(player);
-
-            // play!
-            player.play();
-
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         } catch (InvalidMidiDataException e) {
