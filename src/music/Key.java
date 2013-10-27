@@ -29,7 +29,7 @@ public class Key {
             accidentals.put(note.pitch, note.unappliedAccidental);
         }
         if (accidentals.containsKey(note.pitch)) {
-            return note.unappliedAccidental.apply(note);
+            return accidentals.get(note.pitch).apply(note);
         }
         return new Note(note.pitch.transpose(keySignature.get(note.getLetter())), note.duration);
     }
