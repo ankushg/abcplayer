@@ -13,7 +13,7 @@ import sound.Pitch;
 import sound.SequencePlayer;
 
 public class ChordSequenceTest {
-    @Test
+    // @Test
     public void testDatatype() {
         SequencePlayer player;
         try {
@@ -65,6 +65,102 @@ public class ChordSequenceTest {
              * System.exit(0).
              */
             // System.exit(0);
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Tests to see if an accidental is carried through the rest of a measure.
+    // Test case currently fails.
+    // @Test
+    public void testAccidental() {
+        SequencePlayer player;
+        try {
+            LyricListener listener = new LyricListener() {
+                public void processLyricEvent(String text) {
+                    // do nothing
+                }
+            };
+
+            List<Chord> chords = new ArrayList<>();
+            chords.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C'), new Fraction(2, 1))));
+            chords.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C'), new Fraction(2, 1), new Accidental(
+                    AccidentalType.SHARP, 1))));
+            chords.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C'), new Fraction(2, 1))));
+            List<ChordSequence> cs = new ArrayList<>();
+            cs.addAll(chords);
+
+            List<Chord> finalChords = new Measure(cs).getChords();
+            int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
+            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
+
+            player = new SequencePlayer(140, ticksPerBeat, listener);
+            for (ReadyToAddItem item : items) {
+                item.addTo(player);
+            }
+
+            System.out.println(player);
+
+            // play!
+            player.play();
+
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testKeySig() {
+        SequencePlayer player;
+        try {
+            LyricListener listener = new LyricListener() {
+                public void processLyricEvent(String text) {
+                    // do nothing
+                }
+            };
+
+            List<ChordSequence> noKeyCS = new ArrayList<>();
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('A'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('B'), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C').octaveTranspose(1), new Fraction(2, 1))));
+            noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
+
+            List<ChordSequence> cs = new ArrayList<>();
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('A'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('B'), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C').octaveTranspose(1), new Fraction(2, 1))));
+            cs.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
+
+            List<ChordSequence> measures = new ArrayList<>();
+            measures.add(new Measure(noKeyCS));
+            measures.add(new Measure(new KeySignature(KeyType.D), cs));
+            List<Chord> finalChords = new Voice(measures).getChords();
+
+            int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
+            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
+
+            player = new SequencePlayer(140, ticksPerBeat, listener);
+            for (ReadyToAddItem item : items) {
+                item.addTo(player);
+            }
+
+            System.out.println(player);
+
+            // play!
+            player.play();
+
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         } catch (InvalidMidiDataException e) {
