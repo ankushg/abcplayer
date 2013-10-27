@@ -43,8 +43,8 @@ package grammar;
 /*
  * These are the lexical rules. They define the tokens used by the lexer.
  */
-WHITESPACE        : [ \t]+ -> skip;
-BASENOTE          : ('A'..'G' | 'a'..'g');
+WHITESPACE        : [ \t]+;
+BASE         : ('A'..'G' | 'a'..'g');
 REST              : 'z';
 fragment DIGIT    : [0-9];
 INTEGER           : DIGIT+;
@@ -67,6 +67,7 @@ VOICE_START             : 'V:';
 KEY_ACCIDENTAL           :    ('#' | 'b');
 MODEMINOR                :    'm';
 
+
 NON_FRACTION_METER       :    'C'
                          |    'C|';
 
@@ -84,7 +85,7 @@ DUPLET_START            :    '(2';
 TRIPLET_START            :    '(3';
 QUADRUPLET_START         :    '(4';
 
-OPEN_CHORD              :     '[';
+OPEN_CHORD              :     '[' ;
 CLOSE_CHORD             :     ']';
 
 
@@ -109,10 +110,12 @@ LYRIC_MODIFIER           :    '_'
                          |    '~'
                          |    '\\-'
                          |    '|';
-LYRIC_SEPARATOR          :    '-'
-                         |    ' ';                       
+LYRIC_SEPARATOR          :    '-';                      
 NONBASENOTE              :    ('H'..'Z' | 'h'..'y');
-PUNCTUATION              :    '.';
+PUNCTUATION              :    '.'
+                         |    '('
+                         |    ')'
+                         |    '?';
 
 
 /*
@@ -124,24 +127,24 @@ PUNCTUATION              :    '.';
  * "line" the start rule.
  */
 
-string          : (BASENOTE | REST | PUNCTUATION | NONBASENOTE | INTEGER)+;
-comment         : COMMENT_START string;
+string          : (BASE | REST | PUNCTUATION | NONBASENOTE | INTEGER | WHITESPACE | MODEMINOR | OCTAVE)+;
+comment         : COMMENT_START string? NEWLINE;
 eol             : comment | NEWLINE;
 
 abc_tune        : abc_header abc_music EOF;
 abc_header      : field_track_number comment* field_title other_field* field_key;
 
-field_track_number         : TRACK_NUMBER_START INTEGER eol*;
-field_title                : TITLE_START string eol*;
-field_key                  : KEY_START key_signature eol*;
+field_track_number         : TRACK_NUMBER_START WHITESPACE? INTEGER eol*;
+field_title                : TITLE_START WHITESPACE? string eol*;
+field_key                  : KEY_START WHITESPACE? key_signature eol*;
 
 
-field_composer          : COMPOSER_START string eol*;
-field_default_length    : DEFAULT_LENGTH_START fraction eol*;
+field_composer          : COMPOSER_START WHITESPACE? string eol*;
+field_default_length    : DEFAULT_LENGTH_START WHITESPACE? (fraction EQUALS)? fraction eol*;
 field_meter             : METER_START (NON_FRACTION_METER | fraction) eol*;
 field_tempo             : TEMPO_START tempo eol*;
 field_voice             : VOICE_START string eol+;
-tempo                   : fraction EQUALS INTEGER;
+tempo                   : (fraction EQUALS)? INTEGER;
 other_field             : field_composer
                         | field_default_length
                         | field_meter
@@ -149,26 +152,26 @@ other_field             : field_composer
                         | field_voice
                         | comment;
 
-abc_music       : (field_voice? voice NEWLINE*)+;
-lyric_element   : (LYRIC_MODIFIER | BASENOTE | NONBASENOTE | PUNCTUATION | REST | WHITESPACE | MODEMINOR | ACCIDENTAL_TYPE)+ LYRIC_SEPARATOR? BAR_LINE?;
-lyric           : LYRIC_START lyric_element* eol+;
+abc_music       : (field_voice? voice eol*)+;
+syllable        : (LYRIC_MODIFIER | BASE | NONBASENOTE | PUNCTUATION | REST | MODEMINOR | (ACCIDENTAL_TYPE | EQUALS) | OCTAVE)+ LYRIC_SEPARATOR? WHITESPACE? BAR_LINE? WHITESPACE?;
+lyric           : LYRIC_START WHITESPACE? syllable* eol+;
 voice           : (tune (eol lyric)?)+
                 | comment;
 // element         : tune | repeat | NTH_REPEAT;
-tune             : (chord | tuplet | BAR_LINE | NTH_REPEAT)+ eol*;
+tune            : (chord | tuplet | BAR_LINE | NTH_REPEAT | WHITESPACE)+ eol*;
 // measure         : (chord | tuplet)+ BAR_LINE;
 // repeat          : (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
 chord           : OPEN_CHORD note+ CLOSE_CHORD
                 | note;
-accidental      : ACCIDENTAL_TYPE;
-key_signature   : BASENOTE KEY_ACCIDENTAL? MODEMINOR?;
+accidental      : ACCIDENTAL_TYPE
+                | EQUALS;
+key_signature   : BASE KEY_ACCIDENTAL? MODEMINOR?;
 note            : (pitch | REST) (INTEGER | fraction)?;
 fraction        : INTEGER? OVER INTEGER?;
 tuplet          : duplet | triplet | quadruplet;
 duplet          : DUPLET_START chord chord;
 triplet         : TRIPLET_START chord chord chord;
 quadruplet      : QUADRUPLET_START chord chord chord chord;
-pitch           : accidental? BASENOTE OCTAVE?;
+pitch           : accidental? BASE OCTAVE?;
 
-//syllable      : ;
 //alt_ending	: ;

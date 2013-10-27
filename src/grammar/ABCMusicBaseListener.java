@@ -12,9 +12,6 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 	@Override public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) { }
 
-	@Override public void enterLyric_element(ABCMusicParser.Lyric_elementContext ctx) { }
-	@Override public void exitLyric_element(ABCMusicParser.Lyric_elementContext ctx) { }
-
 	@Override public void enterVoice(ABCMusicParser.VoiceContext ctx) { }
 	@Override public void exitVoice(ABCMusicParser.VoiceContext ctx) { }
 
@@ -65,6 +62,9 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 
 	@Override public void enterKey_signature(ABCMusicParser.Key_signatureContext ctx) { }
 	@Override public void exitKey_signature(ABCMusicParser.Key_signatureContext ctx) { }
+
+	@Override public void enterSyllable(ABCMusicParser.SyllableContext ctx) { }
+	@Override public void exitSyllable(ABCMusicParser.SyllableContext ctx) { }
 
 	@Override public void enterLyric(ABCMusicParser.LyricContext ctx) { }
 	@Override public void exitLyric(ABCMusicParser.LyricContext ctx) { }

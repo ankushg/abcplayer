@@ -9,9 +9,6 @@ public interface ABCMusicListener extends ParseTreeListener {
 	void enterAbc_music(ABCMusicParser.Abc_musicContext ctx);
 	void exitAbc_music(ABCMusicParser.Abc_musicContext ctx);
 
-	void enterLyric_element(ABCMusicParser.Lyric_elementContext ctx);
-	void exitLyric_element(ABCMusicParser.Lyric_elementContext ctx);
-
 	void enterVoice(ABCMusicParser.VoiceContext ctx);
 	void exitVoice(ABCMusicParser.VoiceContext ctx);
 
@@ -62,6 +59,9 @@ public interface ABCMusicListener extends ParseTreeListener {
 
 	void enterKey_signature(ABCMusicParser.Key_signatureContext ctx);
 	void exitKey_signature(ABCMusicParser.Key_signatureContext ctx);
+
+	void enterSyllable(ABCMusicParser.SyllableContext ctx);
+	void exitSyllable(ABCMusicParser.SyllableContext ctx);
 
 	void enterLyric(ABCMusicParser.LyricContext ctx);
 	void exitLyric(ABCMusicParser.LyricContext ctx);
