@@ -17,33 +17,36 @@ public class ABCMusicParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		WHITESPACE=1, BASENOTE=2, REST=3, INTEGER=4, NEWLINE=5, STRING=6, EQUALS=7, 
-		OVER=8, TRACK_NUMBER_START=9, TITLE_START=10, KEY_START=11, COMPOSER_START=12, 
-		DEFAULT_LENGTH_START=13, METER_START=14, TEMPO_START=15, VOICE_START=16, 
-		KEY_ACCIDENTAL=17, MODEMINOR=18, NON_FRACTION_METER=19, OCTAVE=20, ACCIDENTAL_TYPE=21, 
-		TUPLET_START=22, OPEN_CHORD=23, CLOSE_CHORD=24, BAR_LINE=25, OPEN_REPEAT=26, 
-		CLOSE_REPEAT=27, NTH_REPEAT=28, COMMENT_START=29, LYRIC=30, LYRIC_START=31;
+		WHITESPACE=1, BASENOTE=2, REST=3, INTEGER=4, NEWLINE=5, EQUALS=6, OVER=7, 
+		TRACK_NUMBER_START=8, TITLE_START=9, KEY_START=10, COMPOSER_START=11, 
+		DEFAULT_LENGTH_START=12, METER_START=13, TEMPO_START=14, VOICE_START=15, 
+		KEY_ACCIDENTAL=16, MODEMINOR=17, NON_FRACTION_METER=18, OCTAVE=19, ACCIDENTAL_TYPE=20, 
+		DUPLET_START=21, TRIPLET_START=22, QUADRUPLET_START=23, OPEN_CHORD=24, 
+		CLOSE_CHORD=25, BAR_LINE=26, OPEN_REPEAT=27, CLOSE_REPEAT=28, NTH_REPEAT=29, 
+		COMMENT_START=30, LYRIC_START=31, LYRIC_MODIFIER=32, LYRIC_SEPARATOR=33, 
+		NONBASENOTE=34, PUNCTUATION=35;
 	public static final String[] tokenNames = {
-		"<INVALID>", "WHITESPACE", "BASENOTE", "'z'", "INTEGER", "NEWLINE", "STRING", 
-		"'='", "'/'", "'X:'", "'T:'", "'K:'", "'C:'", "'L:'", "'M:'", "'Q:'", 
-		"'V:'", "KEY_ACCIDENTAL", "'m'", "NON_FRACTION_METER", "OCTAVE", "ACCIDENTAL_TYPE", 
-		"'('", "'['", "']'", "BAR_LINE", "'|:'", "':|'", "NTH_REPEAT", "'%'", 
-		"LYRIC", "'w:'"
+		"<INVALID>", "WHITESPACE", "BASENOTE", "'z'", "INTEGER", "NEWLINE", "'='", 
+		"'/'", "'X:'", "'T:'", "'K:'", "'C:'", "'L:'", "'M:'", "'Q:'", "'V:'", 
+		"KEY_ACCIDENTAL", "'m'", "NON_FRACTION_METER", "OCTAVE", "ACCIDENTAL_TYPE", 
+		"'(2'", "'(3'", "'(4'", "'['", "']'", "BAR_LINE", "'|:'", "':|'", "NTH_REPEAT", 
+		"'%'", "'w:'", "LYRIC_MODIFIER", "LYRIC_SEPARATOR", "NONBASENOTE", "'.'"
 	};
 	public static final int
-		RULE_comment = 0, RULE_eol = 1, RULE_abc_tune = 2, RULE_abc_header = 3, 
-		RULE_field_track_number = 4, RULE_field_title = 5, RULE_field_key = 6, 
-		RULE_field_composer = 7, RULE_field_default_length = 8, RULE_field_meter = 9, 
-		RULE_field_tempo = 10, RULE_field_voice = 11, RULE_tempo = 12, RULE_other_field = 13, 
-		RULE_abc_music = 14, RULE_abc_line = 15, RULE_element = 16, RULE_measure = 17, 
-		RULE_repeat = 18, RULE_chord = 19, RULE_accidental = 20, RULE_key_signature = 21, 
-		RULE_note = 22, RULE_fraction = 23, RULE_tuplet = 24, RULE_pitch = 25;
+		RULE_string = 0, RULE_comment = 1, RULE_eol = 2, RULE_abc_tune = 3, RULE_abc_header = 4, 
+		RULE_field_track_number = 5, RULE_field_title = 6, RULE_field_key = 7, 
+		RULE_field_composer = 8, RULE_field_default_length = 9, RULE_field_meter = 10, 
+		RULE_field_tempo = 11, RULE_field_voice = 12, RULE_tempo = 13, RULE_other_field = 14, 
+		RULE_abc_music = 15, RULE_lyric_element = 16, RULE_lyric = 17, RULE_voice = 18, 
+		RULE_tune = 19, RULE_chord = 20, RULE_accidental = 21, RULE_key_signature = 22, 
+		RULE_note = 23, RULE_fraction = 24, RULE_tuplet = 25, RULE_duplet = 26, 
+		RULE_triplet = 27, RULE_quadruplet = 28, RULE_pitch = 29;
 	public static final String[] ruleNames = {
-		"comment", "eol", "abc_tune", "abc_header", "field_track_number", "field_title", 
-		"field_key", "field_composer", "field_default_length", "field_meter", 
-		"field_tempo", "field_voice", "tempo", "other_field", "abc_music", "abc_line", 
-		"element", "measure", "repeat", "chord", "accidental", "key_signature", 
-		"note", "fraction", "tuplet", "pitch"
+		"string", "comment", "eol", "abc_tune", "abc_header", "field_track_number", 
+		"field_title", "field_key", "field_composer", "field_default_length", 
+		"field_meter", "field_tempo", "field_voice", "tempo", "other_field", "abc_music", 
+		"lyric_element", "lyric", "voice", "tune", "chord", "accidental", "key_signature", 
+		"note", "fraction", "tuplet", "duplet", "triplet", "quadruplet", "pitch"
 	};
 
 	@Override
@@ -79,9 +82,91 @@ public class ABCMusicParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+	public static class StringContext extends ParserRuleContext {
+		public List<TerminalNode> INTEGER() { return getTokens(ABCMusicParser.INTEGER); }
+		public List<TerminalNode> PUNCTUATION() { return getTokens(ABCMusicParser.PUNCTUATION); }
+		public List<TerminalNode> BASENOTE() { return getTokens(ABCMusicParser.BASENOTE); }
+		public TerminalNode NONBASENOTE(int i) {
+			return getToken(ABCMusicParser.NONBASENOTE, i);
+		}
+		public List<TerminalNode> NONBASENOTE() { return getTokens(ABCMusicParser.NONBASENOTE); }
+		public TerminalNode REST(int i) {
+			return getToken(ABCMusicParser.REST, i);
+		}
+		public TerminalNode PUNCTUATION(int i) {
+			return getToken(ABCMusicParser.PUNCTUATION, i);
+		}
+		public TerminalNode INTEGER(int i) {
+			return getToken(ABCMusicParser.INTEGER, i);
+		}
+		public List<TerminalNode> REST() { return getTokens(ABCMusicParser.REST); }
+		public TerminalNode BASENOTE(int i) {
+			return getToken(ABCMusicParser.BASENOTE, i);
+		}
+		public StringContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_string; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterString(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitString(this);
+		}
+	}
+
+	public final StringContext string() throws RecognitionException {
+		StringContext _localctx = new StringContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_string);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(61); 
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(60);
+					_la = _input.LA(1);
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << INTEGER) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) ) {
+					_errHandler.recoverInline(this);
+					}
+					consume();
+					}
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(63); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+			} while ( _alt!=2 && _alt!=-1 );
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static class CommentContext extends ParserRuleContext {
+		public StringContext string() {
+			return getRuleContext(StringContext.class,0);
+		}
 		public TerminalNode COMMENT_START() { return getToken(ABCMusicParser.COMMENT_START, 0); }
-		public TerminalNode STRING() { return getToken(ABCMusicParser.STRING, 0); }
 		public CommentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -98,12 +183,12 @@ public class ABCMusicParser extends Parser {
 
 	public final CommentContext comment() throws RecognitionException {
 		CommentContext _localctx = new CommentContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_comment);
+		enterRule(_localctx, 2, RULE_comment);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(52); match(COMMENT_START);
-			setState(53); match(STRING);
+			setState(65); match(COMMENT_START);
+			setState(66); string();
 			}
 		}
 		catch (RecognitionException re) {
@@ -138,20 +223,20 @@ public class ABCMusicParser extends Parser {
 
 	public final EolContext eol() throws RecognitionException {
 		EolContext _localctx = new EolContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_eol);
+		enterRule(_localctx, 4, RULE_eol);
 		try {
-			setState(57);
+			setState(70);
 			switch (_input.LA(1)) {
 			case COMMENT_START:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(55); comment();
+				setState(68); comment();
 				}
 				break;
 			case NEWLINE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(56); match(NEWLINE);
+				setState(69); match(NEWLINE);
 				}
 				break;
 			default:
@@ -193,13 +278,13 @@ public class ABCMusicParser extends Parser {
 
 	public final Abc_tuneContext abc_tune() throws RecognitionException {
 		Abc_tuneContext _localctx = new Abc_tuneContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_abc_tune);
+		enterRule(_localctx, 6, RULE_abc_tune);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(59); abc_header();
-			setState(60); abc_music();
-			setState(61); match(EOF);
+			setState(72); abc_header();
+			setState(73); abc_music();
+			setState(74); match(EOF);
 			}
 		}
 		catch (RecognitionException re) {
@@ -251,40 +336,40 @@ public class ABCMusicParser extends Parser {
 
 	public final Abc_headerContext abc_header() throws RecognitionException {
 		Abc_headerContext _localctx = new Abc_headerContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_abc_header);
+		enterRule(_localctx, 8, RULE_abc_header);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(63); field_track_number();
-			setState(67);
+			setState(76); field_track_number();
+			setState(80);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==COMMENT_START) {
 				{
 				{
-				setState(64); comment();
+				setState(77); comment();
 				}
 				}
-				setState(69);
+				setState(82);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(70); field_title();
-			setState(74);
+			setState(83); field_title();
+			setState(87);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << COMPOSER_START) | (1L << DEFAULT_LENGTH_START) | (1L << METER_START) | (1L << TEMPO_START) | (1L << VOICE_START) | (1L << COMMENT_START))) != 0)) {
 				{
 				{
-				setState(71); other_field();
+				setState(84); other_field();
 				}
 				}
-				setState(76);
+				setState(89);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(77); field_key();
+			setState(90); field_key();
 			}
 		}
 		catch (RecognitionException re) {
@@ -323,27 +408,27 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_track_numberContext field_track_number() throws RecognitionException {
 		Field_track_numberContext _localctx = new Field_track_numberContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_field_track_number);
+		enterRule(_localctx, 10, RULE_field_track_number);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(79); match(TRACK_NUMBER_START);
-			setState(80); match(INTEGER);
-			setState(84);
+			setState(92); match(TRACK_NUMBER_START);
+			setState(93); match(INTEGER);
+			setState(97);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(81); eol();
+					setState(94); eol();
 					}
 					} 
 				}
-				setState(86);
+				setState(99);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
 			}
 		}
@@ -359,18 +444,13 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static class Field_titleContext extends ParserRuleContext {
-		public List<TerminalNode> INTEGER() { return getTokens(ABCMusicParser.INTEGER); }
 		public TerminalNode TITLE_START() { return getToken(ABCMusicParser.TITLE_START, 0); }
-		public TerminalNode STRING(int i) {
-			return getToken(ABCMusicParser.STRING, i);
+		public StringContext string() {
+			return getRuleContext(StringContext.class,0);
 		}
 		public List<EolContext> eol() {
 			return getRuleContexts(EolContext.class);
 		}
-		public TerminalNode INTEGER(int i) {
-			return getToken(ABCMusicParser.INTEGER, i);
-		}
-		public List<TerminalNode> STRING() { return getTokens(ABCMusicParser.STRING); }
 		public EolContext eol(int i) {
 			return getRuleContext(EolContext.class,i);
 		}
@@ -390,43 +470,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_titleContext field_title() throws RecognitionException {
 		Field_titleContext _localctx = new Field_titleContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_field_title);
-		int _la;
+		enterRule(_localctx, 12, RULE_field_title);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(87); match(TITLE_START);
-			setState(89); 
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			do {
-				{
-				{
-				setState(88);
-				_la = _input.LA(1);
-				if ( !(_la==INTEGER || _la==STRING) ) {
-				_errHandler.recoverInline(this);
-				}
-				consume();
-				}
-				}
-				setState(91); 
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( _la==INTEGER || _la==STRING );
-			setState(96);
+			setState(100); match(TITLE_START);
+			setState(101); string();
+			setState(105);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(93); eol();
+					setState(102); eol();
 					}
 					} 
 				}
-				setState(98);
+				setState(107);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			}
@@ -470,25 +532,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_keyContext field_key() throws RecognitionException {
 		Field_keyContext _localctx = new Field_keyContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_field_key);
+		enterRule(_localctx, 14, RULE_field_key);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(99); match(KEY_START);
-			setState(100); key_signature();
-			setState(104);
+			setState(108); match(KEY_START);
+			setState(109); key_signature();
+			setState(113);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(101); eol();
+					setState(110); eol();
 					}
 					} 
 				}
-				setState(106);
+				setState(115);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			}
@@ -506,6 +568,9 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static class Field_composerContext extends ParserRuleContext {
+		public StringContext string() {
+			return getRuleContext(StringContext.class,0);
+		}
 		public List<EolContext> eol() {
 			return getRuleContexts(EolContext.class);
 		}
@@ -513,7 +578,6 @@ public class ABCMusicParser extends Parser {
 		public EolContext eol(int i) {
 			return getRuleContext(EolContext.class,i);
 		}
-		public TerminalNode STRING() { return getToken(ABCMusicParser.STRING, 0); }
 		public Field_composerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -530,25 +594,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_composerContext field_composer() throws RecognitionException {
 		Field_composerContext _localctx = new Field_composerContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_field_composer);
+		enterRule(_localctx, 16, RULE_field_composer);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(107); match(COMPOSER_START);
-			setState(108); match(STRING);
-			setState(112);
+			setState(116); match(COMPOSER_START);
+			setState(117); string();
+			setState(121);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(109); eol();
+					setState(118); eol();
 					}
 					} 
 				}
-				setState(114);
+				setState(123);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
@@ -592,25 +656,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_default_lengthContext field_default_length() throws RecognitionException {
 		Field_default_lengthContext _localctx = new Field_default_lengthContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_field_default_length);
+		enterRule(_localctx, 18, RULE_field_default_length);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(115); match(DEFAULT_LENGTH_START);
-			setState(116); fraction();
-			setState(120);
+			setState(124); match(DEFAULT_LENGTH_START);
+			setState(125); fraction();
+			setState(129);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(117); eol();
+					setState(126); eol();
 					}
 					} 
 				}
-				setState(122);
+				setState(131);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			}
@@ -655,40 +719,40 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_meterContext field_meter() throws RecognitionException {
 		Field_meterContext _localctx = new Field_meterContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_field_meter);
+		enterRule(_localctx, 20, RULE_field_meter);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(123); match(METER_START);
-			setState(126);
+			setState(132); match(METER_START);
+			setState(135);
 			switch (_input.LA(1)) {
 			case NON_FRACTION_METER:
 				{
-				setState(124); match(NON_FRACTION_METER);
+				setState(133); match(NON_FRACTION_METER);
 				}
 				break;
 			case INTEGER:
 			case OVER:
 				{
-				setState(125); fraction();
+				setState(134); fraction();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(131);
+			setState(140);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(128); eol();
+					setState(137); eol();
 					}
 					} 
 				}
-				setState(133);
+				setState(142);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
 			}
@@ -732,25 +796,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_tempoContext field_tempo() throws RecognitionException {
 		Field_tempoContext _localctx = new Field_tempoContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_field_tempo);
+		enterRule(_localctx, 22, RULE_field_tempo);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(134); match(TEMPO_START);
-			setState(135); tempo();
-			setState(139);
+			setState(143); match(TEMPO_START);
+			setState(144); tempo();
+			setState(148);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
 			while ( _alt!=2 && _alt!=-1 ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(136); eol();
+					setState(145); eol();
 					}
 					} 
 				}
-				setState(141);
+				setState(150);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
 			}
@@ -768,13 +832,15 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static class Field_voiceContext extends ParserRuleContext {
+		public StringContext string() {
+			return getRuleContext(StringContext.class,0);
+		}
 		public List<EolContext> eol() {
 			return getRuleContexts(EolContext.class);
 		}
 		public EolContext eol(int i) {
 			return getRuleContext(EolContext.class,i);
 		}
-		public TerminalNode STRING() { return getToken(ABCMusicParser.STRING, 0); }
 		public TerminalNode VOICE_START() { return getToken(ABCMusicParser.VOICE_START, 0); }
 		public Field_voiceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -792,28 +858,32 @@ public class ABCMusicParser extends Parser {
 
 	public final Field_voiceContext field_voice() throws RecognitionException {
 		Field_voiceContext _localctx = new Field_voiceContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_field_voice);
+		enterRule(_localctx, 24, RULE_field_voice);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(142); match(VOICE_START);
-			setState(143); match(STRING);
-			setState(147);
+			setState(151); match(VOICE_START);
+			setState(152); string();
+			setState(154); 
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			while ( _alt!=2 && _alt!=-1 ) {
-				if ( _alt==1 ) {
+			do {
+				switch (_alt) {
+				case 1:
 					{
 					{
-					setState(144); eol();
+					setState(153); eol();
 					}
-					} 
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
-				setState(149);
+				setState(156); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
-			}
+			} while ( _alt!=2 && _alt!=-1 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -849,13 +919,13 @@ public class ABCMusicParser extends Parser {
 
 	public final TempoContext tempo() throws RecognitionException {
 		TempoContext _localctx = new TempoContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_tempo);
+		enterRule(_localctx, 26, RULE_tempo);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(150); fraction();
-			setState(151); match(EQUALS);
-			setState(152); match(INTEGER);
+			setState(158); fraction();
+			setState(159); match(EQUALS);
+			setState(160); match(INTEGER);
 			}
 		}
 		catch (RecognitionException re) {
@@ -904,44 +974,44 @@ public class ABCMusicParser extends Parser {
 
 	public final Other_fieldContext other_field() throws RecognitionException {
 		Other_fieldContext _localctx = new Other_fieldContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_other_field);
+		enterRule(_localctx, 28, RULE_other_field);
 		try {
-			setState(160);
+			setState(168);
 			switch (_input.LA(1)) {
 			case COMPOSER_START:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(154); field_composer();
+				setState(162); field_composer();
 				}
 				break;
 			case DEFAULT_LENGTH_START:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(155); field_default_length();
+				setState(163); field_default_length();
 				}
 				break;
 			case METER_START:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(156); field_meter();
+				setState(164); field_meter();
 				}
 				break;
 			case TEMPO_START:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(157); field_tempo();
+				setState(165); field_tempo();
 				}
 				break;
 			case VOICE_START:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(158); field_voice();
+				setState(166); field_voice();
 				}
 				break;
 			case COMMENT_START:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(159); comment();
+				setState(167); comment();
 				}
 				break;
 			default:
@@ -960,15 +1030,21 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static class Abc_musicContext extends ParserRuleContext {
-		public Abc_lineContext abc_line(int i) {
-			return getRuleContext(Abc_lineContext.class,i);
+		public Field_voiceContext field_voice(int i) {
+			return getRuleContext(Field_voiceContext.class,i);
+		}
+		public List<VoiceContext> voice() {
+			return getRuleContexts(VoiceContext.class);
 		}
 		public List<TerminalNode> NEWLINE() { return getTokens(ABCMusicParser.NEWLINE); }
-		public List<Abc_lineContext> abc_line() {
-			return getRuleContexts(Abc_lineContext.class);
+		public VoiceContext voice(int i) {
+			return getRuleContext(VoiceContext.class,i);
 		}
 		public TerminalNode NEWLINE(int i) {
 			return getToken(ABCMusicParser.NEWLINE, i);
+		}
+		public List<Field_voiceContext> field_voice() {
+			return getRuleContexts(Field_voiceContext.class);
 		}
 		public Abc_musicContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -986,37 +1062,45 @@ public class ABCMusicParser extends Parser {
 
 	public final Abc_musicContext abc_music() throws RecognitionException {
 		Abc_musicContext _localctx = new Abc_musicContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_abc_music);
+		enterRule(_localctx, 30, RULE_abc_music);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(169); 
+			setState(180); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(162); abc_line();
-				setState(166);
+				setState(171);
+				_la = _input.LA(1);
+				if (_la==VOICE_START) {
+					{
+					setState(170); field_voice();
+					}
+				}
+
+				setState(173); voice();
+				setState(177);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==NEWLINE) {
 					{
 					{
-					setState(163); match(NEWLINE);
+					setState(174); match(NEWLINE);
 					}
 					}
-					setState(168);
+					setState(179);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
 				}
 				}
-				setState(171); 
+				setState(182); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << VOICE_START) | (1L << ACCIDENTAL_TYPE) | (1L << TUPLET_START) | (1L << OPEN_CHORD) | (1L << OPEN_REPEAT) | (1L << NTH_REPEAT) | (1L << COMMENT_START))) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << VOICE_START) | (1L << ACCIDENTAL_TYPE) | (1L << DUPLET_START) | (1L << TRIPLET_START) | (1L << QUADRUPLET_START) | (1L << OPEN_CHORD) | (1L << BAR_LINE) | (1L << NTH_REPEAT) | (1L << COMMENT_START))) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -1030,110 +1114,286 @@ public class ABCMusicParser extends Parser {
 		return _localctx;
 	}
 
-	public static class Abc_lineContext extends ParserRuleContext {
-		public List<ElementContext> element() {
-			return getRuleContexts(ElementContext.class);
+	public static class Lyric_elementContext extends ParserRuleContext {
+		public List<TerminalNode> PUNCTUATION() { return getTokens(ABCMusicParser.PUNCTUATION); }
+		public TerminalNode LYRIC_SEPARATOR() { return getToken(ABCMusicParser.LYRIC_SEPARATOR, 0); }
+		public TerminalNode LYRIC_MODIFIER(int i) {
+			return getToken(ABCMusicParser.LYRIC_MODIFIER, i);
 		}
-		public List<TerminalNode> NEWLINE() { return getTokens(ABCMusicParser.NEWLINE); }
-		public TerminalNode NEWLINE(int i) {
-			return getToken(ABCMusicParser.NEWLINE, i);
+		public List<TerminalNode> LYRIC_MODIFIER() { return getTokens(ABCMusicParser.LYRIC_MODIFIER); }
+		public TerminalNode PUNCTUATION(int i) {
+			return getToken(ABCMusicParser.PUNCTUATION, i);
 		}
-		public ElementContext element(int i) {
-			return getRuleContext(ElementContext.class,i);
+		public List<TerminalNode> REST() { return getTokens(ABCMusicParser.REST); }
+		public TerminalNode WHITESPACE(int i) {
+			return getToken(ABCMusicParser.WHITESPACE, i);
+		}
+		public TerminalNode MODEMINOR(int i) {
+			return getToken(ABCMusicParser.MODEMINOR, i);
+		}
+		public List<TerminalNode> BASENOTE() { return getTokens(ABCMusicParser.BASENOTE); }
+		public List<TerminalNode> WHITESPACE() { return getTokens(ABCMusicParser.WHITESPACE); }
+		public TerminalNode NONBASENOTE(int i) {
+			return getToken(ABCMusicParser.NONBASENOTE, i);
+		}
+		public TerminalNode ACCIDENTAL_TYPE(int i) {
+			return getToken(ABCMusicParser.ACCIDENTAL_TYPE, i);
+		}
+		public List<TerminalNode> NONBASENOTE() { return getTokens(ABCMusicParser.NONBASENOTE); }
+		public List<TerminalNode> MODEMINOR() { return getTokens(ABCMusicParser.MODEMINOR); }
+		public TerminalNode REST(int i) {
+			return getToken(ABCMusicParser.REST, i);
+		}
+		public List<TerminalNode> ACCIDENTAL_TYPE() { return getTokens(ABCMusicParser.ACCIDENTAL_TYPE); }
+		public TerminalNode BASENOTE(int i) {
+			return getToken(ABCMusicParser.BASENOTE, i);
+		}
+		public TerminalNode BAR_LINE() { return getToken(ABCMusicParser.BAR_LINE, 0); }
+		public Lyric_elementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_lyric_element; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterLyric_element(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitLyric_element(this);
+		}
+	}
+
+	public final Lyric_elementContext lyric_element() throws RecognitionException {
+		Lyric_elementContext _localctx = new Lyric_elementContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_lyric_element);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(185); 
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(184);
+					_la = _input.LA(1);
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASENOTE) | (1L << REST) | (1L << MODEMINOR) | (1L << ACCIDENTAL_TYPE) | (1L << LYRIC_MODIFIER) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) ) {
+					_errHandler.recoverInline(this);
+					}
+					consume();
+					}
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(187); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+			} while ( _alt!=2 && _alt!=-1 );
+			setState(190);
+			_la = _input.LA(1);
+			if (_la==LYRIC_SEPARATOR) {
+				{
+				setState(189); match(LYRIC_SEPARATOR);
+				}
+			}
+
+			setState(193);
+			_la = _input.LA(1);
+			if (_la==BAR_LINE) {
+				{
+				setState(192); match(BAR_LINE);
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class LyricContext extends ParserRuleContext {
+		public TerminalNode LYRIC_START() { return getToken(ABCMusicParser.LYRIC_START, 0); }
+		public Lyric_elementContext lyric_element(int i) {
+			return getRuleContext(Lyric_elementContext.class,i);
+		}
+		public List<Lyric_elementContext> lyric_element() {
+			return getRuleContexts(Lyric_elementContext.class);
+		}
+		public List<EolContext> eol() {
+			return getRuleContexts(EolContext.class);
+		}
+		public EolContext eol(int i) {
+			return getRuleContext(EolContext.class,i);
+		}
+		public LyricContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_lyric; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterLyric(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitLyric(this);
+		}
+	}
+
+	public final LyricContext lyric() throws RecognitionException {
+		LyricContext _localctx = new LyricContext(_ctx, getState());
+		enterRule(_localctx, 34, RULE_lyric);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(195); match(LYRIC_START);
+			setState(199);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASENOTE) | (1L << REST) | (1L << MODEMINOR) | (1L << ACCIDENTAL_TYPE) | (1L << LYRIC_MODIFIER) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) {
+				{
+				{
+				setState(196); lyric_element();
+				}
+				}
+				setState(201);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			setState(203); 
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
+			do {
+				switch (_alt) {
+				case 1:
+					{
+					{
+					setState(202); eol();
+					}
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
+				}
+				setState(205); 
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
+			} while ( _alt!=2 && _alt!=-1 );
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class VoiceContext extends ParserRuleContext {
+		public List<LyricContext> lyric() {
+			return getRuleContexts(LyricContext.class);
+		}
+		public List<EolContext> eol() {
+			return getRuleContexts(EolContext.class);
+		}
+		public TuneContext tune(int i) {
+			return getRuleContext(TuneContext.class,i);
 		}
 		public CommentContext comment() {
 			return getRuleContext(CommentContext.class,0);
 		}
-		public TerminalNode LYRIC() { return getToken(ABCMusicParser.LYRIC, 0); }
-		public Field_voiceContext field_voice() {
-			return getRuleContext(Field_voiceContext.class,0);
+		public LyricContext lyric(int i) {
+			return getRuleContext(LyricContext.class,i);
 		}
-		public Abc_lineContext(ParserRuleContext parent, int invokingState) {
+		public List<TuneContext> tune() {
+			return getRuleContexts(TuneContext.class);
+		}
+		public EolContext eol(int i) {
+			return getRuleContext(EolContext.class,i);
+		}
+		public VoiceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_abc_line; }
+		@Override public int getRuleIndex() { return RULE_voice; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterAbc_line(this);
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterVoice(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitAbc_line(this);
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitVoice(this);
 		}
 	}
 
-	public final Abc_lineContext abc_line() throws RecognitionException {
-		Abc_lineContext _localctx = new Abc_lineContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_abc_line);
-		int _la;
+	public final VoiceContext voice() throws RecognitionException {
+		VoiceContext _localctx = new VoiceContext(_ctx, getState());
+		enterRule(_localctx, 36, RULE_voice);
 		try {
 			int _alt;
-			setState(190);
+			setState(218);
 			switch (_input.LA(1)) {
 			case BASENOTE:
 			case REST:
 			case ACCIDENTAL_TYPE:
-			case TUPLET_START:
+			case DUPLET_START:
+			case TRIPLET_START:
+			case QUADRUPLET_START:
 			case OPEN_CHORD:
-			case OPEN_REPEAT:
+			case BAR_LINE:
 			case NTH_REPEAT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(174); 
+				setState(213); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
 				do {
 					switch (_alt) {
 					case 1:
 						{
 						{
-						setState(173); element();
+						setState(207); tune();
+						setState(211);
+						switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
+						case 1:
+							{
+							setState(208); eol();
+							setState(209); lyric();
+							}
+							break;
+						}
 						}
 						}
 						break;
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(176); 
+					setState(215); 
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
 				} while ( _alt!=2 && _alt!=-1 );
-				setState(181);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
-				while ( _alt!=2 && _alt!=-1 ) {
-					if ( _alt==1 ) {
-						{
-						{
-						setState(178); match(NEWLINE);
-						}
-						} 
-					}
-					setState(183);
-					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
-				}
-				setState(186);
-				_la = _input.LA(1);
-				if (_la==LYRIC) {
-					{
-					setState(184); match(LYRIC);
-					setState(185); match(NEWLINE);
-					}
-				}
-
-				}
-				break;
-			case VOICE_START:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(188); field_voice();
 				}
 				break;
 			case COMMENT_START:
-				enterOuterAlt(_localctx, 3);
+				enterOuterAlt(_localctx, 2);
 				{
-				setState(189); comment();
+				setState(217); comment();
 				}
 				break;
 			default:
@@ -1151,196 +1411,115 @@ public class ABCMusicParser extends Parser {
 		return _localctx;
 	}
 
-	public static class ElementContext extends ParserRuleContext {
-		public TerminalNode NTH_REPEAT() { return getToken(ABCMusicParser.NTH_REPEAT, 0); }
-		public MeasureContext measure() {
-			return getRuleContext(MeasureContext.class,0);
-		}
-		public RepeatContext repeat() {
-			return getRuleContext(RepeatContext.class,0);
-		}
-		public ElementContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_element; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterElement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitElement(this);
-		}
-	}
-
-	public final ElementContext element() throws RecognitionException {
-		ElementContext _localctx = new ElementContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_element);
-		try {
-			setState(195);
-			switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(192); measure();
-				}
-				break;
-
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(193); repeat();
-				}
-				break;
-
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(194); match(NTH_REPEAT);
-				}
-				break;
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class MeasureContext extends ParserRuleContext {
+	public static class TuneContext extends ParserRuleContext {
+		public List<TerminalNode> NTH_REPEAT() { return getTokens(ABCMusicParser.NTH_REPEAT); }
 		public ChordContext chord(int i) {
 			return getRuleContext(ChordContext.class,i);
+		}
+		public TerminalNode NTH_REPEAT(int i) {
+			return getToken(ABCMusicParser.NTH_REPEAT, i);
 		}
 		public TupletContext tuplet(int i) {
 			return getRuleContext(TupletContext.class,i);
 		}
+		public List<EolContext> eol() {
+			return getRuleContexts(EolContext.class);
+		}
 		public List<TupletContext> tuplet() {
 			return getRuleContexts(TupletContext.class);
+		}
+		public EolContext eol(int i) {
+			return getRuleContext(EolContext.class,i);
+		}
+		public TerminalNode BAR_LINE(int i) {
+			return getToken(ABCMusicParser.BAR_LINE, i);
 		}
 		public List<ChordContext> chord() {
 			return getRuleContexts(ChordContext.class);
 		}
-		public TerminalNode BAR_LINE() { return getToken(ABCMusicParser.BAR_LINE, 0); }
-		public MeasureContext(ParserRuleContext parent, int invokingState) {
+		public List<TerminalNode> BAR_LINE() { return getTokens(ABCMusicParser.BAR_LINE); }
+		public TuneContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_measure; }
+		@Override public int getRuleIndex() { return RULE_tune; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterMeasure(this);
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterTune(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitMeasure(this);
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitTune(this);
 		}
 	}
 
-	public final MeasureContext measure() throws RecognitionException {
-		MeasureContext _localctx = new MeasureContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_measure);
-		int _la;
+	public final TuneContext tune() throws RecognitionException {
+		TuneContext _localctx = new TuneContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_tune);
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(199); 
+			setState(224); 
 			_errHandler.sync(this);
-			_la = _input.LA(1);
+			_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
 			do {
-				{
-				setState(199);
-				switch (_input.LA(1)) {
-				case BASENOTE:
-				case REST:
-				case ACCIDENTAL_TYPE:
-				case OPEN_CHORD:
+				switch (_alt) {
+				case 1:
 					{
-					setState(197); chord();
+					setState(224);
+					switch (_input.LA(1)) {
+					case BASENOTE:
+					case REST:
+					case ACCIDENTAL_TYPE:
+					case OPEN_CHORD:
+						{
+						setState(220); chord();
+						}
+						break;
+					case DUPLET_START:
+					case TRIPLET_START:
+					case QUADRUPLET_START:
+						{
+						setState(221); tuplet();
+						}
+						break;
+					case BAR_LINE:
+						{
+						setState(222); match(BAR_LINE);
+						}
+						break;
+					case NTH_REPEAT:
+						{
+						setState(223); match(NTH_REPEAT);
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
 					}
-					break;
-				case TUPLET_START:
-					{
-					setState(198); tuplet();
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				}
-				setState(201); 
+				setState(226); 
 				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << ACCIDENTAL_TYPE) | (1L << TUPLET_START) | (1L << OPEN_CHORD))) != 0) );
-			setState(203); match(BAR_LINE);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class RepeatContext extends ParserRuleContext {
-		public List<MeasureContext> measure() {
-			return getRuleContexts(MeasureContext.class);
-		}
-		public TerminalNode OPEN_REPEAT() { return getToken(ABCMusicParser.OPEN_REPEAT, 0); }
-		public MeasureContext measure(int i) {
-			return getRuleContext(MeasureContext.class,i);
-		}
-		public TerminalNode CLOSE_REPEAT() { return getToken(ABCMusicParser.CLOSE_REPEAT, 0); }
-		public RepeatContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_repeat; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterRepeat(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitRepeat(this);
-		}
-	}
-
-	public final RepeatContext repeat() throws RecognitionException {
-		RepeatContext _localctx = new RepeatContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_repeat);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(206);
-			_la = _input.LA(1);
-			if (_la==OPEN_REPEAT) {
-				{
-				setState(205); match(OPEN_REPEAT);
-				}
-			}
-
-			setState(209); 
+				_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
+			} while ( _alt!=2 && _alt!=-1 );
+			setState(231);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			do {
-				{
-				{
-				setState(208); measure();
+			_alt = getInterpreter().adaptivePredict(_input,27,_ctx);
+			while ( _alt!=2 && _alt!=-1 ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(228); eol();
+					}
+					} 
 				}
-				}
-				setState(211); 
+				setState(233);
 				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << ACCIDENTAL_TYPE) | (1L << TUPLET_START) | (1L << OPEN_CHORD))) != 0) );
-			setState(213); match(CLOSE_REPEAT);
+				_alt = getInterpreter().adaptivePredict(_input,27,_ctx);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1379,29 +1558,29 @@ public class ABCMusicParser extends Parser {
 
 	public final ChordContext chord() throws RecognitionException {
 		ChordContext _localctx = new ChordContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_chord);
+		enterRule(_localctx, 40, RULE_chord);
 		int _la;
 		try {
-			setState(224);
+			setState(243);
 			switch (_input.LA(1)) {
 			case OPEN_CHORD:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(215); match(OPEN_CHORD);
-				setState(217); 
+				setState(234); match(OPEN_CHORD);
+				setState(236); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(216); note();
+					setState(235); note();
 					}
 					}
-					setState(219); 
+					setState(238); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASENOTE) | (1L << REST) | (1L << ACCIDENTAL_TYPE))) != 0) );
-				setState(221); match(CLOSE_CHORD);
+				setState(240); match(CLOSE_CHORD);
 				}
 				break;
 			case BASENOTE:
@@ -1409,7 +1588,7 @@ public class ABCMusicParser extends Parser {
 			case ACCIDENTAL_TYPE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(223); note();
+				setState(242); note();
 				}
 				break;
 			default:
@@ -1445,11 +1624,11 @@ public class ABCMusicParser extends Parser {
 
 	public final AccidentalContext accidental() throws RecognitionException {
 		AccidentalContext _localctx = new AccidentalContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_accidental);
+		enterRule(_localctx, 42, RULE_accidental);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(226); match(ACCIDENTAL_TYPE);
+			setState(245); match(ACCIDENTAL_TYPE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1483,25 +1662,25 @@ public class ABCMusicParser extends Parser {
 
 	public final Key_signatureContext key_signature() throws RecognitionException {
 		Key_signatureContext _localctx = new Key_signatureContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_key_signature);
+		enterRule(_localctx, 44, RULE_key_signature);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(228); match(BASENOTE);
-			setState(230);
+			setState(247); match(BASENOTE);
+			setState(249);
 			_la = _input.LA(1);
 			if (_la==KEY_ACCIDENTAL) {
 				{
-				setState(229); match(KEY_ACCIDENTAL);
+				setState(248); match(KEY_ACCIDENTAL);
 				}
 			}
 
-			setState(233);
+			setState(252);
 			_la = _input.LA(1);
 			if (_la==MODEMINOR) {
 				{
-				setState(232); match(MODEMINOR);
+				setState(251); match(MODEMINOR);
 				}
 			}
 
@@ -1543,37 +1722,37 @@ public class ABCMusicParser extends Parser {
 
 	public final NoteContext note() throws RecognitionException {
 		NoteContext _localctx = new NoteContext(_ctx, getState());
-		enterRule(_localctx, 44, RULE_note);
+		enterRule(_localctx, 46, RULE_note);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(237);
+			setState(256);
 			switch (_input.LA(1)) {
 			case BASENOTE:
 			case ACCIDENTAL_TYPE:
 				{
-				setState(235); pitch();
+				setState(254); pitch();
 				}
 				break;
 			case REST:
 				{
-				setState(236); match(REST);
+				setState(255); match(REST);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(241);
-			switch ( getInterpreter().adaptivePredict(_input,30,_ctx) ) {
+			setState(260);
+			switch ( getInterpreter().adaptivePredict(_input,33,_ctx) ) {
 			case 1:
 				{
-				setState(239); match(INTEGER);
+				setState(258); match(INTEGER);
 				}
 				break;
 
 			case 2:
 				{
-				setState(240); fraction();
+				setState(259); fraction();
 				}
 				break;
 			}
@@ -1612,25 +1791,25 @@ public class ABCMusicParser extends Parser {
 
 	public final FractionContext fraction() throws RecognitionException {
 		FractionContext _localctx = new FractionContext(_ctx, getState());
-		enterRule(_localctx, 46, RULE_fraction);
+		enterRule(_localctx, 48, RULE_fraction);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(244);
+			setState(263);
 			_la = _input.LA(1);
 			if (_la==INTEGER) {
 				{
-				setState(243); match(INTEGER);
+				setState(262); match(INTEGER);
 				}
 			}
 
-			setState(246); match(OVER);
-			setState(248);
+			setState(265); match(OVER);
+			setState(267);
 			_la = _input.LA(1);
 			if (_la==INTEGER) {
 				{
-				setState(247); match(INTEGER);
+				setState(266); match(INTEGER);
 				}
 			}
 
@@ -1648,13 +1827,14 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static class TupletContext extends ParserRuleContext {
-		public TerminalNode INTEGER() { return getToken(ABCMusicParser.INTEGER, 0); }
-		public ChordContext chord(int i) {
-			return getRuleContext(ChordContext.class,i);
+		public DupletContext duplet() {
+			return getRuleContext(DupletContext.class,0);
 		}
-		public TerminalNode TUPLET_START() { return getToken(ABCMusicParser.TUPLET_START, 0); }
-		public List<ChordContext> chord() {
-			return getRuleContexts(ChordContext.class);
+		public QuadrupletContext quadruplet() {
+			return getRuleContext(QuadrupletContext.class,0);
+		}
+		public TripletContext triplet() {
+			return getRuleContext(TripletContext.class,0);
 		}
 		public TupletContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1672,32 +1852,165 @@ public class ABCMusicParser extends Parser {
 
 	public final TupletContext tuplet() throws RecognitionException {
 		TupletContext _localctx = new TupletContext(_ctx, getState());
-		enterRule(_localctx, 48, RULE_tuplet);
+		enterRule(_localctx, 50, RULE_tuplet);
 		try {
-			int _alt;
+			setState(272);
+			switch (_input.LA(1)) {
+			case DUPLET_START:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(269); duplet();
+				}
+				break;
+			case TRIPLET_START:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(270); triplet();
+				}
+				break;
+			case QUADRUPLET_START:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(271); quadruplet();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class DupletContext extends ParserRuleContext {
+		public TerminalNode DUPLET_START() { return getToken(ABCMusicParser.DUPLET_START, 0); }
+		public ChordContext chord(int i) {
+			return getRuleContext(ChordContext.class,i);
+		}
+		public List<ChordContext> chord() {
+			return getRuleContexts(ChordContext.class);
+		}
+		public DupletContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_duplet; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterDuplet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitDuplet(this);
+		}
+	}
+
+	public final DupletContext duplet() throws RecognitionException {
+		DupletContext _localctx = new DupletContext(_ctx, getState());
+		enterRule(_localctx, 52, RULE_duplet);
+		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(250); match(TUPLET_START);
-			setState(251); match(INTEGER);
-			setState(253); 
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,33,_ctx);
-			do {
-				switch (_alt) {
-				case 1:
-					{
-					{
-					setState(252); chord();
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(255); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,33,_ctx);
-			} while ( _alt!=2 && _alt!=-1 );
+			setState(274); match(DUPLET_START);
+			setState(275); chord();
+			setState(276); chord();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class TripletContext extends ParserRuleContext {
+		public ChordContext chord(int i) {
+			return getRuleContext(ChordContext.class,i);
+		}
+		public TerminalNode TRIPLET_START() { return getToken(ABCMusicParser.TRIPLET_START, 0); }
+		public List<ChordContext> chord() {
+			return getRuleContexts(ChordContext.class);
+		}
+		public TripletContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_triplet; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterTriplet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitTriplet(this);
+		}
+	}
+
+	public final TripletContext triplet() throws RecognitionException {
+		TripletContext _localctx = new TripletContext(_ctx, getState());
+		enterRule(_localctx, 54, RULE_triplet);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(278); match(TRIPLET_START);
+			setState(279); chord();
+			setState(280); chord();
+			setState(281); chord();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class QuadrupletContext extends ParserRuleContext {
+		public ChordContext chord(int i) {
+			return getRuleContext(ChordContext.class,i);
+		}
+		public TerminalNode QUADRUPLET_START() { return getToken(ABCMusicParser.QUADRUPLET_START, 0); }
+		public List<ChordContext> chord() {
+			return getRuleContexts(ChordContext.class);
+		}
+		public QuadrupletContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_quadruplet; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).enterQuadruplet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ABCMusicListener ) ((ABCMusicListener)listener).exitQuadruplet(this);
+		}
+	}
+
+	public final QuadrupletContext quadruplet() throws RecognitionException {
+		QuadrupletContext _localctx = new QuadrupletContext(_ctx, getState());
+		enterRule(_localctx, 56, RULE_quadruplet);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(283); match(QUADRUPLET_START);
+			setState(284); chord();
+			setState(285); chord();
+			setState(286); chord();
+			setState(287); chord();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1733,25 +2046,25 @@ public class ABCMusicParser extends Parser {
 
 	public final PitchContext pitch() throws RecognitionException {
 		PitchContext _localctx = new PitchContext(_ctx, getState());
-		enterRule(_localctx, 50, RULE_pitch);
+		enterRule(_localctx, 58, RULE_pitch);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(258);
+			setState(290);
 			_la = _input.LA(1);
 			if (_la==ACCIDENTAL_TYPE) {
 				{
-				setState(257); accidental();
+				setState(289); accidental();
 				}
 			}
 
-			setState(260); match(BASENOTE);
-			setState(262);
+			setState(292); match(BASENOTE);
+			setState(294);
 			_la = _input.LA(1);
 			if (_la==OCTAVE) {
 				{
-				setState(261); match(OCTAVE);
+				setState(293); match(OCTAVE);
 				}
 			}
 
@@ -1769,97 +2082,111 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3!\u010b\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
+		"\2\3%\u012b\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
 		"\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20"+
 		"\4\21\t\21\4\22\t\22\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27"+
-		"\4\30\t\30\4\31\t\31\4\32\t\32\4\33\t\33\3\2\3\2\3\2\3\3\3\3\5\3<\n\3"+
-		"\3\4\3\4\3\4\3\4\3\5\3\5\7\5D\n\5\f\5\16\5G\13\5\3\5\3\5\7\5K\n\5\f\5"+
-		"\16\5N\13\5\3\5\3\5\3\6\3\6\3\6\7\6U\n\6\f\6\16\6X\13\6\3\7\3\7\6\7\\"+
-		"\n\7\r\7\16\7]\3\7\7\7a\n\7\f\7\16\7d\13\7\3\b\3\b\3\b\7\bi\n\b\f\b\16"+
-		"\bl\13\b\3\t\3\t\3\t\7\tq\n\t\f\t\16\tt\13\t\3\n\3\n\3\n\7\ny\n\n\f\n"+
-		"\16\n|\13\n\3\13\3\13\3\13\5\13\u0081\n\13\3\13\7\13\u0084\n\13\f\13\16"+
-		"\13\u0087\13\13\3\f\3\f\3\f\7\f\u008c\n\f\f\f\16\f\u008f\13\f\3\r\3\r"+
-		"\3\r\7\r\u0094\n\r\f\r\16\r\u0097\13\r\3\16\3\16\3\16\3\16\3\17\3\17\3"+
-		"\17\3\17\3\17\3\17\5\17\u00a3\n\17\3\20\3\20\7\20\u00a7\n\20\f\20\16\20"+
-		"\u00aa\13\20\6\20\u00ac\n\20\r\20\16\20\u00ad\3\21\6\21\u00b1\n\21\r\21"+
-		"\16\21\u00b2\3\21\7\21\u00b6\n\21\f\21\16\21\u00b9\13\21\3\21\3\21\5\21"+
-		"\u00bd\n\21\3\21\3\21\5\21\u00c1\n\21\3\22\3\22\3\22\5\22\u00c6\n\22\3"+
-		"\23\3\23\6\23\u00ca\n\23\r\23\16\23\u00cb\3\23\3\23\3\24\5\24\u00d1\n"+
-		"\24\3\24\6\24\u00d4\n\24\r\24\16\24\u00d5\3\24\3\24\3\25\3\25\6\25\u00dc"+
-		"\n\25\r\25\16\25\u00dd\3\25\3\25\3\25\5\25\u00e3\n\25\3\26\3\26\3\27\3"+
-		"\27\5\27\u00e9\n\27\3\27\5\27\u00ec\n\27\3\30\3\30\5\30\u00f0\n\30\3\30"+
-		"\3\30\5\30\u00f4\n\30\3\31\5\31\u00f7\n\31\3\31\3\31\5\31\u00fb\n\31\3"+
-		"\32\3\32\3\32\6\32\u0100\n\32\r\32\16\32\u0101\3\33\5\33\u0105\n\33\3"+
-		"\33\3\33\5\33\u0109\n\33\3\33\2\34\2\4\6\b\n\f\16\20\22\24\26\30\32\34"+
-		"\36 \"$&(*,.\60\62\64\2\3\4\6\6\b\b\u011b\2\66\3\2\2\2\4;\3\2\2\2\6=\3"+
-		"\2\2\2\bA\3\2\2\2\nQ\3\2\2\2\fY\3\2\2\2\16e\3\2\2\2\20m\3\2\2\2\22u\3"+
-		"\2\2\2\24}\3\2\2\2\26\u0088\3\2\2\2\30\u0090\3\2\2\2\32\u0098\3\2\2\2"+
-		"\34\u00a2\3\2\2\2\36\u00ab\3\2\2\2 \u00c0\3\2\2\2\"\u00c5\3\2\2\2$\u00c9"+
-		"\3\2\2\2&\u00d0\3\2\2\2(\u00e2\3\2\2\2*\u00e4\3\2\2\2,\u00e6\3\2\2\2."+
-		"\u00ef\3\2\2\2\60\u00f6\3\2\2\2\62\u00fc\3\2\2\2\64\u0104\3\2\2\2\66\67"+
-		"\7\37\2\2\678\7\b\2\28\3\3\2\2\29<\5\2\2\2:<\7\7\2\2;9\3\2\2\2;:\3\2\2"+
-		"\2<\5\3\2\2\2=>\5\b\5\2>?\5\36\20\2?@\7\1\2\2@\7\3\2\2\2AE\5\n\6\2BD\5"+
-		"\2\2\2CB\3\2\2\2DG\3\2\2\2EC\3\2\2\2EF\3\2\2\2FH\3\2\2\2GE\3\2\2\2HL\5"+
-		"\f\7\2IK\5\34\17\2JI\3\2\2\2KN\3\2\2\2LJ\3\2\2\2LM\3\2\2\2MO\3\2\2\2N"+
-		"L\3\2\2\2OP\5\16\b\2P\t\3\2\2\2QR\7\13\2\2RV\7\6\2\2SU\5\4\3\2TS\3\2\2"+
-		"\2UX\3\2\2\2VT\3\2\2\2VW\3\2\2\2W\13\3\2\2\2XV\3\2\2\2Y[\7\f\2\2Z\\\t"+
-		"\2\2\2[Z\3\2\2\2\\]\3\2\2\2][\3\2\2\2]^\3\2\2\2^b\3\2\2\2_a\5\4\3\2`_"+
-		"\3\2\2\2ad\3\2\2\2b`\3\2\2\2bc\3\2\2\2c\r\3\2\2\2db\3\2\2\2ef\7\r\2\2"+
-		"fj\5,\27\2gi\5\4\3\2hg\3\2\2\2il\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\17\3\2\2"+
-		"\2lj\3\2\2\2mn\7\16\2\2nr\7\b\2\2oq\5\4\3\2po\3\2\2\2qt\3\2\2\2rp\3\2"+
-		"\2\2rs\3\2\2\2s\21\3\2\2\2tr\3\2\2\2uv\7\17\2\2vz\5\60\31\2wy\5\4\3\2"+
-		"xw\3\2\2\2y|\3\2\2\2zx\3\2\2\2z{\3\2\2\2{\23\3\2\2\2|z\3\2\2\2}\u0080"+
-		"\7\20\2\2~\u0081\7\25\2\2\177\u0081\5\60\31\2\u0080~\3\2\2\2\u0080\177"+
-		"\3\2\2\2\u0081\u0085\3\2\2\2\u0082\u0084\5\4\3\2\u0083\u0082\3\2\2\2\u0084"+
-		"\u0087\3\2\2\2\u0085\u0083\3\2\2\2\u0085\u0086\3\2\2\2\u0086\25\3\2\2"+
-		"\2\u0087\u0085\3\2\2\2\u0088\u0089\7\21\2\2\u0089\u008d\5\32\16\2\u008a"+
-		"\u008c\5\4\3\2\u008b\u008a\3\2\2\2\u008c\u008f\3\2\2\2\u008d\u008b\3\2"+
-		"\2\2\u008d\u008e\3\2\2\2\u008e\27\3\2\2\2\u008f\u008d\3\2\2\2\u0090\u0091"+
-		"\7\22\2\2\u0091\u0095\7\b\2\2\u0092\u0094\5\4\3\2\u0093\u0092\3\2\2\2"+
-		"\u0094\u0097\3\2\2\2\u0095\u0093\3\2\2\2\u0095\u0096\3\2\2\2\u0096\31"+
-		"\3\2\2\2\u0097\u0095\3\2\2\2\u0098\u0099\5\60\31\2\u0099\u009a\7\t\2\2"+
-		"\u009a\u009b\7\6\2\2\u009b\33\3\2\2\2\u009c\u00a3\5\20\t\2\u009d\u00a3"+
-		"\5\22\n\2\u009e\u00a3\5\24\13\2\u009f\u00a3\5\26\f\2\u00a0\u00a3\5\30"+
-		"\r\2\u00a1\u00a3\5\2\2\2\u00a2\u009c\3\2\2\2\u00a2\u009d\3\2\2\2\u00a2"+
-		"\u009e\3\2\2\2\u00a2\u009f\3\2\2\2\u00a2\u00a0\3\2\2\2\u00a2\u00a1\3\2"+
-		"\2\2\u00a3\35\3\2\2\2\u00a4\u00a8\5 \21\2\u00a5\u00a7\7\7\2\2\u00a6\u00a5"+
-		"\3\2\2\2\u00a7\u00aa\3\2\2\2\u00a8\u00a6\3\2\2\2\u00a8\u00a9\3\2\2\2\u00a9"+
-		"\u00ac\3\2\2\2\u00aa\u00a8\3\2\2\2\u00ab\u00a4\3\2\2\2\u00ac\u00ad\3\2"+
-		"\2\2\u00ad\u00ab\3\2\2\2\u00ad\u00ae\3\2\2\2\u00ae\37\3\2\2\2\u00af\u00b1"+
-		"\5\"\22\2\u00b0\u00af\3\2\2\2\u00b1\u00b2\3\2\2\2\u00b2\u00b0\3\2\2\2"+
-		"\u00b2\u00b3\3\2\2\2\u00b3\u00b7\3\2\2\2\u00b4\u00b6\7\7\2\2\u00b5\u00b4"+
-		"\3\2\2\2\u00b6\u00b9\3\2\2\2\u00b7\u00b5\3\2\2\2\u00b7\u00b8\3\2\2\2\u00b8"+
-		"\u00bc\3\2\2\2\u00b9\u00b7\3\2\2\2\u00ba\u00bb\7 \2\2\u00bb\u00bd\7\7"+
-		"\2\2\u00bc\u00ba\3\2\2\2\u00bc\u00bd\3\2\2\2\u00bd\u00c1\3\2\2\2\u00be"+
-		"\u00c1\5\30\r\2\u00bf\u00c1\5\2\2\2\u00c0\u00b0\3\2\2\2\u00c0\u00be\3"+
-		"\2\2\2\u00c0\u00bf\3\2\2\2\u00c1!\3\2\2\2\u00c2\u00c6\5$\23\2\u00c3\u00c6"+
-		"\5&\24\2\u00c4\u00c6\7\36\2\2\u00c5\u00c2\3\2\2\2\u00c5\u00c3\3\2\2\2"+
-		"\u00c5\u00c4\3\2\2\2\u00c6#\3\2\2\2\u00c7\u00ca\5(\25\2\u00c8\u00ca\5"+
-		"\62\32\2\u00c9\u00c7\3\2\2\2\u00c9\u00c8\3\2\2\2\u00ca\u00cb\3\2\2\2\u00cb"+
-		"\u00c9\3\2\2\2\u00cb\u00cc\3\2\2\2\u00cc\u00cd\3\2\2\2\u00cd\u00ce\7\33"+
-		"\2\2\u00ce%\3\2\2\2\u00cf\u00d1\7\34\2\2\u00d0\u00cf\3\2\2\2\u00d0\u00d1"+
-		"\3\2\2\2\u00d1\u00d3\3\2\2\2\u00d2\u00d4\5$\23\2\u00d3\u00d2\3\2\2\2\u00d4"+
-		"\u00d5\3\2\2\2\u00d5\u00d3\3\2\2\2\u00d5\u00d6\3\2\2\2\u00d6\u00d7\3\2"+
-		"\2\2\u00d7\u00d8\7\35\2\2\u00d8\'\3\2\2\2\u00d9\u00db\7\31\2\2\u00da\u00dc"+
-		"\5.\30\2\u00db\u00da\3\2\2\2\u00dc\u00dd\3\2\2\2\u00dd\u00db\3\2\2\2\u00dd"+
-		"\u00de\3\2\2\2\u00de\u00df\3\2\2\2\u00df\u00e0\7\32\2\2\u00e0\u00e3\3"+
-		"\2\2\2\u00e1\u00e3\5.\30\2\u00e2\u00d9\3\2\2\2\u00e2\u00e1\3\2\2\2\u00e3"+
-		")\3\2\2\2\u00e4\u00e5\7\27\2\2\u00e5+\3\2\2\2\u00e6\u00e8\7\4\2\2\u00e7"+
-		"\u00e9\7\23\2\2\u00e8\u00e7\3\2\2\2\u00e8\u00e9\3\2\2\2\u00e9\u00eb\3"+
-		"\2\2\2\u00ea\u00ec\7\24\2\2\u00eb\u00ea\3\2\2\2\u00eb\u00ec\3\2\2\2\u00ec"+
-		"-\3\2\2\2\u00ed\u00f0\5\64\33\2\u00ee\u00f0\7\5\2\2\u00ef\u00ed\3\2\2"+
-		"\2\u00ef\u00ee\3\2\2\2\u00f0\u00f3\3\2\2\2\u00f1\u00f4\7\6\2\2\u00f2\u00f4"+
-		"\5\60\31\2\u00f3\u00f1\3\2\2\2\u00f3\u00f2\3\2\2\2\u00f3\u00f4\3\2\2\2"+
-		"\u00f4/\3\2\2\2\u00f5\u00f7\7\6\2\2\u00f6\u00f5\3\2\2\2\u00f6\u00f7\3"+
-		"\2\2\2\u00f7\u00f8\3\2\2\2\u00f8\u00fa\7\n\2\2\u00f9\u00fb\7\6\2\2\u00fa"+
-		"\u00f9\3\2\2\2\u00fa\u00fb\3\2\2\2\u00fb\61\3\2\2\2\u00fc\u00fd\7\30\2"+
-		"\2\u00fd\u00ff\7\6\2\2\u00fe\u0100\5(\25\2\u00ff\u00fe\3\2\2\2\u0100\u0101"+
-		"\3\2\2\2\u0101\u00ff\3\2\2\2\u0101\u0102\3\2\2\2\u0102\63\3\2\2\2\u0103"+
-		"\u0105\5*\26\2\u0104\u0103\3\2\2\2\u0104\u0105\3\2\2\2\u0105\u0106\3\2"+
-		"\2\2\u0106\u0108\7\4\2\2\u0107\u0109\7\26\2\2\u0108\u0107\3\2\2\2\u0108"+
-		"\u0109\3\2\2\2\u0109\65\3\2\2\2&;ELV]bjrz\u0080\u0085\u008d\u0095\u00a2"+
-		"\u00a8\u00ad\u00b2\u00b7\u00bc\u00c0\u00c5\u00c9\u00cb\u00d0\u00d5\u00dd"+
-		"\u00e2\u00e8\u00eb\u00ef\u00f3\u00f6\u00fa\u0101\u0104\u0108";
+		"\4\30\t\30\4\31\t\31\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36"+
+		"\4\37\t\37\3\2\6\2@\n\2\r\2\16\2A\3\3\3\3\3\3\3\4\3\4\5\4I\n\4\3\5\3\5"+
+		"\3\5\3\5\3\6\3\6\7\6Q\n\6\f\6\16\6T\13\6\3\6\3\6\7\6X\n\6\f\6\16\6[\13"+
+		"\6\3\6\3\6\3\7\3\7\3\7\7\7b\n\7\f\7\16\7e\13\7\3\b\3\b\3\b\7\bj\n\b\f"+
+		"\b\16\bm\13\b\3\t\3\t\3\t\7\tr\n\t\f\t\16\tu\13\t\3\n\3\n\3\n\7\nz\n\n"+
+		"\f\n\16\n}\13\n\3\13\3\13\3\13\7\13\u0082\n\13\f\13\16\13\u0085\13\13"+
+		"\3\f\3\f\3\f\5\f\u008a\n\f\3\f\7\f\u008d\n\f\f\f\16\f\u0090\13\f\3\r\3"+
+		"\r\3\r\7\r\u0095\n\r\f\r\16\r\u0098\13\r\3\16\3\16\3\16\6\16\u009d\n\16"+
+		"\r\16\16\16\u009e\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\20\3\20\3\20\5"+
+		"\20\u00ab\n\20\3\21\5\21\u00ae\n\21\3\21\3\21\7\21\u00b2\n\21\f\21\16"+
+		"\21\u00b5\13\21\6\21\u00b7\n\21\r\21\16\21\u00b8\3\22\6\22\u00bc\n\22"+
+		"\r\22\16\22\u00bd\3\22\5\22\u00c1\n\22\3\22\5\22\u00c4\n\22\3\23\3\23"+
+		"\7\23\u00c8\n\23\f\23\16\23\u00cb\13\23\3\23\6\23\u00ce\n\23\r\23\16\23"+
+		"\u00cf\3\24\3\24\3\24\3\24\5\24\u00d6\n\24\6\24\u00d8\n\24\r\24\16\24"+
+		"\u00d9\3\24\5\24\u00dd\n\24\3\25\3\25\3\25\3\25\6\25\u00e3\n\25\r\25\16"+
+		"\25\u00e4\3\25\7\25\u00e8\n\25\f\25\16\25\u00eb\13\25\3\26\3\26\6\26\u00ef"+
+		"\n\26\r\26\16\26\u00f0\3\26\3\26\3\26\5\26\u00f6\n\26\3\27\3\27\3\30\3"+
+		"\30\5\30\u00fc\n\30\3\30\5\30\u00ff\n\30\3\31\3\31\5\31\u0103\n\31\3\31"+
+		"\3\31\5\31\u0107\n\31\3\32\5\32\u010a\n\32\3\32\3\32\5\32\u010e\n\32\3"+
+		"\33\3\33\3\33\5\33\u0113\n\33\3\34\3\34\3\34\3\34\3\35\3\35\3\35\3\35"+
+		"\3\35\3\36\3\36\3\36\3\36\3\36\3\36\3\37\5\37\u0125\n\37\3\37\3\37\5\37"+
+		"\u0129\n\37\3\37\2 \2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60"+
+		"\62\64\668:<\2\4\4\4\6$%\7\3\5\23\23\26\26\"\"$%\u013b\2?\3\2\2\2\4C\3"+
+		"\2\2\2\6H\3\2\2\2\bJ\3\2\2\2\nN\3\2\2\2\f^\3\2\2\2\16f\3\2\2\2\20n\3\2"+
+		"\2\2\22v\3\2\2\2\24~\3\2\2\2\26\u0086\3\2\2\2\30\u0091\3\2\2\2\32\u0099"+
+		"\3\2\2\2\34\u00a0\3\2\2\2\36\u00aa\3\2\2\2 \u00b6\3\2\2\2\"\u00bb\3\2"+
+		"\2\2$\u00c5\3\2\2\2&\u00dc\3\2\2\2(\u00e2\3\2\2\2*\u00f5\3\2\2\2,\u00f7"+
+		"\3\2\2\2.\u00f9\3\2\2\2\60\u0102\3\2\2\2\62\u0109\3\2\2\2\64\u0112\3\2"+
+		"\2\2\66\u0114\3\2\2\28\u0118\3\2\2\2:\u011d\3\2\2\2<\u0124\3\2\2\2>@\t"+
+		"\2\2\2?>\3\2\2\2@A\3\2\2\2A?\3\2\2\2AB\3\2\2\2B\3\3\2\2\2CD\7 \2\2DE\5"+
+		"\2\2\2E\5\3\2\2\2FI\5\4\3\2GI\7\7\2\2HF\3\2\2\2HG\3\2\2\2I\7\3\2\2\2J"+
+		"K\5\n\6\2KL\5 \21\2LM\7\1\2\2M\t\3\2\2\2NR\5\f\7\2OQ\5\4\3\2PO\3\2\2\2"+
+		"QT\3\2\2\2RP\3\2\2\2RS\3\2\2\2SU\3\2\2\2TR\3\2\2\2UY\5\16\b\2VX\5\36\20"+
+		"\2WV\3\2\2\2X[\3\2\2\2YW\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[Y\3\2\2\2\\]\5\20"+
+		"\t\2]\13\3\2\2\2^_\7\n\2\2_c\7\6\2\2`b\5\6\4\2a`\3\2\2\2be\3\2\2\2ca\3"+
+		"\2\2\2cd\3\2\2\2d\r\3\2\2\2ec\3\2\2\2fg\7\13\2\2gk\5\2\2\2hj\5\6\4\2i"+
+		"h\3\2\2\2jm\3\2\2\2ki\3\2\2\2kl\3\2\2\2l\17\3\2\2\2mk\3\2\2\2no\7\f\2"+
+		"\2os\5.\30\2pr\5\6\4\2qp\3\2\2\2ru\3\2\2\2sq\3\2\2\2st\3\2\2\2t\21\3\2"+
+		"\2\2us\3\2\2\2vw\7\r\2\2w{\5\2\2\2xz\5\6\4\2yx\3\2\2\2z}\3\2\2\2{y\3\2"+
+		"\2\2{|\3\2\2\2|\23\3\2\2\2}{\3\2\2\2~\177\7\16\2\2\177\u0083\5\62\32\2"+
+		"\u0080\u0082\5\6\4\2\u0081\u0080\3\2\2\2\u0082\u0085\3\2\2\2\u0083\u0081"+
+		"\3\2\2\2\u0083\u0084\3\2\2\2\u0084\25\3\2\2\2\u0085\u0083\3\2\2\2\u0086"+
+		"\u0089\7\17\2\2\u0087\u008a\7\24\2\2\u0088\u008a\5\62\32\2\u0089\u0087"+
+		"\3\2\2\2\u0089\u0088\3\2\2\2\u008a\u008e\3\2\2\2\u008b\u008d\5\6\4\2\u008c"+
+		"\u008b\3\2\2\2\u008d\u0090\3\2\2\2\u008e\u008c\3\2\2\2\u008e\u008f\3\2"+
+		"\2\2\u008f\27\3\2\2\2\u0090\u008e\3\2\2\2\u0091\u0092\7\20\2\2\u0092\u0096"+
+		"\5\34\17\2\u0093\u0095\5\6\4\2\u0094\u0093\3\2\2\2\u0095\u0098\3\2\2\2"+
+		"\u0096\u0094\3\2\2\2\u0096\u0097\3\2\2\2\u0097\31\3\2\2\2\u0098\u0096"+
+		"\3\2\2\2\u0099\u009a\7\21\2\2\u009a\u009c\5\2\2\2\u009b\u009d\5\6\4\2"+
+		"\u009c\u009b\3\2\2\2\u009d\u009e\3\2\2\2\u009e\u009c\3\2\2\2\u009e\u009f"+
+		"\3\2\2\2\u009f\33\3\2\2\2\u00a0\u00a1\5\62\32\2\u00a1\u00a2\7\b\2\2\u00a2"+
+		"\u00a3\7\6\2\2\u00a3\35\3\2\2\2\u00a4\u00ab\5\22\n\2\u00a5\u00ab\5\24"+
+		"\13\2\u00a6\u00ab\5\26\f\2\u00a7\u00ab\5\30\r\2\u00a8\u00ab\5\32\16\2"+
+		"\u00a9\u00ab\5\4\3\2\u00aa\u00a4\3\2\2\2\u00aa\u00a5\3\2\2\2\u00aa\u00a6"+
+		"\3\2\2\2\u00aa\u00a7\3\2\2\2\u00aa\u00a8\3\2\2\2\u00aa\u00a9\3\2\2\2\u00ab"+
+		"\37\3\2\2\2\u00ac\u00ae\5\32\16\2\u00ad\u00ac\3\2\2\2\u00ad\u00ae\3\2"+
+		"\2\2\u00ae\u00af\3\2\2\2\u00af\u00b3\5&\24\2\u00b0\u00b2\7\7\2\2\u00b1"+
+		"\u00b0\3\2\2\2\u00b2\u00b5\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b4\3\2"+
+		"\2\2\u00b4\u00b7\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b6\u00ad\3\2\2\2\u00b7"+
+		"\u00b8\3\2\2\2\u00b8\u00b6\3\2\2\2\u00b8\u00b9\3\2\2\2\u00b9!\3\2\2\2"+
+		"\u00ba\u00bc\t\3\2\2\u00bb\u00ba\3\2\2\2\u00bc\u00bd\3\2\2\2\u00bd\u00bb"+
+		"\3\2\2\2\u00bd\u00be\3\2\2\2\u00be\u00c0\3\2\2\2\u00bf\u00c1\7#\2\2\u00c0"+
+		"\u00bf\3\2\2\2\u00c0\u00c1\3\2\2\2\u00c1\u00c3\3\2\2\2\u00c2\u00c4\7\34"+
+		"\2\2\u00c3\u00c2\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4#\3\2\2\2\u00c5\u00c9"+
+		"\7!\2\2\u00c6\u00c8\5\"\22\2\u00c7\u00c6\3\2\2\2\u00c8\u00cb\3\2\2\2\u00c9"+
+		"\u00c7\3\2\2\2\u00c9\u00ca\3\2\2\2\u00ca\u00cd\3\2\2\2\u00cb\u00c9\3\2"+
+		"\2\2\u00cc\u00ce\5\6\4\2\u00cd\u00cc\3\2\2\2\u00ce\u00cf\3\2\2\2\u00cf"+
+		"\u00cd\3\2\2\2\u00cf\u00d0\3\2\2\2\u00d0%\3\2\2\2\u00d1\u00d5\5(\25\2"+
+		"\u00d2\u00d3\5\6\4\2\u00d3\u00d4\5$\23\2\u00d4\u00d6\3\2\2\2\u00d5\u00d2"+
+		"\3\2\2\2\u00d5\u00d6\3\2\2\2\u00d6\u00d8\3\2\2\2\u00d7\u00d1\3\2\2\2\u00d8"+
+		"\u00d9\3\2\2\2\u00d9\u00d7\3\2\2\2\u00d9\u00da\3\2\2\2\u00da\u00dd\3\2"+
+		"\2\2\u00db\u00dd\5\4\3\2\u00dc\u00d7\3\2\2\2\u00dc\u00db\3\2\2\2\u00dd"+
+		"\'\3\2\2\2\u00de\u00e3\5*\26\2\u00df\u00e3\5\64\33\2\u00e0\u00e3\7\34"+
+		"\2\2\u00e1\u00e3\7\37\2\2\u00e2\u00de\3\2\2\2\u00e2\u00df\3\2\2\2\u00e2"+
+		"\u00e0\3\2\2\2\u00e2\u00e1\3\2\2\2\u00e3\u00e4\3\2\2\2\u00e4\u00e2\3\2"+
+		"\2\2\u00e4\u00e5\3\2\2\2\u00e5\u00e9\3\2\2\2\u00e6\u00e8\5\6\4\2\u00e7"+
+		"\u00e6\3\2\2\2\u00e8\u00eb\3\2\2\2\u00e9\u00e7\3\2\2\2\u00e9\u00ea\3\2"+
+		"\2\2\u00ea)\3\2\2\2\u00eb\u00e9\3\2\2\2\u00ec\u00ee\7\32\2\2\u00ed\u00ef"+
+		"\5\60\31\2\u00ee\u00ed\3\2\2\2\u00ef\u00f0\3\2\2\2\u00f0\u00ee\3\2\2\2"+
+		"\u00f0\u00f1\3\2\2\2\u00f1\u00f2\3\2\2\2\u00f2\u00f3\7\33\2\2\u00f3\u00f6"+
+		"\3\2\2\2\u00f4\u00f6\5\60\31\2\u00f5\u00ec\3\2\2\2\u00f5\u00f4\3\2\2\2"+
+		"\u00f6+\3\2\2\2\u00f7\u00f8\7\26\2\2\u00f8-\3\2\2\2\u00f9\u00fb\7\4\2"+
+		"\2\u00fa\u00fc\7\22\2\2\u00fb\u00fa\3\2\2\2\u00fb\u00fc\3\2\2\2\u00fc"+
+		"\u00fe\3\2\2\2\u00fd\u00ff\7\23\2\2\u00fe\u00fd\3\2\2\2\u00fe\u00ff\3"+
+		"\2\2\2\u00ff/\3\2\2\2\u0100\u0103\5<\37\2\u0101\u0103\7\5\2\2\u0102\u0100"+
+		"\3\2\2\2\u0102\u0101\3\2\2\2\u0103\u0106\3\2\2\2\u0104\u0107\7\6\2\2\u0105"+
+		"\u0107\5\62\32\2\u0106\u0104\3\2\2\2\u0106\u0105\3\2\2\2\u0106\u0107\3"+
+		"\2\2\2\u0107\61\3\2\2\2\u0108\u010a\7\6\2\2\u0109\u0108\3\2\2\2\u0109"+
+		"\u010a\3\2\2\2\u010a\u010b\3\2\2\2\u010b\u010d\7\t\2\2\u010c\u010e\7\6"+
+		"\2\2\u010d\u010c\3\2\2\2\u010d\u010e\3\2\2\2\u010e\63\3\2\2\2\u010f\u0113"+
+		"\5\66\34\2\u0110\u0113\58\35\2\u0111\u0113\5:\36\2\u0112\u010f\3\2\2\2"+
+		"\u0112\u0110\3\2\2\2\u0112\u0111\3\2\2\2\u0113\65\3\2\2\2\u0114\u0115"+
+		"\7\27\2\2\u0115\u0116\5*\26\2\u0116\u0117\5*\26\2\u0117\67\3\2\2\2\u0118"+
+		"\u0119\7\30\2\2\u0119\u011a\5*\26\2\u011a\u011b\5*\26\2\u011b\u011c\5"+
+		"*\26\2\u011c9\3\2\2\2\u011d\u011e\7\31\2\2\u011e\u011f\5*\26\2\u011f\u0120"+
+		"\5*\26\2\u0120\u0121\5*\26\2\u0121\u0122\5*\26\2\u0122;\3\2\2\2\u0123"+
+		"\u0125\5,\27\2\u0124\u0123\3\2\2\2\u0124\u0125\3\2\2\2\u0125\u0126\3\2"+
+		"\2\2\u0126\u0128\7\4\2\2\u0127\u0129\7\25\2\2\u0128\u0127\3\2\2\2\u0128"+
+		"\u0129\3\2\2\2\u0129=\3\2\2\2)AHRYcks{\u0083\u0089\u008e\u0096\u009e\u00aa"+
+		"\u00ad\u00b3\u00b8\u00bd\u00c0\u00c3\u00c9\u00cf\u00d5\u00d9\u00dc\u00e2"+
+		"\u00e4\u00e9\u00f0\u00f5\u00fb\u00fe\u0102\u0106\u0109\u010d\u0112\u0124"+
+		"\u0128";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {
