@@ -60,8 +60,10 @@ EQUALS                  : '=';
 OVER                    : '/';
 
 // Header tokens
-// Track number is the first Header field
-TRACK_NUMBER_START      : {inHeader = false;} 'X:' {inHeader = true;}; 
+
+// Track number is the first Header field so we can set inHeader to true when we enter
+TRACK_NUMBER_START      : 'X:' {inHeader = true;}; 
+
 TITLE_START             : 'T:';
 COMPOSER_START          : 'C:';
 DEFAULT_LENGTH_START    : 'L:';
