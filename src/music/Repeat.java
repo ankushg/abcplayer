@@ -75,7 +75,8 @@ public class Repeat implements ChordSequence {
     }
 
     /**
-     * Calls getChords() on the contained chord sequence and then returns a list
+     * Calls getChords() on the contained chord sequences and then returns a
+     * list
      * that's common + endings[0] + common + endings[1] + ...
      * 
      * @return the list of Chords contained in the Repeat object, repeated and
