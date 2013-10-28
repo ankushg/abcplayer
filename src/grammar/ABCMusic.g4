@@ -23,9 +23,7 @@ package grammar;
  * lines unless you know what you're doing.
  */
 @members {
-    public boolean inKey = false;
-    public boolean inHeader = true;
-    public boolean inMeter = false; 
+    public boolean inKey, inHeader, inMeter, inLyric;
     // This method makes the lexer or parser stop running if it encounters
     // invalid input and throw a RuntimeException.
     public void reportErrorsAsExceptions() {
@@ -54,7 +52,7 @@ fragment BASENOTE       : ('A'..'G' | 'a'..'g');
 REST                    : 'z';
 fragment DIGIT          : [0-9];
 INTEGER                 : DIGIT+ {inMeter = false;};
-NEWLINE                 : ('\r'|'\n')+;
+NEWLINE                 : ('\r'|'\n')+ {inLyric = false;};
 
 EQUALS                  : '=';
 OVER                    : '/';
@@ -63,7 +61,6 @@ OVER                    : '/';
 
 // Track number is the first Header field so we can set inHeader to true when we enter
 TRACK_NUMBER_START      : 'X:' {inHeader = true;}; 
-
 TITLE_START             : 'T:';
 COMPOSER_START          : 'C:';
 DEFAULT_LENGTH_START    : 'L:';
@@ -85,19 +82,16 @@ NON_FRACTION_METER      : {inMeter}? ('C'
 OCTAVE                  : '\''+
                         | ','+;
 
-ACCIDENTAL_TYPE         : '^'
+ACCIDENTAL_TYPE         : {!inLyric}?
+                        ( '^'
                         | '^^'
                         | '='
                         | '_'
-                        | '__';
+                        | '__');
 
 DUPLET_START            : '(2';
 TRIPLET_START           : '(3';
 QUADRUPLET_START        : '(4';
-
-OPEN_BRACKET            :  '[' ;
-CLOSE_BRACKET           :  ']';
-
 
 BAR_LINE                : '||'
                         | '[|'
@@ -106,18 +100,25 @@ BAR_LINE                : '||'
                         | ':|'
                         | '[1'
                         | '[2';
+                    
+OPEN_BRACKET            :  '[' ;
+CLOSE_BRACKET           :  ']';
+       
                         
-SINGLE_BAR              : '|';
+SINGLE_BAR              : {!inLyric}? '|';
 
 COMMENT_START           : '%';
 
-LYRIC_START             : 'w:';
-LYRIC_MODIFIER          : '_'
+LYRIC_START             : 'w:' {inLyric = true;};
+LYRIC_MODIFIER          : {inLyric}?
+                        ( '_'
                         | '*'
                         | '~'
                         | '\\-'
-                        | '|';
-LYRIC_SEPARATOR         : '-';                      
+                        );
+                        
+LYRIC_SEPARATOR         : {inLyric}? ('-' | '|')+;
+                                          
 NONBASENOTE             : {!inKey}? ('H'..'Z' | 'h'..'y');
 PUNCTUATION             : '.'
                         | '('
@@ -137,19 +138,21 @@ PUNCTUATION             : '.'
 string          : (BASE | REST | PUNCTUATION | NONBASENOTE | INTEGER | WHITESPACE | OCTAVE)+;
 comment         : COMMENT_START string? NEWLINE;
 eol             : comment | NEWLINE;
+
+// Root rule
 abc_tune        : abc_header abc_music EOF;
 
 // Header parser rules
 abc_header              : field_track_number comment* field_title field_optional* field_key;
 
-field_track_number      : TRACK_NUMBER_START WHITESPACE? INTEGER eol*;
-field_title             : TITLE_START WHITESPACE? string eol*;
-field_key               : KEY_START WHITESPACE? key_signature eol*;
-field_composer          : COMPOSER_START WHITESPACE? string eol*;
-field_default_length    : DEFAULT_LENGTH_START WHITESPACE? (fraction EQUALS)? fraction eol*;
-field_meter             : METER_START (NON_FRACTION_METER | fraction) eol*;
-field_tempo             : TEMPO_START tempo eol*;
-field_voice             : VOICE_START string eol+;
+field_track_number      : TRACK_NUMBER_START WHITESPACE? INTEGER WHITESPACE? eol*;
+field_title             : TITLE_START WHITESPACE? string WHITESPACE? eol*;
+field_key               : KEY_START WHITESPACE? key_signature WHITESPACE? eol*;
+field_composer          : COMPOSER_START WHITESPACE? string WHITESPACE? eol*;
+field_default_length    : DEFAULT_LENGTH_START WHITESPACE? (fraction EQUALS)? fraction WHITESPACE? eol*;
+field_meter             : METER_START WHITESPACE? (NON_FRACTION_METER | fraction) WHITESPACE? eol*;
+field_tempo             : TEMPO_START WHITESPACE? tempo WHITESPACE? eol*;
+field_voice             : VOICE_START WHITESPACE? string WHITESPACE? eol+;
 field_optional          : field_composer
                         | field_default_length
                         | field_meter
@@ -161,7 +164,11 @@ tempo                   : (fraction EQUALS)? INTEGER;
 
 
 // Music parser rules
-abc_music       : (field_voice? voice eol*)+;
+abc_music       : (field_voice? voice)+ eol*;
+
+voice           : (tune (eol lyric)?)+
+                | comment;
+// Lyrics
 syllable        : ( LYRIC_MODIFIER
                     | BASE
                     | NONBASENOTE
@@ -170,12 +177,12 @@ syllable        : ( LYRIC_MODIFIER
                     | ACCIDENTAL_TYPE
                     | EQUALS
                     | OCTAVE
-                  )+ LYRIC_SEPARATOR? WHITESPACE? bar_line? WHITESPACE?;
-lyric           : LYRIC_START WHITESPACE? syllable* eol+;
-voice           : (tune (eol lyric)?)+
-                | comment;
+                  )+ (LYRIC_SEPARATOR|WHITESPACE)*;
+lyric           : LYRIC_START WHITESPACE? syllable* eol*;
+
+// Music
 tune            : (chord | tuplet | bar_line | WHITESPACE)+ eol*;
-chord           : OPEN_BRACKET note+ CLOSE_BRACKET
+chord           : OPEN_BRACKET note (WHITESPACE | note)* CLOSE_BRACKET
                 | note;
 accidental      : ACCIDENTAL_TYPE | EQUALS;
 key_signature   : KEY_TOKEN ;
