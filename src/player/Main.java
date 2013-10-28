@@ -90,6 +90,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // Replace the filepath with an actual .abc file.
-        play("sample_abc/piece3.abc");
+        play("sample_abc/paddy.abc");
     }
 }
