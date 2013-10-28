@@ -24,6 +24,9 @@ public interface ABCMusicListener extends ParseTreeListener {
 	void enterTempo(ABCMusicParser.TempoContext ctx);
 	void exitTempo(ABCMusicParser.TempoContext ctx);
 
+	void enterBar_line(ABCMusicParser.Bar_lineContext ctx);
+	void exitBar_line(ABCMusicParser.Bar_lineContext ctx);
+
 	void enterField_optional(ABCMusicParser.Field_optionalContext ctx);
 	void exitField_optional(ABCMusicParser.Field_optionalContext ctx);
 

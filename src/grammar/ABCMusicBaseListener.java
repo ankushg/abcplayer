@@ -27,6 +27,9 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterTempo(ABCMusicParser.TempoContext ctx) { }
 	@Override public void exitTempo(ABCMusicParser.TempoContext ctx) { }
 
+	@Override public void enterBar_line(ABCMusicParser.Bar_lineContext ctx) { }
+	@Override public void exitBar_line(ABCMusicParser.Bar_lineContext ctx) { }
+
 	@Override public void enterField_optional(ABCMusicParser.Field_optionalContext ctx) { }
 	@Override public void exitField_optional(ABCMusicParser.Field_optionalContext ctx) { }
 

@@ -60,15 +60,19 @@ EQUALS                  : '=';
 OVER                    : '/';
 
 // Header tokens
-TRACK_NUMBER_START      : {inHeader = false;} 'X:' {inHeader = true;} ; // Track number is the first Header field
-TITLE_START             : {inHeader = false;} 'T:';
-COMPOSER_START          : {inHeader = false;} 'C:';
-DEFAULT_LENGTH_START    : {inHeader = false;} 'L:';
+// Track number is the first Header field
+TRACK_NUMBER_START      : {inHeader = false;} 'X:' {inHeader = true;}; 
+TITLE_START             : 'T:';
+COMPOSER_START          : 'C:';
+DEFAULT_LENGTH_START    : 'L:';
 METER_START             : 'M:' {inMeter = true;};
-TEMPO_START             : {inHeader = false;} 'Q:';
-VOICE_START             : {inHeader = false;} 'V:';
-KEY_START               : {inHeader = false;} 'K:' {inHeader = false; inKey = true;}; // Key is the last header field
-KEY_TOKEN               : {inKey}? BASENOTE KEY_ACCIDENTAL? MINOR_MOD? {inKey = false; inHeader = false;};
+TEMPO_START             : 'Q:';
+VOICE_START             : 'V:';
+KEY_START               : 'K:' {inKey = true;}; 
+
+// Key is the last header field so once it's done, we're not in the header anymore.
+KEY_TOKEN               : {inKey}? BASENOTE KEY_ACCIDENTAL? MINOR_MOD? {inKey = false; inHeader = false;}; 
+
 fragment MINOR_MOD      : 'm';
 fragment KEY_ACCIDENTAL : ('#' | 'b');
 
@@ -93,15 +97,15 @@ OPEN_BRACKET            :  '[' ;
 CLOSE_BRACKET           :  ']';
 
 
-BAR_LINE                : '|'
-                        | '||'
+BAR_LINE                : '||'
                         | '[|'
                         | '|]'
-                        |  '|:'
-                        |  ':|'
-                        |  '[1'
-                        |  '[2';
+                        | '|:'
+                        | ':|'
+                        | '[1'
+                        | '[2';
                         
+SINGLE_BAR              : '|';
 
 COMMENT_START           : '%';
 
@@ -164,11 +168,11 @@ syllable        : ( LYRIC_MODIFIER
                     | ACCIDENTAL_TYPE
                     | EQUALS
                     | OCTAVE
-                  )+ LYRIC_SEPARATOR? WHITESPACE? BAR_LINE? WHITESPACE?;
+                  )+ LYRIC_SEPARATOR? WHITESPACE? bar_line? WHITESPACE?;
 lyric           : LYRIC_START WHITESPACE? syllable* eol+;
 voice           : (tune (eol lyric)?)+
                 | comment;
-tune            : (chord | tuplet | BAR_LINE | WHITESPACE)+ eol*;
+tune            : (chord | tuplet | bar_line | WHITESPACE)+ eol*;
 chord           : OPEN_BRACKET note+ CLOSE_BRACKET
                 | note;
 accidental      : ACCIDENTAL_TYPE | EQUALS;
@@ -180,8 +184,11 @@ duplet          : DUPLET_START chord chord;
 triplet         : TRIPLET_START chord chord chord;
 quadruplet      : QUADRUPLET_START chord chord chord chord;
 pitch           : accidental? BASE OCTAVE?;
-bar_line        : BAR_LINE
-                | OPEN_BRACKET + |
+bar_line        : SINGLE_BAR
+                | BAR_LINE
+                | OPEN_BRACKET SINGLE_BAR
+                | OPEN_BRACKET INTEGER
+                | SINGLE_BAR CLOSE_BRACKET;
 
 // Old parser rules (not used in current parsetree, but kept in case we need to refer to them)
 // measure         : (chord | tuplet)+ BAR_LINE;
