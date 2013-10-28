@@ -5,48 +5,52 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Utilities.
  */
 public class Utilities {
 
     /**
-     * Copy list.
+     * Returns an immutable copy of a given list (that is no longer tied to the
+     * original list).
      * 
      * @param <T>
      *            the generic type
      * @param list
      *            the list
-     * @return the list
+     * @return an immutable copy of the list
      */
     public static <T> List<T> copyList(List<T> list) {
         return Collections.unmodifiableList(new ArrayList<>(list));
     }
 
     /**
-     * Array to list.
+     * Returns an immutable list copy of a given array (that is no longer tied
+     * to the array).
      * 
      * @param <T>
      *            the generic type
      * @param array
      *            the array
-     * @return the list
+     * @return an immutable copy of the array, in list form
      */
     public static <T> List<T> arrayToList(T[] array) {
         return copyList(Arrays.asList(array));
     }
 
     /**
-     * Gcd.
+     * Returns the greatest common denominator of two integers, which cannot
+     * both be zero (since gcd(0, 0) is undefined).
      * 
      * @param a
-     *            the a
+     *            first integer
      * @param b
-     *            the b
-     * @return the int
+     *            second integer
+     * @return gcd(a, b)
      */
     public static int gcd(int a, int b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
         if (a < b) {
             int c = a;
             a = b;
@@ -59,24 +63,29 @@ public class Utilities {
     }
 
     /**
-     * Lcm.
+     * Returns the (positive) least common multiple of two integers, neither of
+     * which can
+     * be zero.
      * 
      * @param a
-     *            the a
+     *            first integer
      * @param b
-     *            the b
-     * @return the int
+     *            second integer
+     * @return lcm(a, b)
      */
     public static int lcm(int a, int b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
         return (a * b) / gcd(a, b);
     }
 
     /**
-     * Flatten.
+     * Flattens a list of ChordSequences into a list of Chords
      * 
      * @param chordSequences
-     *            the chord sequences
-     * @return the list
+     *            the list of chord sequences (so, effectively, a list of lists
+     *            of chords)
+     * @return the flattened list of chords
      */
     public static List<Chord> flatten(List<? extends ChordSequence> chordSequences) {
         List<Chord> chords = new ArrayList<>();
@@ -87,11 +96,13 @@ public class Utilities {
     }
 
     /**
-     * Compute ticks per beat.
+     * Computes a value of ticksPerBeat that allows us to represent all the
+     * given chords.
      * 
      * @param chords
-     *            the chords
-     * @return the int
+     *            the list of chords that will be played
+     * @return a valid value of ticksPerBeat (every duration of every chord/note
+     *         in the input must be representable as an integer number of ticks)
      */
     public static int computeTicksPerBeat(List<Chord> chords) {
         int lcm = 1;
@@ -105,11 +116,12 @@ public class Utilities {
     }
 
     /**
-     * Gets the ready to add items.
+     * Computes a list of ReadyToAddItems (notes and lyrics), given a list of
+     * Chords.
      * 
      * @param chords
      *            the chords
-     * @return the ready to add items
+     * @return the notes/lyrics
      */
     public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords) {
         int ticksPerBeat = computeTicksPerBeat(chords);
