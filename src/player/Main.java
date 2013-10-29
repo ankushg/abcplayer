@@ -1,17 +1,15 @@
 package player;
 
-import grammar.ABCMusicBaseListener;
 import grammar.ABCMusicLexer;
 import grammar.ABCMusicParser;
+import grammar.Listener;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -46,12 +44,12 @@ public class Main {
 
         // Feed the tokens into the parser.
         ABCMusicLexer lexer = new ABCMusicLexer(stream);
-        // lexer.reportErrorsAsExceptions();
-        List<? extends Token> allTokens = lexer.getAllTokens();
-        for (Token t : allTokens) {
-            System.out.format("<<<%s===%s>>>%n", t.getText(), ABCMusicLexer.tokenNames[t.getType()]);
-        }
-        lexer.reset();
+        lexer.reportErrorsAsExceptions();
+        // List<? extends Token> allTokens = lexer.getAllTokens();
+//        for (Token t : allTokens) {
+//            System.out.format("<<<%s===%s>>>%n", t.getText(), ABCMusicLexer.tokenNames[t.getType()]);
+//        }
+        // lexer.reset();
         TokenStream tokens = new CommonTokenStream(lexer);
 
         // Feed the tokens into the parser.
@@ -71,7 +69,7 @@ public class Main {
 
         // Walk the tree with a listener.
         // TODO: create a Song class and getSong() in the listener
-        ParseTreeListener listener = new ABCMusicBaseListener();
+        ParseTreeListener listener = new Listener();
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, tree);
 
@@ -88,6 +86,6 @@ public class Main {
      */
     public static void main(String[] args) {
         // Replace the filepath with an actual .abc file.
-        play("sample_abc/tests/greensleeves.abc");
+        play("sample_abc/piece1.abc");
     }
 }
