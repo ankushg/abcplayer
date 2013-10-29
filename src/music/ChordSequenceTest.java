@@ -1,5 +1,6 @@
 package music;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -15,47 +16,33 @@ import sound.Pitch;
 import sound.SequencePlayer;
 
 public class ChordSequenceTest {
-
     @Test
     public void testTuplet() {
-        SequencePlayer player;
-        try {
-            LyricListener listener = new LyricListener() {
-                public void processLyricEvent(String text) {
-                    // do nothing
-                }
-            };
+        List<Chord> chords = new ArrayList<>();
 
-            List<Chord> chords = new ArrayList<>();
+        chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
 
-            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
-            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
-            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        Tuplet t = new Tuplet(3, chords);
 
-            Tuplet t = new Tuplet(3, chords);
-            List<ChordSequence> cs = new ArrayList<>();
-            cs.add(t);
-            cs.add(new Chord(new Fraction(1, 1), new Note(new Pitch('C'), new Fraction(1, 1))));
+        List<ChordSequence> cs = new ArrayList<>();
+        cs.add(t);
+        cs.add(new Chord(new Fraction(1, 1), new Note(new Pitch('C'), new Fraction(1, 1))));
 
-            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
-            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
-            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+        cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
 
-            List<Chord> finalChords = new Measure(cs).getChords();
-            int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
-            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
-
-            player = new SequencePlayer(100, ticksPerBeat, listener);
-            for (ReadyToAddItem item : items) {
-                item.addTo(player);
-            }
-            player.play();
-            System.out.println(player);
-        } catch (MidiUnavailableException e) {
-            e.printStackTrace();
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
+        List<Chord> finalChords = new ChordSequenceList(cs).getChords();
+        List<Fraction> durations = new ArrayList<>();
+        for (Chord c : finalChords) {
+            durations.add(c.duration);
         }
+        Fraction[] actualDurations = durations.toArray(new Fraction[0]);
+        Fraction[] expectedDurations = { new Fraction(1, 3), new Fraction(1, 3), new Fraction(1, 3),
+                new Fraction(1, 1), new Fraction(1, 2), new Fraction(1, 2), new Fraction(1, 2) };
+        assertArrayEquals(expectedDurations, actualDurations);
     }
 
     @Test

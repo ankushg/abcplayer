@@ -8,7 +8,6 @@ package music;
  * Fraction objects are immutable.
  */
 public class Fraction {
-
     public final int numerator;
     public final int denominator;
 
@@ -39,5 +38,27 @@ public class Fraction {
      */
     public Fraction multiply(int numerator, int denominator) {
         return new Fraction(this.numerator * numerator, this.denominator * denominator);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + denominator;
+        result = prime * result + numerator;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (getClass() != obj.getClass())
+            return false;
+        Fraction other = (Fraction) obj;
+        return numerator * other.denominator == other.numerator * denominator;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d/%d", numerator, denominator);
     }
 }

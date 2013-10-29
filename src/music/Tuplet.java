@@ -87,10 +87,10 @@ public class Tuplet implements ChordSequence {
          * @param length
          *            the length
          */
-        private TupletType(int numerator, int denominator, int length) {
+        private TupletType(int length, int numerator, int denominator) {
+            this.length = length;
             this.numerator = numerator;
             this.denominator = denominator;
-            this.length = length;
         }
 
         /**
