@@ -81,6 +81,7 @@ public class Listener extends ABCMusicBaseListener {
     // TODO: handle repeats and alternate endings
     public void exitVoice(ABCMusicParser.VoiceContext ctx) {
         List<ChordSequence> chords = new ArrayList<ChordSequence>();
+        List<ChordSequence> repeatMeasures = new ArrayList<ChordSequence>();
         for (Object x : chordsAndBars) {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
@@ -89,10 +90,13 @@ public class Listener extends ABCMusicBaseListener {
                 chords.add((Tuplet) x);
             } else {
                 if (x instanceof String) {
-                    System.out.println("found bar");
-                    Measure m = new Measure(chords);
-                    measures.add(m);
-                    chords.clear();
+                    if (x.equals("|")) {
+                        Measure m = new Measure(chords);
+                        measures.add(m);
+                        chords.clear();
+                    } else if (x.equals("|:")) {
+
+                    }
                 }
             }
         }
@@ -209,16 +213,16 @@ public class Listener extends ABCMusicBaseListener {
         Pitch p;
         Fraction duration;
         if (ctx.fraction() != null) {
-            String frac = ctx.fraction().getText();
+
             int numerator;
             int denom;
-            if (frac.length() == 2) {
-                numerator = 1;
-                denom = Character.getNumericValue(frac.charAt(1));
+            if (ctx.fraction().children.size() == 3) {
+                numerator = Integer.parseInt(ctx.fraction().getChild(0).getText());
+                denom = Integer.parseInt(ctx.fraction().getChild(2).getText());
                 duration = new Fraction(numerator, denom);
-            } else if (frac.length() == 3) {
-                numerator = Character.getNumericValue(frac.charAt(0));
-                denom = Character.getNumericValue(frac.charAt(2));
+            } else if (ctx.fraction().children.size() == 2) {
+                numerator = 1;
+                denom = Integer.parseInt(ctx.fraction().getChild(1).getText());
                 duration = new Fraction(numerator, denom);
             } else {
                 duration = null;
@@ -238,6 +242,20 @@ public class Listener extends ABCMusicBaseListener {
             } else {
                 p = new Pitch(note.charAt(0));
             }
+            // Add in octaves.
+
+            if (ctx.pitch().OCTAVE() != null) {
+                String octave = ctx.pitch().OCTAVE().getText();
+                int length = octave.length();
+                if (octave.charAt(0) == '\'') {
+                    p = p.octaveTranspose(length);
+                }
+                if (octave.charAt(0) == ',') {
+                    p = p.octaveTranspose(-length);
+                }
+            }
+
+            // Add in accidental.
             Accidental a = new Accidental(AccidentalType.NONE, 0);
             if (ctx.pitch().accidental() != null) {
                 if (ctx.pitch().accidental().getText().equals("^")) {
