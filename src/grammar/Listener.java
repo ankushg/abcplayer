@@ -12,6 +12,7 @@ import music.Fraction;
 import music.Measure;
 import music.Note;
 import music.ReadyToAddItem;
+import music.Tuplet;
 import music.Utilities;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -30,11 +31,13 @@ public class Listener extends ABCMusicBaseListener {
     Fraction defaultLength;
     String tempo;
     String keySignature;
+    boolean inTuplet;
 
     List<Note> notes = new ArrayList<Note>();
     List<Chord> chords = new ArrayList<Chord>();
     List<Object> chordsAndBars = new ArrayList<Object>();
     List<ChordSequence> measures = new ArrayList<ChordSequence>();
+    List<Chord> tupletList = new ArrayList<Chord>();
 
     @Override
     public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) {
@@ -82,6 +85,8 @@ public class Listener extends ABCMusicBaseListener {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
                 System.out.println(chords.size());
+            } else if (x instanceof Tuplet) {
+                chords.add((Tuplet) x);
             } else {
                 if (x instanceof String) {
                     System.out.println("found bar");
@@ -160,7 +165,11 @@ public class Listener extends ABCMusicBaseListener {
     public void exitChord(ABCMusicParser.ChordContext ctx) {
         Fraction duration = notes.get(0).duration;
         Chord chord = new Chord(duration, notes);
-        chordsAndBars.add(chord);
+        if (inTuplet) {
+            tupletList.add(chord);
+        } else {
+            chordsAndBars.add(chord);
+        }
         notes.clear();
     }
 
@@ -221,7 +230,14 @@ public class Listener extends ABCMusicBaseListener {
         }
         if (ctx.pitch() != null) {
             note = ctx.pitch().BASE().getText();
-            p = new Pitch(note.charAt(0));
+            System.out.println(note);
+            if (Character.isLowerCase(note.charAt(0))) {
+                p = new Pitch(Character.toUpperCase(note.charAt(0)));
+                p = p.octaveTranspose(1);
+
+            } else {
+                p = new Pitch(note.charAt(0));
+            }
             Accidental a = new Accidental(AccidentalType.NONE, 0);
             if (ctx.pitch().accidental() != null) {
                 if (ctx.pitch().accidental().getText().equals("^")) {
@@ -360,14 +376,19 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitTriplet(ABCMusicParser.TripletContext ctx) {
+        Tuplet tuplet = new Tuplet(3, tupletList);
+        chordsAndBars.add(tuplet);
+        tupletList.clear();
     }
 
     @Override
     public void enterTuplet(ABCMusicParser.TupletContext ctx) {
+        inTuplet = true;
     }
 
     @Override
     public void exitTuplet(ABCMusicParser.TupletContext ctx) {
+        inTuplet = false;
     }
 
     @Override

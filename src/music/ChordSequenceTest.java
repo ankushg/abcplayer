@@ -15,6 +15,49 @@ import sound.Pitch;
 import sound.SequencePlayer;
 
 public class ChordSequenceTest {
+
+    @Test
+    public void testTuplet() {
+        SequencePlayer player;
+        try {
+            LyricListener listener = new LyricListener() {
+                public void processLyricEvent(String text) {
+                    // do nothing
+                }
+            };
+
+            List<Chord> chords = new ArrayList<>();
+
+            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+            chords.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+
+            Tuplet t = new Tuplet(3, chords);
+            List<ChordSequence> cs = new ArrayList<>();
+            cs.add(t);
+            cs.add(new Chord(new Fraction(1, 1), new Note(new Pitch('C'), new Fraction(1, 1))));
+
+            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+            cs.add(new Chord(new Fraction(1, 2), new Note(new Pitch('C'), new Fraction(1, 2))));
+
+            List<Chord> finalChords = new Measure(cs).getChords();
+            int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
+            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
+
+            player = new SequencePlayer(100, ticksPerBeat, listener);
+            for (ReadyToAddItem item : items) {
+                item.addTo(player);
+            }
+            player.play();
+            System.out.println(player);
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testDatatype() {
         SequencePlayer player;
