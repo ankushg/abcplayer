@@ -45,10 +45,12 @@ public class Listener extends ABCMusicBaseListener {
         System.out.println("now playing...1");
 
         ChordSequenceList csl = new ChordSequenceList(measures);
+        System.out.println(measures);
         List<Chord> finalChords = csl.getChords();
         int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
         List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
 
+        System.out.println(items.toString());
         LyricListener listener = new LyricListener() {
             public void processLyricEvent(String text) {
                 System.out.print(text);
@@ -79,8 +81,10 @@ public class Listener extends ABCMusicBaseListener {
         for (Object x : chordsAndBars) {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
+                System.out.println(chords.size());
             } else {
                 if (x instanceof String) {
+                    System.out.println("found bar");
                     Measure m = new Measure(chords);
                     measures.add(m);
                     chords.clear();
@@ -129,6 +133,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitBar_line(ABCMusicParser.Bar_lineContext ctx) {
+        chordsAndBars.add(ctx.getText());
     }
 
     @Override
@@ -155,6 +160,8 @@ public class Listener extends ABCMusicBaseListener {
     public void exitChord(ABCMusicParser.ChordContext ctx) {
         Fraction duration = notes.get(0).duration;
         Chord chord = new Chord(duration, notes);
+        chordsAndBars.add(chord);
+        notes.clear();
     }
 
     @Override
@@ -189,29 +196,34 @@ public class Listener extends ABCMusicBaseListener {
     public void exitNote(ABCMusicParser.NoteContext ctx) {
         // TODO: Add support for octaves
         Note n;
-        String frac = ctx.fraction().getText();
-        int numerator;
-        int denom;
-        Fraction duration;
-        if (frac.length() == 2) {
-            numerator = 1;
-            denom = Character.getNumericValue(frac.charAt(2));
-            duration = new Fraction(numerator, denom);
-        } else if (frac.length() == 3) {
-            numerator = Character.getNumericValue(frac.charAt(0));
-            denom = Character.getNumericValue(frac.charAt(2));
-            duration = new Fraction(numerator, denom);
-        } else {
-            duration = null;
-        }
-
         String note;
         Pitch p;
+        Fraction duration;
+        if (ctx.fraction() != null) {
+            String frac = ctx.fraction().getText();
+            int numerator;
+            int denom;
+            if (frac.length() == 2) {
+                numerator = 1;
+                denom = Character.getNumericValue(frac.charAt(1));
+                duration = new Fraction(numerator, denom);
+            } else if (frac.length() == 3) {
+                numerator = Character.getNumericValue(frac.charAt(0));
+                denom = Character.getNumericValue(frac.charAt(2));
+                duration = new Fraction(numerator, denom);
+            } else {
+                duration = null;
+            }
+        }
+
+        else {
+            duration = new Fraction(1, 1);
+        }
         if (ctx.pitch() != null) {
             note = ctx.pitch().BASE().getText();
             p = new Pitch(note.charAt(0));
+            Accidental a = new Accidental(AccidentalType.NONE, 0);
             if (ctx.pitch().accidental() != null) {
-                Accidental a;
                 if (ctx.pitch().accidental().getText().equals("^")) {
                     a = new Accidental(AccidentalType.SHARP, 1);
                 } else if (ctx.pitch().accidental().getText().equals("^^")) {
@@ -225,15 +237,16 @@ public class Listener extends ABCMusicBaseListener {
                 else if (ctx.pitch().accidental().getText().equals("=")) {
                     a = new Accidental(AccidentalType.NONE, 0);
                 } else {
-                    a = null;
+                    a = new Accidental(AccidentalType.NONE, 0);
                 }
-                n = new Note(p, duration, a);
-                notes.add(n);
             }
+            n = new Note(p, duration, a);
+            notes.add(n);
 
         } else {
             note = ctx.REST().getText();
         }
+
     }
 
     @Override

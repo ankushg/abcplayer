@@ -23,10 +23,10 @@ public class Main {
     /**
      * Plays the input file using Java MIDI API and displays header information
      * to the standard output stream.
-     *
+     * 
      * (Your code should not exit the application abnormally using
      * System.exit().)
-     *
+     * 
      * @param file
      *            the name of input abc file
      */
@@ -46,9 +46,10 @@ public class Main {
         ABCMusicLexer lexer = new ABCMusicLexer(stream);
         lexer.reportErrorsAsExceptions();
         // List<? extends Token> allTokens = lexer.getAllTokens();
-//        for (Token t : allTokens) {
-//            System.out.format("<<<%s===%s>>>%n", t.getText(), ABCMusicLexer.tokenNames[t.getType()]);
-//        }
+        // for (Token t : allTokens) {
+        // System.out.format("<<<%s===%s>>>%n", t.getText(),
+        // ABCMusicLexer.tokenNames[t.getType()]);
+        // }
         // lexer.reset();
         TokenStream tokens = new CommonTokenStream(lexer);
 
@@ -79,13 +80,13 @@ public class Main {
 
     /**
      * Plays the file specified by the first argument.
-     *
+     * 
      * @param args
      *            the command line arguments. Only the first is looked at, and
      *            it must be the path to a valid abc file
      */
     public static void main(String[] args) {
         // Replace the filepath with an actual .abc file.
-        play("sample_abc/piece1.abc");
+        play("sample_abc/testPiece.abc");
     }
 }
