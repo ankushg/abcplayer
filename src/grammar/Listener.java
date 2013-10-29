@@ -12,6 +12,7 @@ import music.Fraction;
 import music.Measure;
 import music.Note;
 import music.ReadyToAddItem;
+import music.Repeat;
 import music.Tuplet;
 import music.Utilities;
 
@@ -36,7 +37,7 @@ public class Listener extends ABCMusicBaseListener {
     List<Note> notes = new ArrayList<Note>();
     List<Chord> chords = new ArrayList<Chord>();
     List<Object> chordsAndBars = new ArrayList<Object>();
-    List<ChordSequence> measures = new ArrayList<ChordSequence>();
+    List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
     List<Chord> tupletList = new ArrayList<Chord>();
 
     @Override
@@ -47,8 +48,8 @@ public class Listener extends ABCMusicBaseListener {
     public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) {
         System.out.println("now playing...1");
 
-        ChordSequenceList csl = new ChordSequenceList(measures);
-        System.out.println(measures);
+        ChordSequenceList csl = new ChordSequenceList(chordSequences);
+        System.out.println(chordSequences);
         List<Chord> finalChords = csl.getChords();
         int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
         List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
@@ -78,10 +79,18 @@ public class Listener extends ABCMusicBaseListener {
     }
 
     @Override
-    // TODO: handle repeats and alternate endings
+    // TODO: handle repeats and alternate endings. Handle repeats when there's
+    // no |:
     public void exitVoice(ABCMusicParser.VoiceContext ctx) {
         List<ChordSequence> chords = new ArrayList<ChordSequence>();
-        List<ChordSequence> repeatMeasures = new ArrayList<ChordSequence>();
+        List<ArrayList<ChordSequence>> repeatMeasures = new ArrayList<ArrayList<ChordSequence>>();
+        List<ChordSequence> noEnding = new ArrayList<ChordSequence>();
+        List<ChordSequence> firstEnding = new ArrayList<ChordSequence>();
+        List<ChordSequence> secondEnding = new ArrayList<ChordSequence>();
+        boolean inRepeat = false;
+        boolean inRepeatNotInEnding = false;
+        boolean inFirstEnding = false;
+        boolean inSecondEnding = false;
         for (Object x : chordsAndBars) {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
@@ -92,15 +101,47 @@ public class Listener extends ABCMusicBaseListener {
                 if (x instanceof String) {
                     if (x.equals("|")) {
                         Measure m = new Measure(chords);
-                        measures.add(m);
+                        if (inFirstEnding) {
+                            firstEnding.add(m);
+                        } else if (inRepeat && !inFirstEnding) {
+                            noEnding.add(m);
+                        } else {
+                            chordSequences.add(m);
+                        }
                         chords.clear();
                     } else if (x.equals("|:")) {
-
+                        inRepeat = true;
+                        inRepeatNotInEnding = true;
+                    } else if (x.equals(":|")) {
+                        inRepeat = false;
+                        inFirstEnding = false;
+                        Measure m = new Measure(chords);
+                        firstEnding.add(m);
+                        ChordSequence repeat = new Repeat(new ChordSequenceList(noEnding), new ChordSequenceList(
+                                firstEnding));
+                        chordSequences.add(repeat);
+                        /*
+                         * chordSequences.addAll(noEnding);
+                         * chordSequences.addAll(firstEnding);
+                         * chordSequences.addAll(noEnding);
+                         */
+                        chords.clear();
+                    } else if (x.equals("[1")) {
+                        inFirstEnding = true;
+                        inRepeatNotInEnding = false;
+                    } else if (x.equals("[2")) {
+                        inSecondEnding = true;
+                        inRepeatNotInEnding = false;
+                    } else {
+                        Measure m = new Measure(chords);
+                        chordSequences.add(m);
+                        chords.clear();
                     }
                 }
             }
         }
 
+        // TODO move this to the right place
     }
 
     @Override

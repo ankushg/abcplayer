@@ -112,7 +112,7 @@ public class Chord implements ChordSequence {
      *            the denominator of the fraction with which to multiply the
      *            duration of this note
      * @return a new chord representing this chord scaled by the fraction given
-     *         as paremters.
+     *         as parameters.
      */
     public Chord multiply(int numerator, int denominator) {
         List<Note> notes = new ArrayList<Note>();

@@ -25,7 +25,7 @@ public class Repeat implements ChordSequence {
      */
     public Repeat(ChordSequence common) {
         this.common = common;
-        endings = getListOfEmptyChordSequences(2);
+        endings = getListOfEmptyChordSequences(1);
     }
 
     /**
@@ -76,8 +76,7 @@ public class Repeat implements ChordSequence {
 
     /**
      * Calls getChords() on the contained chord sequences and then returns a
-     * list
-     * that's common + endings[0] + common + endings[1] + ...
+     * list that's common + endings[0] + common + endings[1] + ... + common
      * 
      * @return the list of Chords contained in the Repeat object, repeated and
      *         with the proper endings attached as necessary
@@ -91,6 +90,7 @@ public class Repeat implements ChordSequence {
             chords.addAll(commonChords);
             chords.addAll(ending.getChords());
         }
+        chords.addAll(commonChords);
         return chords;
     }
 }
