@@ -23,13 +23,13 @@ public class ABCMusicParser extends Parser {
 		NON_FRACTION_METER=17, OCTAVE=18, ACCIDENTAL_TYPE=19, DUPLET_START=20, 
 		TRIPLET_START=21, QUADRUPLET_START=22, BAR_LINE=23, OPEN_BRACKET=24, CLOSE_BRACKET=25, 
 		SINGLE_BAR=26, COMMENT_START=27, LYRIC_START=28, LYRIC_MODIFIER=29, LYRIC_SEPARATOR=30, 
-		NONBASENOTE=31, PUNCTUATION=32;
+		NONBASENOTE=31, PUNCTUATION=32, OTHER_CHAR=33;
 	public static final String[] tokenNames = {
 		"<INVALID>", "WHITESPACE", "BASE", "'z'", "INTEGER", "NEWLINE", "'='", 
 		"'/'", "'X:'", "'T:'", "'C:'", "'L:'", "'M:'", "'Q:'", "'V:'", "'K:'", 
 		"KEY_TOKEN", "NON_FRACTION_METER", "OCTAVE", "ACCIDENTAL_TYPE", "'(2'", 
 		"'(3'", "'(4'", "BAR_LINE", "'['", "']'", "SINGLE_BAR", "'%'", "'w:'", 
-		"LYRIC_MODIFIER", "LYRIC_SEPARATOR", "NONBASENOTE", "PUNCTUATION"
+		"LYRIC_MODIFIER", "LYRIC_SEPARATOR", "NONBASENOTE", "PUNCTUATION", "OTHER_CHAR"
 	};
 	public static final int
 		RULE_string = 0, RULE_comment = 1, RULE_eol = 2, RULE_abc_tune = 3, RULE_abc_header = 4, 
@@ -63,7 +63,7 @@ public class ABCMusicParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	    public boolean inKey, inHeader, inMeter, inLyric;
+	    public boolean inKey, inHeader, inMeter, inLyric, inVoice;
 	    // This method makes the lexer or parser stop running if it encounters
 	    // invalid input and throw a RuntimeException.
 	    public void reportErrorsAsExceptions() {
@@ -87,12 +87,16 @@ public class ABCMusicParser extends Parser {
 	public static class StringContext extends ParserRuleContext {
 		public List<TerminalNode> PUNCTUATION() { return getTokens(ABCMusicParser.PUNCTUATION); }
 		public List<TerminalNode> INTEGER() { return getTokens(ABCMusicParser.INTEGER); }
+		public List<TerminalNode> OTHER_CHAR() { return getTokens(ABCMusicParser.OTHER_CHAR); }
 		public TerminalNode PUNCTUATION(int i) {
 			return getToken(ABCMusicParser.PUNCTUATION, i);
 		}
 		public List<TerminalNode> REST() { return getTokens(ABCMusicParser.REST); }
 		public TerminalNode WHITESPACE(int i) {
 			return getToken(ABCMusicParser.WHITESPACE, i);
+		}
+		public TerminalNode OTHER_CHAR(int i) {
+			return getToken(ABCMusicParser.OTHER_CHAR, i);
 		}
 		public TerminalNode BASE(int i) {
 			return getToken(ABCMusicParser.BASE, i);
@@ -145,7 +149,7 @@ public class ABCMusicParser extends Parser {
 					{
 					setState(62);
 					_la = _input.LA(1);
-					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASE) | (1L << REST) | (1L << INTEGER) | (1L << OCTAVE) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) ) {
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASE) | (1L << REST) | (1L << INTEGER) | (1L << OCTAVE) | (1L << NONBASENOTE) | (1L << PUNCTUATION) | (1L << OTHER_CHAR))) != 0)) ) {
 					_errHandler.recoverInline(this);
 					}
 					consume();
@@ -202,7 +206,7 @@ public class ABCMusicParser extends Parser {
 			setState(67); match(COMMENT_START);
 			setState(69);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASE) | (1L << REST) | (1L << INTEGER) | (1L << OCTAVE) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << WHITESPACE) | (1L << BASE) | (1L << REST) | (1L << INTEGER) | (1L << OCTAVE) | (1L << NONBASENOTE) | (1L << PUNCTUATION) | (1L << OTHER_CHAR))) != 0)) {
 				{
 				setState(68); string();
 				}
@@ -1441,6 +1445,7 @@ public class ABCMusicParser extends Parser {
 	public static class SyllableContext extends ParserRuleContext {
 		public List<TerminalNode> PUNCTUATION() { return getTokens(ABCMusicParser.PUNCTUATION); }
 		public List<TerminalNode> LYRIC_SEPARATOR() { return getTokens(ABCMusicParser.LYRIC_SEPARATOR); }
+		public List<TerminalNode> OTHER_CHAR() { return getTokens(ABCMusicParser.OTHER_CHAR); }
 		public TerminalNode LYRIC_MODIFIER(int i) {
 			return getToken(ABCMusicParser.LYRIC_MODIFIER, i);
 		}
@@ -1454,6 +1459,9 @@ public class ABCMusicParser extends Parser {
 		public List<TerminalNode> REST() { return getTokens(ABCMusicParser.REST); }
 		public TerminalNode WHITESPACE(int i) {
 			return getToken(ABCMusicParser.WHITESPACE, i);
+		}
+		public TerminalNode OTHER_CHAR(int i) {
+			return getToken(ABCMusicParser.OTHER_CHAR, i);
 		}
 		public TerminalNode BASE(int i) {
 			return getToken(ABCMusicParser.BASE, i);
@@ -1511,7 +1519,7 @@ public class ABCMusicParser extends Parser {
 					{
 					setState(258);
 					_la = _input.LA(1);
-					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASE) | (1L << REST) | (1L << EQUALS) | (1L << OCTAVE) | (1L << ACCIDENTAL_TYPE) | (1L << LYRIC_MODIFIER) | (1L << NONBASENOTE) | (1L << PUNCTUATION))) != 0)) ) {
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << BASE) | (1L << REST) | (1L << EQUALS) | (1L << OCTAVE) | (1L << ACCIDENTAL_TYPE) | (1L << LYRIC_MODIFIER) | (1L << NONBASENOTE) | (1L << PUNCTUATION) | (1L << OTHER_CHAR))) != 0)) ) {
 					_errHandler.recoverInline(this);
 					}
 					consume();
@@ -2401,7 +2409,7 @@ public class ABCMusicParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3\"\u0174\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
+		"\2\3#\u0174\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
 		"\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20"+
 		"\4\21\t\21\4\22\t\22\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27"+
 		"\4\30\t\30\4\31\t\31\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36"+
@@ -2432,7 +2440,7 @@ public class ABCMusicParser extends Parser {
 		"\3\34\3\34\3\35\3\35\3\35\3\35\3\35\3\36\3\36\3\36\3\36\3\36\3\36\3\37"+
 		"\5\37\u0164\n\37\3\37\3\37\5\37\u0168\n\37\3 \3 \3 \3 \3 \3 \3 \3 \5 "+
 		"\u0172\n \3 \2!\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62"+
-		"\64\668:<>\2\6\5\3\6\24\24!\"\7\4\5\b\b\24\25\37\37!\"\4\3\3  \4\b\b\25"+
+		"\64\668:<>\2\6\5\3\6\24\24!#\7\4\5\b\b\24\25\37\37!#\4\3\3  \4\b\b\25"+
 		"\25\u0199\2A\3\2\2\2\4E\3\2\2\2\6M\3\2\2\2\bO\3\2\2\2\nS\3\2\2\2\fc\3"+
 		"\2\2\2\16q\3\2\2\2\20\177\3\2\2\2\22\u008d\3\2\2\2\24\u009b\3\2\2\2\26"+
 		"\u00ae\3\2\2\2\30\u00bf\3\2\2\2\32\u00cd\3\2\2\2\34\u00e0\3\2\2\2\36\u00e5"+

@@ -23,7 +23,7 @@ package grammar;
  * lines unless you know what you're doing.
  */
 @members {
-    public boolean inKey, inHeader, inMeter, inLyric;
+    public boolean inKey, inHeader, inMeter, inLyric, inVoice;
     // This method makes the lexer or parser stop running if it encounters
     // invalid input and throw a RuntimeException.
     public void reportErrorsAsExceptions() {
@@ -52,7 +52,7 @@ fragment BASENOTE       : ('A'..'G' | 'a'..'g');
 REST                    : 'z';
 fragment DIGIT          : [0-9];
 INTEGER                 : DIGIT+ {inMeter = false;};
-NEWLINE                 : ('\r'|'\n')+ {inLyric = false;};
+NEWLINE                 : ('\r'|'\n')+ {inLyric = false; inVoice = false;};
 
 EQUALS                  : '=';
 OVER                    : '/';
@@ -66,7 +66,7 @@ COMPOSER_START          : 'C:';
 DEFAULT_LENGTH_START    : 'L:';
 METER_START             : 'M:' {inMeter = true;};
 TEMPO_START             : 'Q:';
-VOICE_START             : 'V:';
+VOICE_START             : 'V:' {inVoice = true;};
 KEY_START               : 'K:' {inKey = true;}; 
 
 // Key is the last header field so once it's done, we're not in the header anymore.
@@ -124,6 +124,9 @@ PUNCTUATION             : '.'
                         | '('
                         | ')'
                         | '?';
+// Catch-all for unrecognized characters. They're used only in strings in the parser.
+OTHER_CHAR              : {!inKey && (inHeader || inVoice)}? .;   
+                     
 
 
 /*
@@ -135,7 +138,7 @@ PUNCTUATION             : '.'
  * "line" the start rule.
  */
 // Generic parser rules
-string          : (BASE | REST | PUNCTUATION | NONBASENOTE | INTEGER | WHITESPACE | OCTAVE)+;
+string          : (BASE | REST | PUNCTUATION | NONBASENOTE | INTEGER | WHITESPACE | OCTAVE | OTHER_CHAR)+;
 comment         : COMMENT_START string? NEWLINE;
 eol             : comment | NEWLINE;
 
@@ -177,6 +180,7 @@ syllable        : ( LYRIC_MODIFIER
                     | ACCIDENTAL_TYPE
                     | EQUALS
                     | OCTAVE
+                    | OTHER_CHAR
                   )+ (LYRIC_SEPARATOR|WHITESPACE)*;
 lyric           : LYRIC_START WHITESPACE? syllable* eol*;
 
