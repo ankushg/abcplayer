@@ -26,13 +26,7 @@ public final class Song {
         this(Utilities.arrayToList(voices));
     }
 
-    /**
-     * Plays the current song through the MIDI player.
-     *
-     * @throws MidiUnavailableException
-     * @throws InvalidMidiDataException
-     */
-    public void play() throws MidiUnavailableException, InvalidMidiDataException {
+    public SequencePlayer getPlayer() throws MidiUnavailableException, InvalidMidiDataException {
         int ticksPerBeat = Utilities.computeTicksPerBeat(Utilities.flatten(voices));
 
         // TODO replace "140" based on the meter/tempo/etc
@@ -51,7 +45,17 @@ public final class Song {
                 item.addTo(player);
             }
         }
+        return player;
+    }
 
+    /**
+     * Plays the current song through the MIDI player.
+     *
+     * @throws MidiUnavailableException
+     * @throws InvalidMidiDataException
+     */
+    public void play() throws MidiUnavailableException, InvalidMidiDataException {
+        SequencePlayer player = this.getPlayer();
         player.play();
         System.out.println(player);
     }
