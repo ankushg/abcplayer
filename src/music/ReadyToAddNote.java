@@ -2,7 +2,6 @@ package music;
 
 import sound.SequencePlayer;
 
-// TODO: Auto-generated Javadoc
 /**
  * A ReadyToAddNote directly stores the information needed to add a single note
  * to the SequencePlayer. This includes its midiNote value, startTick, and
@@ -38,10 +37,13 @@ public final class ReadyToAddNote implements ReadyToAddItem {
         this.numTicks = numTicks;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Adds this ReadyToAddNote to the given player
      *
+     * @param player
+     *            the SequencePlayer to add this ReadyToAddNote to
      * @see music.ReadyToAddItem#addTo(sound.SequencePlayer)
+     *
      */
     @Override
     public void addTo(SequencePlayer player) {

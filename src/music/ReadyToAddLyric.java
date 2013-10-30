@@ -2,7 +2,6 @@ package music;
 
 import sound.SequencePlayer;
 
-// TODO: Auto-generated Javadoc
 /**
  * ReadyToAddLyric represents a lyric that is ready to be added to the
  * SequencePlayer.
@@ -30,10 +29,13 @@ public final class ReadyToAddLyric implements ReadyToAddItem {
         this.tick = tick;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Adds this ReadyToAddLyric to the given player
      *
+     * @param player
+     *            the SequencePlayer to add this ReadyToAddLyric to
      * @see music.ReadyToAddItem#addTo(sound.SequencePlayer)
+     *
      */
     @Override
     public void addTo(SequencePlayer player) {
