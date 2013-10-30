@@ -41,7 +41,7 @@ public class Listener extends ABCMusicBaseListener {
     private Fraction chordDuration = null;
     private Deque<Object> chordsAndBars = new LinkedList<>();
     private List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
-    private Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
+    private Map<String, List<ChordSequence>> map = new HashMap<>();
     private String currentVoice = "";
     private int tupletLength = 0;
 
@@ -58,8 +58,8 @@ public class Listener extends ABCMusicBaseListener {
     @Override
     public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) {
 
-        ArrayList<Voice> voices = new ArrayList<Voice>();
-        for (ArrayList<ChordSequence> sequence : map.values()) {
+        List<Voice> voices = new ArrayList<Voice>();
+        for (List<ChordSequence> sequence : map.values()) {
             voices.add(new Voice(sequence));
         }
         System.out.println(map);
@@ -93,22 +93,19 @@ public class Listener extends ABCMusicBaseListener {
     // TODO: handle repeats and alternate endings. Handle repeats when there's
     // no |:
     public void exitVoice(ABCMusicParser.VoiceContext ctx) {
-        List<ChordSequence> chords = new ArrayList<ChordSequence>();
+        List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
         List<ChordSequence> noEnding = new ArrayList<ChordSequence>();
         List<ChordSequence> firstEnding = new ArrayList<ChordSequence>();
         boolean inRepeat = false;
         boolean inFirstEnding = false;
         for (Object x : chordsAndBars) {
-            if (x instanceof Chord) {
-                chords.add((Chord) x);
-                // System.out.println(chords.size());
-            } else if (x instanceof Tuplet) {
-                chords.add((Tuplet) x);
+            if (x instanceof ChordSequence) {
+                chordSequences.add((ChordSequence) x);
             } else {
                 if (x instanceof BarLine) {
                     BarLine bar = (BarLine) x;
                     if (bar == BarLine.SINGLE_BAR) {
-                        Measure m = new Measure(chords);
+                        Measure m = new Measure(chordSequences);
                         if (inFirstEnding) {
                             firstEnding.add(m);
                         } else if (inRepeat && !inFirstEnding) {
@@ -116,35 +113,30 @@ public class Listener extends ABCMusicBaseListener {
                         } else {
                             chordSequences.add(m);
                         }
-                        chords.clear();
+                        chordSequences.clear();
                     } else if (bar == BarLine.START_REPEAT || bar == BarLine.DOUBLE_BAR) {
                         inRepeat = true;
                     } else if (bar == BarLine.END_REPEAT) {
                         inRepeat = false;
                         inFirstEnding = false;
-                        Measure m = new Measure(chords);
+                        Measure m = new Measure(chordSequences);
                         firstEnding.add(m);
                         ChordSequence repeat = new Repeat(new ChordSequenceList(noEnding), new ChordSequenceList(
                                 firstEnding));
                         chordSequences.add(repeat);
-                        /*
-                         * chordSequences.addAll(noEnding);
-                         * chordSequences.addAll(firstEnding);
-                         * chordSequences.addAll(noEnding);
-                         */
-                        chords.clear();
+                        chordSequences.clear();
                     } else if (bar == BarLine.REPEAT_ONE) {
                         inFirstEnding = true;
                     } else {
-                        Measure m = new Measure(chords);
+                        Measure m = new Measure(chordSequences);
                         chordSequences.add(m);
-                        chords.clear();
+                        chordSequences.clear();
                     }
                 }
             }
 
         }
-        ArrayList<ChordSequence> newList = map.remove(currentVoice);
+        List<ChordSequence> newList = map.remove(currentVoice);
 
         if (newList == null) {
             newList = new ArrayList<ChordSequence>();
@@ -153,8 +145,6 @@ public class Listener extends ABCMusicBaseListener {
 
         map.put(currentVoice, newList);
         chordSequences = new ArrayList<ChordSequence>();
-
-        // voiceFragments.add(chordSequences);
     }
 
     @Override
@@ -299,7 +289,6 @@ public class Listener extends ABCMusicBaseListener {
         }
         if (ctx.pitch() != null) {
             note = ctx.pitch().BASE().getText();
-            // System.out.println(note);
             if (Character.isLowerCase(note.charAt(0))) {
                 pitch = new Pitch(Character.toUpperCase(note.charAt(0)));
                 pitch = pitch.octaveTranspose(1);
@@ -409,9 +398,9 @@ public class Listener extends ABCMusicBaseListener {
         String lengthString = ctx.fraction().toString();
 
         int numerator = Character.getNumericValue(lengthString.charAt(0));
-        int denom = Character.getNumericValue(lengthString.charAt(2));
+        int denominator = Character.getNumericValue(lengthString.charAt(2));
 
-        defaultLength = new Fraction(numerator, denom);
+        defaultLength = new Fraction(numerator, denominator);
     }
 
     @Override
