@@ -58,7 +58,7 @@ public final class Note {
      * @return a new note with the multiplication applied to it
      */
     public Note multiply(int numerator, int denominator) {
-        return new Note(pitch, duration.multiply(numerator, denominator));
+        return new Note(pitch, duration.multiply(numerator, denominator), unappliedAccidental);
     }
 
     /**
