@@ -24,7 +24,7 @@ public final class KeySignature {
 
     /**
      * Instantiates a new key signature.
-     *
+     * 
      * @param k
      *            the k
      */
@@ -34,7 +34,7 @@ public final class KeySignature {
 
     /**
      * Instantiates a new key signature.
-     *
+     * 
      * @param key
      *            the key
      */
@@ -44,10 +44,12 @@ public final class KeySignature {
 
     /**
      * Make key.
-     *
+     * 
      * @param k
-     *            the k
-     * @return the map
+     *            A KeyType k.
+     * @return A Map whose key is a pitch (C, D, E, F, G, A, B), and whose value
+     *         is the number of semitones it is raised or lowered by, based on
+     *         the KeyType.
      */
     public Map<Character, Integer> makeKey(KeyType k) {
         Map<Character, Integer> map = new HashMap<Character, Integer>();
@@ -72,7 +74,7 @@ public final class KeySignature {
         else if (k.getSharps() < 0) {
             int numFlats = Math.abs(k.getSharps());
             char[] flats = new char[] { 'B', 'E', 'A', 'D', 'G', 'C', 'F' };
-            for (int i = 0; i < k.getSharps(); i++) {
+            for (int i = 0; i < numFlats; i++) {
                 map.remove(flats[i]);
                 map.put(flats[i], -1);
             }
@@ -88,8 +90,9 @@ public final class KeySignature {
      * Gets the
      * 
      * @param note
-     *            the note
-     * @return the int
+     *            the note to get in a certain key.
+     * @return the int that signifies how many semitones the note is raised or
+     *         lowered by.
      */
     public int get(char note) {
         Integer result = key.get(note);
@@ -98,7 +101,7 @@ public final class KeySignature {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -108,7 +111,7 @@ public final class KeySignature {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -121,7 +124,7 @@ public final class KeySignature {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
