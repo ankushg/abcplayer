@@ -93,4 +93,14 @@ public class Repeat implements ChordSequence {
         chords.addAll(commonChords);
         return chords;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Repeat [common=%s, endings=%s]", common, endings);
+    }
 }

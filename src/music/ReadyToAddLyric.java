@@ -36,4 +36,14 @@ public class ReadyToAddLyric implements ReadyToAddItem {
     public void addTo(SequencePlayer player) {
         player.addLyricEvent(text, tick);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("ReadyToAddLyric [text=%s, tick=%s]", text, tick);
+    }
 }

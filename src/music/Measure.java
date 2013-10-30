@@ -145,4 +145,15 @@ public class Measure implements ChordSequence {
 
         return processedChords;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Measure [keySignature=%s, syllables=%s, chordSequences=%s]", keySignature, syllables,
+                chordSequences);
+    }
 }

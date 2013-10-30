@@ -43,4 +43,14 @@ public class Song {
         player.play();
         System.out.println(player);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Song [voices=%s]", voices);
+    }
 }

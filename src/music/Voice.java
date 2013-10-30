@@ -44,4 +44,14 @@ public class Voice implements ChordSequence {
     public List<Chord> getChords() {
         return Utilities.flatten(chordSequences);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Voice [chordSequences=%s]", chordSequences);
+    }
 }

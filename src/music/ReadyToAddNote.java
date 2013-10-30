@@ -12,13 +12,13 @@ import sound.SequencePlayer;
  * 
  */
 public class ReadyToAddNote implements ReadyToAddItem {
-    
+
     /** The midi note. */
     public final int midiNote;
-    
+
     /** The start tick. */
     public final int startTick;
-    
+
     /** The num ticks. */
     public final int numTicks;
 
@@ -46,5 +46,15 @@ public class ReadyToAddNote implements ReadyToAddItem {
     @Override
     public void addTo(SequencePlayer player) {
         player.addNote(midiNote, startTick, numTicks);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("ReadyToAddNote [midiNote=%s, startTick=%s, numTicks=%s]", midiNote, startTick, numTicks);
     }
 }

@@ -24,4 +24,14 @@ public class Syllable {
         this.text = text;
         this.length = length;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Syllable [text=%s, length=%s]", text, length);
+    }
 }

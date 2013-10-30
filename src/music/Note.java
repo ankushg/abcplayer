@@ -98,4 +98,15 @@ public class Note {
 
         return 0; // error code indicating this note had an accidental applied
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Note [pitch=%s, duration=%s, unappliedAccidental=%s]", pitch, duration,
+                unappliedAccidental);
+    }
 }

@@ -121,4 +121,14 @@ public class Chord implements ChordSequence {
         }
         return new Chord(this.duration.multiply(numerator, denominator), notes);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Chord [notes=%s, duration=%s, lyric=%s]", notes, duration, lyric);
+    }
 }

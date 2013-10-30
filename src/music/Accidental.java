@@ -6,7 +6,6 @@ package music;
  * Accidentals are immutable.
  */
 public class Accidental {
-
     /**
      * The Constant NONE represents an Accidental object with no accidentals
      * applied.
@@ -53,5 +52,15 @@ public class Accidental {
      */
     public Note apply(Note note) {
         return new Note(note.pitch.transpose(number), note.duration, Accidental.NONE);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Accidental [type=%s, number=%s]", type, number);
     }
 }

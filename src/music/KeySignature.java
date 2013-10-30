@@ -30,7 +30,6 @@ public class KeySignature {
      */
     public KeySignature(KeyType k) {
         this.key = this.makeKey(k);
-
     }
 
     /**
@@ -95,5 +94,15 @@ public class KeySignature {
     public int get(char note) {
         Integer result = key.get(note);
         return result == null ? 0 : result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("KeySignature [key=%s]", key);
     }
 }

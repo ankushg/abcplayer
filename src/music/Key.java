@@ -61,4 +61,14 @@ public class Key {
         }
         return new Note(note.pitch.transpose(keySignature.get(note.getLetter())), note.duration);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("Key [keySignature=%s, accidentals=%s]", keySignature, accidentals);
+    }
 }

@@ -17,4 +17,14 @@ public class EmptyChordSequence implements ChordSequence {
     public List<Chord> getChords() {
         return Collections.emptyList();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("EmptyChordSequence []");
+    }
 }
