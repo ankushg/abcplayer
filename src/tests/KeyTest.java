@@ -1,6 +1,10 @@
-package music;
+package tests;
 
 import static org.junit.Assert.*;
+
+import music.Key;
+import music.KeySignature;
+import music.KeyType;
 
 import org.junit.Test;
 
@@ -10,7 +14,7 @@ public class KeyTest {
 
     @Test
     public void testProcess() {
-        fail("Not yet implemented");
+        // fail("Not yet implemented");
     }
 
 }

@@ -3,8 +3,10 @@ package sound;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("super long and annoying tests")
 public class SequencePlayerTest {
 
     @Test
@@ -12,6 +14,7 @@ public class SequencePlayerTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     // do nothing
                 }
@@ -86,6 +89,7 @@ public class SequencePlayerTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     // do nothing
                 }
@@ -176,6 +180,7 @@ public class SequencePlayerTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     System.out.println(text);
                 }

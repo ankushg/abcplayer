@@ -1,13 +1,22 @@
-package music;
+package tests;
 
 import static org.junit.Assert.*;
+
+import music.Accidental;
+import music.AccidentalType;
+import music.Fraction;
+import music.Note;
 
 import org.junit.Test;
 
 import sound.Pitch;
 
-//TODO: figure out accidentaltranspose vs accidental
 public class AccidentalTest {
+
+    public static Accidental noAcc = Accidental.NONE;
+    public static Accidental oneSharp = new Accidental(AccidentalType.SHARP, 1);
+    public static Accidental oneFlat = new Accidental(AccidentalType.SHARP, -1);
+    public static Accidental natural = new Accidental(AccidentalType.NATURAL, 0);
 
     /**
      * Naturals only change the pitch of a note when the note is already altered
@@ -16,10 +25,6 @@ public class AccidentalTest {
      */
     @Test
     public void testApply() {
-        Accidental noAcc = Accidental.NONE;
-        Accidental oneSharp = new Accidental(AccidentalType.SHARP, 1);
-        Accidental oneFlat = new Accidental(AccidentalType.SHARP, -1);
-        Accidental natural = new Accidental(AccidentalType.NATURAL, 0);
         Note n = new Note(new Pitch('C'), new Fraction(1, 2));
 
         assertEquals(n, noAcc.apply(n));

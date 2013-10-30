@@ -1,4 +1,6 @@
-package music;
+package tests;
+
+import music.Note;
 
 import org.junit.Test;
 

@@ -1,11 +1,12 @@
-package music;
+package tests;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
-import org.junit.After;
-import org.junit.Before;
+import music.Fraction;
+
 import org.junit.Test;
 
 /**
@@ -14,35 +15,14 @@ import org.junit.Test;
  * than denominator.
  */
 public class FractionTest {
-    Fraction unitFraction;
-    Fraction numGreaterThanDenom;
-    Fraction numLessThanDenom;
-    Fraction maxVals;
-    Fraction zeroOverOne;
-    Fraction copyGreaterThanDenom;
-    Fraction copyZeroOverOne;
+    public static Fraction unitFraction = new Fraction(1, 1);
+    public static Fraction numGreaterThanDenom = new Fraction(5, 2);
+    public static Fraction numLessThanDenom = new Fraction(3, 4);
+    public static Fraction maxVals = new Fraction(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static Fraction zeroOverOne = new Fraction(0, 1);
+    public static Fraction copyGreaterThanDenom = new Fraction(5, 2);
+    public static Fraction copyZeroOverOne = new Fraction(0, 1);
 
-    @Before
-    public void setUp() {
-        unitFraction = new Fraction(1, 1);
-        numGreaterThanDenom = new Fraction(5, 2);
-        numLessThanDenom = new Fraction(3, 4);
-        maxVals = new Fraction(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        zeroOverOne = new Fraction(0, 1);
-        copyGreaterThanDenom = new Fraction(5, 2);
-        copyZeroOverOne = new Fraction(0, 1);
-    }
-
-    @After
-    public void tearDown() {
-        unitFraction = null;
-        numGreaterThanDenom = null;
-        numLessThanDenom = null;
-        maxVals = null;
-        zeroOverOne = null;
-        copyGreaterThanDenom = null;
-        copyZeroOverOne = null;
-    }
 
     /**
      * Compares hashcodes of equal Fractions to ensure they are equal and

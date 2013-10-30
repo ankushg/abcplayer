@@ -1,4 +1,4 @@
-package music;
+package tests;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -9,12 +9,30 @@ import java.util.List;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+import music.Accidental;
+import music.AccidentalType;
+import music.Chord;
+import music.ChordSequence;
+import music.ChordSequenceList;
+import music.Fraction;
+import music.KeySignature;
+import music.KeyType;
+import music.Measure;
+import music.Note;
+import music.ReadyToAddItem;
+import music.Repeat;
+import music.Tuplet;
+import music.Utilities;
+import music.Voice;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sound.LyricListener;
 import sound.Pitch;
 import sound.SequencePlayer;
 
+@Ignore("super long and annoying tests")
 public class ChordSequenceTest {
     @Test
     public void testTuplet() {
@@ -50,6 +68,7 @@ public class ChordSequenceTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     // do nothing
                 }
@@ -111,6 +130,7 @@ public class ChordSequenceTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     // do nothing
                 }
@@ -150,6 +170,7 @@ public class ChordSequenceTest {
         SequencePlayer player;
         try {
             LyricListener listener = new LyricListener() {
+                @Override
                 public void processLyricEvent(String text) {
                     // do nothing
                 }
