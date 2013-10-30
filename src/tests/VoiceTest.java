@@ -20,6 +20,8 @@ import org.junit.Test;
 
 import sound.Pitch;
 
+/* Testing strategy: A Voice can be made up of Measures, Repeats, and ChordSequenceLists. We're testing a voice only made up of Measures, a voice made up of Measures and Repeats, and a voice made up of Measures, Repeats, and ChordSequenceLists.*/
+
 public class VoiceTest {
 
     @Test
