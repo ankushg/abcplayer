@@ -33,7 +33,6 @@ public class NoteTest {
      */
     @Test
     public void testMultiply() {
-        // TODO test note multiply
         assertEquals(new Note(PitchTest.highC, FractionTest.unitFraction), wholeNoteHighC.multiply(1, 1));
         assertEquals(new Note(PitchTest.aSharp, FractionTest.oneHalf.multiply(2, 5)), halfNoteASharp.multiply(2, 5));
         assertEquals(new Note(PitchTest.bFlat, FractionTest.oneFourth.multiply(5, 2)), quarterNoteBFlat.multiply(5, 2));
@@ -52,5 +51,6 @@ public class NoteTest {
     @Test
     public void testEqual() {
         // TODO test note equal
+        assertEquals(halfNoteASharp, halfNoteASharpUnappliedNone);
     }
 }
