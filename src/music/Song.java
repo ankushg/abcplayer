@@ -41,5 +41,6 @@ public class Song {
         }
 
         player.play();
+        System.out.println(player);
     }
 }

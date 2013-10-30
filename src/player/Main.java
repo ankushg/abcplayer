@@ -6,13 +6,14 @@ import grammar.Listener;
 
 import java.io.IOException;
 
+import music.Song;
+
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
@@ -61,21 +62,27 @@ public class Main {
         ParseTree tree;
         tree = parser.abc_tune();
 
-        // Display the tree graph - uncomment before git pushing
+        // Walk the tree with a listener.
+        // TODO: create a Song class and getSong() in the listener
+        Listener listener = new Listener();
+        ParseTreeWalker walker = new ParseTreeWalker();
         try {
             ((RuleContext) tree).inspect(parser);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Walk the tree with a listener.
-        // TODO: create a Song class and getSong() in the listener
-        ParseTreeListener listener = new Listener();
-        ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, tree);
-
+        Song song = listener.getSong();
+        try {
+            song.play();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
         // TODO: take the created song and actually play it instead of
         // displaying the AST
+        // Display the tree graph - uncomment before git pushing
+
     }
 
     /**

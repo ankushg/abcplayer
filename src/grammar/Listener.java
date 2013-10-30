@@ -1,7 +1,9 @@
 package grammar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import music.Accidental;
 import music.AccidentalType;
@@ -11,18 +13,16 @@ import music.ChordSequenceList;
 import music.Fraction;
 import music.Measure;
 import music.Note;
-import music.ReadyToAddItem;
 import music.Repeat;
+import music.Song;
 import music.Tuplet;
-import music.Utilities;
+import music.Voice;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import sound.LyricListener;
 import sound.Pitch;
-import sound.SequencePlayer;
 
 public class Listener extends ABCMusicBaseListener {
 
@@ -33,45 +33,56 @@ public class Listener extends ABCMusicBaseListener {
     String tempo;
     String keySignature;
     boolean inTuplet;
+    Song song;
 
     List<Note> notes = new ArrayList<Note>();
     List<Chord> chords = new ArrayList<Chord>();
     List<Object> chordsAndBars = new ArrayList<Object>();
     List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
     List<Chord> tupletList = new ArrayList<Chord>();
+    List<Object> voiceFragments = new ArrayList<Object>();
+    Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
+    String currentVoice;
+
+    public Song getSong() {
+        System.out.println("merp");
+
+        return song;
+    }
 
     @Override
     public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) {
     }
 
+    // TODO: How do we take care of invalid inputs? For example if the name of a
+    // voice wasn't followed by the voice itself
     @Override
     public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) {
-        System.out.println("now playing...1");
 
-        ChordSequenceList csl = new ChordSequenceList(chordSequences);
-        System.out.println(chordSequences);
-        List<Chord> finalChords = csl.getChords();
-        int ticksPerBeat = Utilities.computeTicksPerBeat(finalChords);
-        List<ReadyToAddItem> items = Utilities.getReadyToAddItems(finalChords);
-
-        System.out.println(items.toString());
-        LyricListener listener = new LyricListener() {
-            public void processLyricEvent(String text) {
-                System.out.print(text);
-            }
-        };
-
-        SequencePlayer player;
-        try {
-            player = new SequencePlayer(140, ticksPerBeat, listener);
-            for (ReadyToAddItem item : items) {
-                item.addTo(player);
-            }
-            player.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+        ArrayList<Voice> voices = new ArrayList<Voice>();
+        for (ArrayList<ChordSequence> sequence : map.values()) {
+            voices.add(new Voice(sequence));
         }
-
+        System.out.println(map);
+        System.out.println("The number of voices is " + voices.size());
+        song = new Song(voices);
+        /*
+         * // Stuff to test playing chords
+         * System.out.println("now playing...1");
+         * 
+         * ChordSequenceList csl = new ChordSequenceList(chordSequences);
+         * List<Chord> finalChords = csl.getChords(); int ticksPerBeat =
+         * Utilities.computeTicksPerBeat(finalChords); List<ReadyToAddItem>
+         * items = Utilities.getReadyToAddItems(finalChords);
+         * 
+         * LyricListener listener = new LyricListener() { public void
+         * processLyricEvent(String text) { System.out.print(text); } };
+         * 
+         * SequencePlayer player; try { player = new SequencePlayer(140,
+         * ticksPerBeat, listener); for (ReadyToAddItem item : items) {
+         * item.addTo(player); } player.play(); } catch (Exception e) {
+         * e.printStackTrace(); }
+         */
     }
 
     @Override
@@ -83,18 +94,15 @@ public class Listener extends ABCMusicBaseListener {
     // no |:
     public void exitVoice(ABCMusicParser.VoiceContext ctx) {
         List<ChordSequence> chords = new ArrayList<ChordSequence>();
-        List<ArrayList<ChordSequence>> repeatMeasures = new ArrayList<ArrayList<ChordSequence>>();
         List<ChordSequence> noEnding = new ArrayList<ChordSequence>();
         List<ChordSequence> firstEnding = new ArrayList<ChordSequence>();
-        List<ChordSequence> secondEnding = new ArrayList<ChordSequence>();
         boolean inRepeat = false;
-        boolean inRepeatNotInEnding = false;
         boolean inFirstEnding = false;
         boolean inSecondEnding = false;
         for (Object x : chordsAndBars) {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
-                System.out.println(chords.size());
+                // System.out.println(chords.size());
             } else if (x instanceof Tuplet) {
                 chords.add((Tuplet) x);
             } else {
@@ -111,7 +119,6 @@ public class Listener extends ABCMusicBaseListener {
                         chords.clear();
                     } else if (x.equals("|:")) {
                         inRepeat = true;
-                        inRepeatNotInEnding = true;
                     } else if (x.equals(":|")) {
                         inRepeat = false;
                         inFirstEnding = false;
@@ -128,10 +135,8 @@ public class Listener extends ABCMusicBaseListener {
                         chords.clear();
                     } else if (x.equals("[1")) {
                         inFirstEnding = true;
-                        inRepeatNotInEnding = false;
                     } else if (x.equals("[2")) {
                         inSecondEnding = true;
-                        inRepeatNotInEnding = false;
                     } else {
                         Measure m = new Measure(chords);
                         chordSequences.add(m);
@@ -139,9 +144,18 @@ public class Listener extends ABCMusicBaseListener {
                     }
                 }
             }
-        }
 
-        // TODO move this to the right place
+        }
+        System.out.println(map);
+        ArrayList<ChordSequence> newList = map.remove(currentVoice);
+        newList.addAll(chordSequences);
+
+        map.put(currentVoice, newList);
+        System.out.println(map);
+        System.out.println("before " + chordSequences);
+        chordSequences = new ArrayList<ChordSequence>();
+        System.out.println("after " + chordSequences);
+        // voiceFragments.add(chordSequences);
     }
 
     @Override
@@ -275,7 +289,7 @@ public class Listener extends ABCMusicBaseListener {
         }
         if (ctx.pitch() != null) {
             note = ctx.pitch().BASE().getText();
-            System.out.println(note);
+            // System.out.println(note);
             if (Character.isLowerCase(note.charAt(0))) {
                 p = new Pitch(Character.toUpperCase(note.charAt(0)));
                 p = p.octaveTranspose(1);
@@ -481,6 +495,12 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitField_voice(ABCMusicParser.Field_voiceContext ctx) {
+        String name = ctx.string().getText();
+        currentVoice = name;
+        if (!map.containsKey(name)) {
+            map.put(currentVoice, new ArrayList<ChordSequence>());
+        }
+
     }
 
     @Override
