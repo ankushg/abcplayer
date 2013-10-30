@@ -50,18 +50,6 @@ public final class Song {
         return player;
     }
 
-    /**
-     * Plays the current song through the MIDI player.
-     *
-     * @throws MidiUnavailableException
-     * @throws InvalidMidiDataException
-     */
-    public void play() throws MidiUnavailableException, InvalidMidiDataException {
-        SequencePlayer player = this.getPlayer();
-        player.play();
-        System.out.println(player);
-    }
-
     /*
      * (non-Javadoc)
      *

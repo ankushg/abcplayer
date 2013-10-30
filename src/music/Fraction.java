@@ -26,8 +26,9 @@ public final class Fraction {
     }
 
     /**
-     * Multiply this fragment with the numerator and denominator of another
-     * fraction.
+     * Multiply this fraction with the numerator and denominator of another
+     * fraction. Only used for tuplets, so preconditions are that numerator and
+     * denominator must be between 1 and 10.
      *
      * @param numerator
      *            the numerator of the other fraction

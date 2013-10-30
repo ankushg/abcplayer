@@ -47,13 +47,15 @@ public final class Note {
     }
 
     /**
-     * Multiply.
+     * Multiply the duration of this note by a fraction. Only used for tuplets,
+     * so preconditions are that numerator and denominator must be between 1 and
+     * 10.
      *
      * @param numerator
-     *            the numerator
+     *            the numerator of the fraction
      * @param denominator
-     *            the denominator
-     * @return the note
+     *            the denominator of the fraction
+     * @return a new note with the multiplication applied to it
      */
     public Note multiply(int numerator, int denominator) {
         return new Note(pitch, duration.multiply(numerator, denominator));

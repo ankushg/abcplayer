@@ -37,7 +37,6 @@ public class Main {
         try {
             stream = new ANTLRFileStream(file);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -77,7 +76,7 @@ public class Main {
         // play the song
         Song song = listener.getSong();
         try {
-            song.play();
+            song.getPlayer().play();
         } catch (Exception e1) {
             e1.printStackTrace();
         }

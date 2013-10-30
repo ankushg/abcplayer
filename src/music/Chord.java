@@ -103,7 +103,9 @@ public final class Chord implements ChordSequence {
     }
 
     /**
-     * Multiply the duration of this chord by a fraction.
+     * Multiply the duration of this chord by a fraction. Used for tuplets, so
+     * preconditions are that numerator and denominator must be between 1 and
+     * 10.
      *
      * @param numerator
      *            the numerator of the fraction with which to multiply the
