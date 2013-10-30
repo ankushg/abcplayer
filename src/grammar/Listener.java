@@ -264,10 +264,9 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitNote(ABCMusicParser.NoteContext ctx) {
-        // TODO: Add support for octaves
         Note n;
         String note;
-        Pitch p;
+        Pitch pitch;
         Fraction duration;
         if (ctx.fraction() != null) {
             int numerator = -1;
@@ -306,28 +305,28 @@ public class Listener extends ABCMusicBaseListener {
             note = ctx.pitch().BASE().getText();
             // System.out.println(note);
             if (Character.isLowerCase(note.charAt(0))) {
-                p = new Pitch(Character.toUpperCase(note.charAt(0)));
-                p = p.octaveTranspose(1);
+                pitch = new Pitch(Character.toUpperCase(note.charAt(0)));
+                pitch = pitch.octaveTranspose(1);
             } else {
-                p = new Pitch(note.charAt(0));
+                pitch = new Pitch(note.charAt(0));
             }
 
             // Add in octaves.
             if (ctx.pitch().OCTAVE() != null) {
                 for (char c : ctx.pitch().OCTAVE().getText().toCharArray()) {
                     if (c == '\'') {
-                        p = p.octaveTranspose(1);
+                        pitch = pitch.octaveTranspose(1);
                     } else if (c == ',') {
-                        p = p.octaveTranspose(-1);
+                        pitch = pitch.octaveTranspose(-1);
                     }
                 }
             }
 
             // Add in accidental.
-            Accidental a = new Accidental(AccidentalType.NONE, 0);
+            Accidental accidental = new Accidental(AccidentalType.NONE, 0);
             if (ctx.pitch().accidental() != null) {
                 if (ctx.pitch().accidental().getText().equals("=")) {
-                    a = new Accidental(AccidentalType.NATURAL, 0);
+                    accidental = new Accidental(AccidentalType.NATURAL, 0);
                 } else {
                     int sharps = 0;
                     for (char c : ctx.pitch().accidental().getText().toCharArray()) {
@@ -337,10 +336,10 @@ public class Listener extends ABCMusicBaseListener {
                             sharps--;
                         }
                     }
-                    a = new Accidental(AccidentalType.SHARP, sharps);
+                    accidental = new Accidental(AccidentalType.SHARP, sharps);
                 }
             }
-            n = new Note(p, duration, a);
+            n = new Note(pitch, duration, accidental);
 
             notes.add(n);
         }
@@ -411,7 +410,6 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitField_default_length(ABCMusicParser.Field_default_lengthContext ctx) {
-
         String lengthString = ctx.fraction().toString();
 
         int numerator = Character.getNumericValue(lengthString.charAt(0));
@@ -513,10 +511,6 @@ public class Listener extends ABCMusicBaseListener {
     public void exitField_voice(ABCMusicParser.Field_voiceContext ctx) {
         String name = ctx.string().getText();
         currentVoice = name;
-        if (!map.containsKey(name)) {
-            map.put(currentVoice, new ArrayList<ChordSequence>());
-        }
-
     }
 
     @Override
