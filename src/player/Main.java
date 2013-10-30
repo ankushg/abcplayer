@@ -24,10 +24,10 @@ public class Main {
     /**
      * Plays the input file using Java MIDI API and displays header information
      * to the standard output stream.
-     * 
+     *
      * (Your code should not exit the application abnormally using
      * System.exit().)
-     * 
+     *
      * @param file
      *            the name of input abc file
      */
@@ -63,31 +63,30 @@ public class Main {
         tree = parser.abc_tune();
 
         // Walk the tree with a listener.
-        // TODO: create a Song class and getSong() in the listener
         Listener listener = new Listener();
         ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(listener, tree);
+
+        // Display the parsetree
         try {
             ((RuleContext) tree).inspect(parser);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        walker.walk(listener, tree);
+        // play the song
         Song song = listener.getSong();
         try {
             song.play();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        // TODO: take the created song and actually play it instead of
-        // displaying the AST
-        // Display the tree graph - uncomment before git pushing
 
     }
 
     /**
      * Plays the file specified by the first argument.
-     * 
+     *
      * @param args
      *            the command line arguments. Only the first is looked at, and
      *            it must be the path to a valid abc file
