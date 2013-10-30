@@ -25,7 +25,7 @@ public final class Song {
     private final Fraction fracTempo;
     private String keySignature;
 
-    private int tempo = 140;
+    private int tempo = 100;
 
     // TODO add other fields + appropriate constructors + comments for those
     // constructors
@@ -84,10 +84,10 @@ public final class Song {
         this.title = "";
         this.composer = "Unknown";
         this.meter = new Fraction(4, 4);
-        this.defaultLength = new Fraction(1, 8);
+        this.defaultLength = new Fraction(1, 4);
         this.fracTempo = new Fraction(1, 8);
         this.keySignature = "C";
-        this.tempo = 100;
+        this.tempo = 200;
 
     }
 

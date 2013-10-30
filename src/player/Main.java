@@ -16,6 +16,8 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import sound.SequencePlayer;
+
 /**
  * Main entry point of your application.
  */
@@ -24,14 +26,33 @@ public class Main {
     /**
      * Plays the input file using Java MIDI API and displays header information
      * to the standard output stream.
-     *
+     * 
      * (Your code should not exit the application abnormally using
      * System.exit().)
-     *
+     * 
      * @param file
      *            the name of input abc file
      */
     public static void play(String file) {
+        try {
+            SequencePlayer player = getSong(file).getPlayer();
+            System.out.println(player);
+            player.play();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Lexes and parses the input file and creates a Song object.
+     * 
+     * @param file
+     *            the name of input valid, well-formed abc file
+     * 
+     * @return the Song object represented by the file
+     */
+    private static Song getSong(String file) {
         // Create a stream of tokens using the lexer.
         CharStream stream = null;
         try {
@@ -73,19 +94,13 @@ public class Main {
             e.printStackTrace();
         }
 
-        // play the song
-        Song song = listener.getSong();
-        try {
-            song.getPlayer().play();
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
+        // return the song
+        return listener.getSong();
     }
 
     /**
      * Plays the file specified by the first argument.
-     *
+     * 
      * @param args
      *            the command line arguments. Only the first is looked at, and
      *            it must be the path to a valid abc file
