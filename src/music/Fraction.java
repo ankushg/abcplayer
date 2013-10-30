@@ -15,9 +15,9 @@ public class Fraction {
      * Instantiates a new fraction and automatically simplifies it.
      * 
      * @param numerator
-     *            the numerator of this fraction. Must be non-zero.
+     *            the numerator of this fraction. Must be nonnegative.
      * @param denominator
-     *            the denominator of this fraction. Must be non-zero.
+     *            the denominator of this fraction. Must be positive.
      */
     public Fraction(int numerator, int denominator) {
         int gcd = Utilities.gcd(numerator, denominator);
