@@ -230,19 +230,13 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitChord(ABCMusicParser.ChordContext ctx) {
-        if (notes.size() == 0 && ctx.note() != null && isRest) {
-            Chord chord = new Chord(restDuration, new ArrayList<Note>());
-            chordsAndBars.add(chord);
-            restDuration = null;
+        Chord chord = new Chord(chordDuration, notes);
+        chordDuration = null;
+        notes.clear();
+        if (inTuplet) {
+            tupletList.add(chord);
         } else {
-            Fraction duration = notes.get(0).duration;
-            Chord chord = new Chord(duration, notes);
-            if (inTuplet) {
-                tupletList.add(chord);
-            } else {
-                chordsAndBars.add(chord);
-            }
-            notes.clear();
+            chordsAndBars.add(chord);
         }
     }
 
@@ -311,6 +305,9 @@ public class Listener extends ABCMusicBaseListener {
         } else {
             duration = new Fraction(1, 1);
         }
+        if (chordDuration == null) {
+            chordDuration = duration;
+        }
         if (ctx.pitch() != null) {
             note = ctx.pitch().BASE().getText();
             // System.out.println(note);
@@ -353,18 +350,9 @@ public class Listener extends ABCMusicBaseListener {
                 }
             }
             n = new Note(p, duration, a);
+
             notes.add(n);
-
-        } else {
-            note = ctx.REST().getText();
-            if (ctx.fraction() != null) {
-
-            }
-            restDuration = duration;
-            isRest = true;
-
         }
-
     }
 
     @Override
