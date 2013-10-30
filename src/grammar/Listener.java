@@ -1,7 +1,10 @@
 package grammar;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,16 +35,15 @@ public class Listener extends ABCMusicBaseListener {
     private Fraction defaultLength;
     private String tempo;
     private String keySignature;
-    private boolean inTuplet;
     private Song song;
 
     private List<Note> notes = new ArrayList<Note>();
     private Fraction chordDuration = null;
-    private List<Object> chordsAndBars = new ArrayList<Object>();
+    private Deque<Object> chordsAndBars = new LinkedList<>();
     private List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
-    private List<Chord> tupletList = new ArrayList<Chord>();
     private Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
     private String currentVoice = "";
+    private int tupletLength = 0;
 
     public Song getSong() {
         return song;
@@ -157,6 +159,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void enterDuplet(ABCMusicParser.DupletContext ctx) {
+        tupletLength = 2;
     }
 
     @Override
@@ -165,6 +168,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void enterQuadruplet(ABCMusicParser.QuadrupletContext ctx) {
+        tupletLength = 4;
     }
 
     @Override
@@ -223,11 +227,7 @@ public class Listener extends ABCMusicBaseListener {
         Chord chord = new Chord(chordDuration, notes);
         chordDuration = null;
         notes.clear();
-        if (inTuplet) {
-            tupletList.add(chord);
-        } else {
-            chordsAndBars.add(chord);
-        }
+        chordsAndBars.add(chord);
     }
 
     @Override
@@ -455,23 +455,26 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void enterTriplet(ABCMusicParser.TripletContext ctx) {
+        tupletLength = 3;
     }
 
     @Override
     public void exitTriplet(ABCMusicParser.TripletContext ctx) {
-        Tuplet tuplet = new Tuplet(3, tupletList);
-        chordsAndBars.add(tuplet);
-        tupletList.clear();
     }
 
     @Override
     public void enterTuplet(ABCMusicParser.TupletContext ctx) {
-        inTuplet = true;
     }
 
     @Override
     public void exitTuplet(ABCMusicParser.TupletContext ctx) {
-        inTuplet = false;
+        List<Chord> tupletList = new ArrayList<>();
+        for (int i = 0; i < tupletLength; i++) {
+            tupletList.add((Chord) chordsAndBars.removeLast());
+        }
+        Collections.reverse(tupletList);
+        chordsAndBars.add(new Tuplet(tupletLength, tupletList));
+        tupletLength = 0;
     }
 
     @Override
