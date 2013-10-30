@@ -1,4 +1,4 @@
-package sound;
+package tests;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -6,7 +6,13 @@ import javax.sound.midi.MidiUnavailableException;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore("super long and annoying tests")
+import sound.LyricListener;
+import sound.Pitch;
+import sound.SequencePlayer;
+
+// TODO: verify that these are correct since there were errors in the files.
+// TODO: Use these as end-to-end tests since we've hardcoded in everything from the piece1, piece2 and piece3 abc files and can compare the toStrings of the players
+@Ignore("No need to play these out loud")
 public class SequencePlayerTest {
 
     @Test
@@ -38,12 +44,9 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('G').toMidiNote(), 72, 24);
 
             // Measure 3
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 96,
-                    4);
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 100,
-                    4);
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 104,
-                    4);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 96, 4);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 100, 4);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 104, 4);
             player.addNote(new Pitch('G').toMidiNote(), 108, 4);
             player.addNote(new Pitch('G').toMidiNote(), 112, 4);
             player.addNote(new Pitch('G').toMidiNote(), 116, 4);
@@ -106,30 +109,25 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 6, 6);
 
             player.addNote(new Pitch('F').transpose(1).toMidiNote(), 18, 6);
-            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 18,
-                    6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 18, 6);
 
             player.addNote(new Pitch('F').transpose(1).toMidiNote(), 30, 6);
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 30,
-                    6);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 30, 6);
 
             player.addNote(new Pitch('F').transpose(1).toMidiNote(), 36, 12);
-            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 36,
-                    12);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 36, 12);
 
             // Measure 2
             player.addNote(new Pitch('G').toMidiNote(), 48, 12);
             player.addNote(new Pitch('B').toMidiNote(), 48, 12);
-            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 48,
-                    12);
+            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 48, 12);
 
             // rest
             player.addNote(new Pitch('G').toMidiNote(), 72, 12);
             // rest
 
             // Measure 3
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 84,
-                    18);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 84, 18);
             player.addNote(new Pitch('G').toMidiNote(), 102, 6);
 
             // rest
@@ -144,25 +142,17 @@ public class SequencePlayerTest {
 
             // Measure 5
             player.addNote(new Pitch('G').toMidiNote(), 168, 8);
-            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 176,
-                    8);
-            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 184,
-                    8);
-            player.addNote(new Pitch('A').octaveTranspose(1).toMidiNote(), 192,
-                    12);
-            player.addNote(new Pitch('F').octaveTranspose(1).toMidiNote(), 204,
-                    6);
-            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 210,
-                    6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 176, 8);
+            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 184, 8);
+            player.addNote(new Pitch('A').octaveTranspose(1).toMidiNote(), 192, 12);
+            player.addNote(new Pitch('F').octaveTranspose(1).toMidiNote(), 204, 6);
+            player.addNote(new Pitch('G').octaveTranspose(1).toMidiNote(), 210, 6);
 
             // Measure 6
             // rest
-            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 222,
-                    12);
-            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 234,
-                    6);
-            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 240,
-                    6);
+            player.addNote(new Pitch('E').octaveTranspose(1).toMidiNote(), 222, 12);
+            player.addNote(new Pitch('C').octaveTranspose(1).toMidiNote(), 234, 6);
+            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 240, 6);
             player.addNote(new Pitch('B').toMidiNote(), 246, 18);
 
             player.play();
@@ -233,12 +223,10 @@ public class SequencePlayerTest {
             player.addLyricEvent("like", 240);
 
             // Measure 8
-            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 252,
-                    36);
+            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 252, 36);
             player.addLyricEvent("me.", 252);
             // Measure 9
-            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 288,
-                    12);
+            player.addNote(new Pitch('D').octaveTranspose(1).toMidiNote(), 288, 12);
             System.out.println(player);
 
             // play!

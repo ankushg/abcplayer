@@ -33,6 +33,7 @@ import sound.Pitch;
 import sound.SequencePlayer;
 
 @Ignore("super long and annoying tests")
+// TODO: either delete these or move them somewhere that they actually belong
 public class ChordSequenceTest {
     @Test
     public void testTuplet() {
