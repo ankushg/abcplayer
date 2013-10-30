@@ -20,6 +20,7 @@ import music.Voice;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import sound.Pitch;
@@ -281,24 +282,32 @@ public class Listener extends ABCMusicBaseListener {
         Pitch p;
         Fraction duration;
         if (ctx.fraction() != null) {
-
-            int numerator;
-            int denom;
-            if (ctx.fraction().children.size() == 3) {
-                numerator = Integer.parseInt(ctx.fraction().getChild(0).getText());
-                denom = Integer.parseInt(ctx.fraction().getChild(2).getText());
-                duration = new Fraction(numerator, denom);
-            } else if (ctx.fraction().children.size() == 2) {
-                numerator = 1;
-                denom = Integer.parseInt(ctx.fraction().getChild(1).getText());
-                duration = new Fraction(numerator, denom);
-            } else {
-                duration = null;
+            int numerator = -1;
+            int denominator = -1;
+            boolean seenSlash = false;
+            for (ParseTree child : ctx.fraction().children) {
+                TerminalNode fractionFragment = (TerminalNode) child;
+                if (fractionFragment.getSymbol().getType() == ABCMusicLexer.OVER) {
+                    seenSlash = true;
+                } else if (fractionFragment.getSymbol().getType() == ABCMusicParser.INTEGER) {
+                    int integer = Integer.parseInt(fractionFragment.getText());
+                    if (!seenSlash) {
+                        numerator = integer;
+                    } else {
+                        denominator = integer;
+                    }
+                }
             }
+            if (numerator == -1) {
+                numerator = 1;
+            }
+            if (denominator == -1) {
+                denominator = 2;
+            }
+            duration = new Fraction(numerator, denominator);
         } else if (ctx.INTEGER() != null) {
             int numerator = Integer.parseInt(ctx.INTEGER().getText());
-            int denom = 1;
-            duration = new Fraction(numerator, denom);
+            duration = new Fraction(numerator, 1);
         } else {
             duration = new Fraction(1, 1);
         }
@@ -308,7 +317,6 @@ public class Listener extends ABCMusicBaseListener {
             if (Character.isLowerCase(note.charAt(0))) {
                 p = new Pitch(Character.toUpperCase(note.charAt(0)));
                 p = p.octaveTranspose(1);
-
             } else {
                 p = new Pitch(note.charAt(0));
             }
