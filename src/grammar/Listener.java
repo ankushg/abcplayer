@@ -332,20 +332,18 @@ public class Listener extends ABCMusicBaseListener {
             // Add in accidental.
             Accidental a = new Accidental(AccidentalType.NONE, 0);
             if (ctx.pitch().accidental() != null) {
-                if (ctx.pitch().accidental().getText().equals("^")) {
-                    a = new Accidental(AccidentalType.SHARP, 1);
-                } else if (ctx.pitch().accidental().getText().equals("^^")) {
-                    a = new Accidental(AccidentalType.SHARP, 2);
-                } else if (ctx.pitch().accidental().getText().equals("_")) {
-                    a = new Accidental(AccidentalType.SHARP, -1);
-                } else if (ctx.pitch().accidental().getText().equals("__")) {
-                    a = new Accidental(AccidentalType.SHARP, -2);
-                }
-
-                else if (ctx.pitch().accidental().getText().equals("=")) {
-                    a = new Accidental(AccidentalType.NONE, 0);
+                if (ctx.pitch().accidental().getText().equals("=")) {
+                    a = new Accidental(AccidentalType.NATURAL, 0);
                 } else {
-                    a = new Accidental(AccidentalType.NONE, 0);
+                    int sharps = 0;
+                    for (char c : ctx.pitch().accidental().getText().toCharArray()) {
+                        if (c == '^') {
+                            sharps++;
+                        } else if (c == '_') {
+                            sharps--;
+                        }
+                    }
+                    a = new Accidental(AccidentalType.SHARP, sharps);
                 }
             }
             n = new Note(p, duration, a);
