@@ -79,8 +79,7 @@ NON_FRACTION_METER      : {inMeter}? ('C'
                         | 'C|') {inMeter = false;};
 
 // Music tokens
-OCTAVE                  : '\''+
-                        | ','+;
+OCTAVE                  : ('\''|',')+;
 
 ACCIDENTAL_TYPE         : {!inLyric}?
                         ( '^'
@@ -207,4 +206,4 @@ bar_line        : SINGLE_BAR
 // measure         : (chord | tuplet)+ BAR_LINE;
 // repeat          : (OPEN_REPEAT)? (measure)+ CLOSE_REPEAT;
 // element         : tune | repeat | NTH_REPEAT;
-// alt_ending	   : ;
+// alt_ending	     : ;
