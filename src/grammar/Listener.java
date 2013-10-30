@@ -317,16 +317,15 @@ public class Listener extends ABCMusicBaseListener {
             } else {
                 p = new Pitch(note.charAt(0));
             }
-            // Add in octaves.
 
+            // Add in octaves.
             if (ctx.pitch().OCTAVE() != null) {
-                String octave = ctx.pitch().OCTAVE().getText();
-                int length = octave.length();
-                if (octave.charAt(0) == '\'') {
-                    p = p.octaveTranspose(length);
-                }
-                if (octave.charAt(0) == ',') {
-                    p = p.octaveTranspose(-length);
+                for (char c : ctx.pitch().OCTAVE().getText().toCharArray()) {
+                    if (c == '\'') {
+                        p = p.octaveTranspose(1);
+                    } else if (c == ',') {
+                        p = p.octaveTranspose(-1);
+                    }
                 }
             }
 
