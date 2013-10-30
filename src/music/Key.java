@@ -71,4 +71,31 @@ public class Key {
     public String toString() {
         return String.format("Key [keySignature=%s, accidentals=%s]", keySignature, accidentals);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accidentals == null) ? 0 : accidentals.hashCode());
+        result = prime * result + ((keySignature == null) ? 0 : keySignature.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Key))
+            return false;
+        Key other = (Key) obj;
+        return accidentals.equals(other.accidentals) && keySignature.equals(other.keySignature);
+    }
 }

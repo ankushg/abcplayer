@@ -50,4 +50,34 @@ public class ChordSequenceList implements ChordSequence {
     public String toString() {
         return String.format("ChordSequenceList [chordSequences=%s]", chordSequences);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((chordSequences == null) ? 0 : chordSequences.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof ChordSequenceList))
+            return false;
+        ChordSequenceList other = (ChordSequenceList) obj;
+        return chordSequences.equals(other.chordSequences);
+    }
 }

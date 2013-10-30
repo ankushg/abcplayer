@@ -63,4 +63,31 @@ public class Accidental {
     public String toString() {
         return String.format("Accidental [type=%s, number=%s]", type, number);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + number;
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Accidental))
+            return false;
+        Accidental other = (Accidental) obj;
+        return number == other.number && type == other.type;
+    }
 }

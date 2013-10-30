@@ -109,4 +109,33 @@ public class Note {
         return String.format("Note [pitch=%s, duration=%s, unappliedAccidental=%s]", pitch, duration,
                 unappliedAccidental);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((duration == null) ? 0 : duration.hashCode());
+        result = prime * result + ((pitch == null) ? 0 : pitch.hashCode());
+        result = prime * result + ((unappliedAccidental == null) ? 0 : unappliedAccidental.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Note))
+            return false;
+        Note other = (Note) obj;
+        return duration.equals(other.duration) && pitch.equals(other.pitch)
+                && unappliedAccidental.equals(other.unappliedAccidental);
+    }
 }

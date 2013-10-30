@@ -131,4 +131,32 @@ public class Chord implements ChordSequence {
     public String toString() {
         return String.format("Chord [notes=%s, duration=%s, lyric=%s]", notes, duration, lyric);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((duration == null) ? 0 : duration.hashCode());
+        result = prime * result + ((lyric == null) ? 0 : lyric.hashCode());
+        result = prime * result + ((notes == null) ? 0 : notes.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Chord))
+            return false;
+        Chord other = (Chord) obj;
+        return duration.equals(other.duration) && lyric.equals(other.lyric) && notes.equals(other.notes);
+    }
 }

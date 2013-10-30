@@ -105,4 +105,30 @@ public class KeySignature {
     public String toString() {
         return String.format("KeySignature [key=%s]", key);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof KeySignature))
+            return false;
+        KeySignature other = (KeySignature) obj;
+        return key.equals(other.key);
+    }
 }

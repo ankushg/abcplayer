@@ -103,4 +103,31 @@ public class Repeat implements ChordSequence {
     public String toString() {
         return String.format("Repeat [common=%s, endings=%s]", common, endings);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((common == null) ? 0 : common.hashCode());
+        result = prime * result + ((endings == null) ? 0 : endings.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Repeat))
+            return false;
+        Repeat other = (Repeat) obj;
+        return common.equals(other.common) && endings.equals(other.endings);
+    }
 }

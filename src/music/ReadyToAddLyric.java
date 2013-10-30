@@ -46,4 +46,31 @@ public class ReadyToAddLyric implements ReadyToAddItem {
     public String toString() {
         return String.format("ReadyToAddLyric [text=%s, tick=%s]", text, tick);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + tick;
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ReadyToAddLyric))
+            return false;
+        ReadyToAddLyric other = (ReadyToAddLyric) obj;
+        return text.equals(other.text) && tick == other.tick;
+    }
 }

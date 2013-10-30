@@ -57,4 +57,32 @@ public class ReadyToAddNote implements ReadyToAddItem {
     public String toString() {
         return String.format("ReadyToAddNote [midiNote=%s, startTick=%s, numTicks=%s]", midiNote, startTick, numTicks);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + midiNote;
+        result = prime * result + numTicks;
+        result = prime * result + startTick;
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ReadyToAddNote))
+            return false;
+        ReadyToAddNote other = (ReadyToAddNote) obj;
+        return midiNote == other.midiNote && numTicks == other.numTicks && startTick == other.startTick;
+    }
 }

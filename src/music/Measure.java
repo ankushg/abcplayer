@@ -156,4 +156,33 @@ public class Measure implements ChordSequence {
         return String.format("Measure [keySignature=%s, syllables=%s, chordSequences=%s]", keySignature, syllables,
                 chordSequences);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((chordSequences == null) ? 0 : chordSequences.hashCode());
+        result = prime * result + ((keySignature == null) ? 0 : keySignature.hashCode());
+        result = prime * result + ((syllables == null) ? 0 : syllables.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Measure))
+            return false;
+        Measure other = (Measure) obj;
+        return chordSequences.equals(other.chordSequences) && keySignature.equals(other.keySignature)
+                && syllables.equals(other.syllables);
+    }
 }

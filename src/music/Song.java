@@ -53,4 +53,30 @@ public class Song {
     public String toString() {
         return String.format("Song [voices=%s]", voices);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((voices == null) ? 0 : voices.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Song))
+            return false;
+        Song other = (Song) obj;
+        return voices.equals(other.voices);
+    }
 }
