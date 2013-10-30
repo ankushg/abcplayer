@@ -15,6 +15,8 @@ import sound.SequencePlayer;
 public final class Song {
     private final List<Voice> voices;
 
+    private final int tempo = 140;
+
     // TODO add other fields + appropriate constructors + comments for those
     // constructors
 
@@ -30,7 +32,7 @@ public final class Song {
         int ticksPerBeat = Utilities.computeTicksPerBeat(Utilities.flatten(voices));
 
         // TODO replace "140" based on the meter/tempo/etc
-        SequencePlayer player = new SequencePlayer(140, ticksPerBeat, new LyricListener() {
+        SequencePlayer player = new SequencePlayer(tempo, ticksPerBeat, new LyricListener() {
             @Override
             public void processLyricEvent(String text) {
                 System.out.print(text);

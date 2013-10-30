@@ -22,7 +22,8 @@ public class FractionTest {
     public static Fraction zeroOverOne = new Fraction(0, 1);
     public static Fraction copyGreaterThanDenom = new Fraction(5, 2);
     public static Fraction copyZeroOverOne = new Fraction(0, 1);
-
+    public static Fraction oneFourth = new Fraction(1, 4);
+    public static Fraction oneHalf = new Fraction(1, 2);
 
     /**
      * Compares hashcodes of equal Fractions to ensure they are equal and

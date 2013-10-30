@@ -3,6 +3,7 @@ package music;
 import sound.Pitch;
 
 // TODO: Auto-generated Javadoc
+// TODO: Document the Note class
 /**
  * The Class Note.
  */
