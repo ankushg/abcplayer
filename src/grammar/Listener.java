@@ -26,26 +26,22 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import sound.Pitch;
 
 public class Listener extends ABCMusicBaseListener {
+    private String trackNumber;
+    private String title;
+    private Fraction meter;
+    private Fraction defaultLength;
+    private String tempo;
+    private String keySignature;
+    private boolean inTuplet;
+    private Song song;
 
-    String trackNumber;
-    String title;
-    Fraction meter;
-    Fraction defaultLength;
-    String tempo;
-    String keySignature;
-    boolean inTuplet;
-    Song song;
-
-    List<Note> notes = new ArrayList<Note>();
-    List<Chord> chords = new ArrayList<Chord>();
-    List<Object> chordsAndBars = new ArrayList<Object>();
-    List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
-    List<Chord> tupletList = new ArrayList<Chord>();
-    List<Object> voiceFragments = new ArrayList<Object>();
-    Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
-    String currentVoice = "";
-    boolean isRest;
-    Fraction restDuration;
+    private List<Note> notes = new ArrayList<Note>();
+    private Fraction chordDuration = null;
+    private List<Object> chordsAndBars = new ArrayList<Object>();
+    private List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
+    private List<Chord> tupletList = new ArrayList<Chord>();
+    private Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
+    private String currentVoice = "";
 
     public Song getSong() {
         System.out.println("merp");
@@ -102,7 +98,6 @@ public class Listener extends ABCMusicBaseListener {
         List<ChordSequence> firstEnding = new ArrayList<ChordSequence>();
         boolean inRepeat = false;
         boolean inFirstEnding = false;
-        boolean inSecondEnding = false;
         for (Object x : chordsAndBars) {
             if (x instanceof Chord) {
                 chords.add((Chord) x);
@@ -140,7 +135,6 @@ public class Listener extends ABCMusicBaseListener {
                     } else if (x.equals("[1")) {
                         inFirstEnding = true;
                     } else if (x.equals("[2")) {
-                        inSecondEnding = true;
                     } else {
                         Measure m = new Measure(chords);
                         chordSequences.add(m);
