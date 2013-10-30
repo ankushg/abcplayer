@@ -42,7 +42,7 @@ public class Listener extends ABCMusicBaseListener {
     List<Chord> tupletList = new ArrayList<Chord>();
     List<Object> voiceFragments = new ArrayList<Object>();
     Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
-    String currentVoice;
+    String currentVoice = "";
 
     public Song getSong() {
         System.out.println("merp");
@@ -149,13 +149,16 @@ public class Listener extends ABCMusicBaseListener {
         }
         System.out.println(map);
         ArrayList<ChordSequence> newList = map.remove(currentVoice);
+
+        if (newList == null) {
+            newList = new ArrayList<ChordSequence>();
+        }
         newList.addAll(chordSequences);
 
         map.put(currentVoice, newList);
         System.out.println(map);
-        System.out.println("before " + chordSequences);
         chordSequences = new ArrayList<ChordSequence>();
-        System.out.println("after " + chordSequences);
+
         // voiceFragments.add(chordSequences);
     }
 
@@ -334,7 +337,9 @@ public class Listener extends ABCMusicBaseListener {
             notes.add(n);
 
         } else {
+
             note = ctx.REST().getText();
+
         }
 
     }
