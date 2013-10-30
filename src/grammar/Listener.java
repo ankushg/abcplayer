@@ -44,8 +44,6 @@ public class Listener extends ABCMusicBaseListener {
     private String currentVoice = "";
 
     public Song getSong() {
-        System.out.println("merp");
-
         return song;
     }
 
@@ -144,7 +142,6 @@ public class Listener extends ABCMusicBaseListener {
             }
 
         }
-        System.out.println(map);
         ArrayList<ChordSequence> newList = map.remove(currentVoice);
 
         if (newList == null) {
@@ -153,7 +150,6 @@ public class Listener extends ABCMusicBaseListener {
         newList.addAll(chordSequences);
 
         map.put(currentVoice, newList);
-        System.out.println(map);
         chordSequences = new ArrayList<ChordSequence>();
 
         // voiceFragments.add(chordSequences);
