@@ -87,6 +87,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void enterVoice(ABCMusicParser.VoiceContext ctx) {
+        chordsAndBars.clear();
     }
 
     @Override
