@@ -6,12 +6,12 @@ import java.util.List;
 
 /**
  * The Chord class represents a single note, a chord, or a rest.
- * 
+ *
  * Chords are immutable.
- * 
+ *
  * @see music.ChordSequence
  */
-public class Chord implements ChordSequence {
+public final class Chord implements ChordSequence {
 
     /** The notes. */
     public final List<Note> notes;
@@ -24,7 +24,7 @@ public class Chord implements ChordSequence {
 
     /**
      * Creates a new Chord.
-     * 
+     *
      * @param duration
      *            a Fraction representing the duration of the chord as a whole
      *            (this is the duration of the first note in the chord as
@@ -44,7 +44,7 @@ public class Chord implements ChordSequence {
 
     /**
      * Instantiates a new chord.
-     * 
+     *
      * @param duration
      *            a Fraction representing the duration of the chord as a whole
      *            (this is the duration of the first note in the chord as
@@ -60,7 +60,7 @@ public class Chord implements ChordSequence {
 
     /**
      * Creates a new Chord.
-     * 
+     *
      * @param duration
      *            a Fraction representing the duration of the chord as a whole
      *            (this is the duration of the first note in the chord as
@@ -78,7 +78,7 @@ public class Chord implements ChordSequence {
 
     /**
      * Creates a new Chord.
-     * 
+     *
      * @param duration
      *            a Fraction representing the duration of the chord as a whole
      *            (this is the duration of the first note in the chord as
@@ -92,7 +92,7 @@ public class Chord implements ChordSequence {
         this(duration, Utilities.arrayToList(notes));
     }
 
-    /*
+    /**
      * @return an immutable list containing only this Chord.
      * 
      * @see music.ChordSequence#getChords()
@@ -104,7 +104,7 @@ public class Chord implements ChordSequence {
 
     /**
      * Multiply the duration of this chord by a fraction.
-     * 
+     *
      * @param numerator
      *            the numerator of the fraction with which to multiply the
      *            duration of this note
@@ -122,9 +122,9 @@ public class Chord implements ChordSequence {
         return new Chord(this.duration.multiply(numerator, denominator), notes);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -134,7 +134,7 @@ public class Chord implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -149,7 +149,7 @@ public class Chord implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

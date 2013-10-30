@@ -8,10 +8,15 @@ import javax.sound.midi.MidiUnavailableException;
 import sound.LyricListener;
 import sound.SequencePlayer;
 
-public class Song {
+/**
+ * A Song represents an entire, playable musical piece. It contains metadata and
+ * voices and allows the piece to be played. Songs are immutable.
+ */
+public final class Song {
     private final List<Voice> voices;
 
-    // TODO add other fields + appropriate constructors
+    // TODO add other fields + appropriate constructors + comments for those
+    // constructors
 
     public Song(List<Voice> voices) {
         this.voices = Utilities.copyList(voices);
@@ -21,11 +26,18 @@ public class Song {
         this(Utilities.arrayToList(voices));
     }
 
+    /**
+     * Plays the current song through the MIDI player.
+     *
+     * @throws MidiUnavailableException
+     * @throws InvalidMidiDataException
+     */
     public void play() throws MidiUnavailableException, InvalidMidiDataException {
         int ticksPerBeat = Utilities.computeTicksPerBeat(Utilities.flatten(voices));
 
         // TODO replace "140" based on the meter/tempo/etc
         SequencePlayer player = new SequencePlayer(140, ticksPerBeat, new LyricListener() {
+            @Override
             public void processLyricEvent(String text) {
                 System.out.print(text);
             }
@@ -46,7 +58,7 @@ public class Song {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -56,7 +68,7 @@ public class Song {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -69,7 +81,7 @@ public class Song {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

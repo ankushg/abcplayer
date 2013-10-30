@@ -3,22 +3,21 @@ package music;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The class Tuplet represents a musical tuplet and abstracts away the duplet,
  * triplet and quadruplet. Tuplets are immutable.
  */
-public class Tuplet implements ChordSequence {
+public final class Tuplet implements ChordSequence {
 
     /** The type of Tuplet. Can be a DUPLET, TRIPLET, or QUADRUPLET. */
-    private TupletType type;
+    private final TupletType type;
 
     /** The chords in this tuplet */
-    private List<Chord> chords;
+    private final List<Chord> chords;
 
     /**
      * Instantiates a new tuplet with a given length and List of Chord objects.
-     * 
+     *
      * @param length
      *            the integer length of the tuplet (in number of Chord objects)
      * @param chords
@@ -33,7 +32,7 @@ public class Tuplet implements ChordSequence {
 
     /**
      * Instantiates a new tuplet with a given length and List of Chord objects.
-     * 
+     *
      * @param length
      *            the integer length of the tuplet (in number of Chord objects)
      * @param chords
@@ -44,9 +43,12 @@ public class Tuplet implements ChordSequence {
         this(length, Utilities.arrayToList(chords));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Scales the chords contained in this tuplet based on the type of the
+     * tuplet and returns a list of them.
+     *
+     * @return a list of Chords scaled as appropriate for the type of tuplet
+     *         (defined in the ABC spec)
      * @see music.ChordSequence#getChords()
      */
     @Override
@@ -79,13 +81,13 @@ public class Tuplet implements ChordSequence {
 
         /**
          * Instantiates a new tuplet type.
-         * 
+         *
          * @param numerator
-         *            the numerator
+         *            the numerator of the scale factor of this tuplet
          * @param denominator
-         *            the denominator
+         *            the denominator of the scale factor of this tuplet
          * @param length
-         *            the length
+         *            the length of this tuplet
          */
         private TupletType(int length, int numerator, int denominator) {
             this.length = length;
@@ -94,7 +96,7 @@ public class Tuplet implements ChordSequence {
         }
 
         /**
-         * Gets a TupletType by an integer length.
+         * Gets a TupletType by an integer length (in Chords).
          * 
          * @param length
          *            the length of the desired TupletType. Only 2, 3 and 4 are
@@ -113,14 +115,13 @@ public class Tuplet implements ChordSequence {
                 return QUADRUPLET;
             default:
                 throw new RuntimeException("invalid tuplet type: " + length);
-                // TODO improve exceptions
             }
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

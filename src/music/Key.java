@@ -7,23 +7,24 @@ import java.util.Map;
 
 import sound.Pitch;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Key.
+ * The class Key represents an instance of the key signature which can both
+ * apply the current key to notes, and be modified by notes which contain
+ * accidentals. Key objects are <b>NOT</b> immutable.
  */
-public class Key {
+public final class Key {
 
     /** The key signature. */
     private final KeySignature keySignature;
 
-    /** The accidentals. */
+    /** The accidentals and pitches associated with the key. */
     private final Map<Pitch, Accidental> accidentals;
 
     /**
      * Instantiates a new key.
-     * 
+     *
      * @param keySignature
-     *            the key signature
+     *            the key signature of the key
      */
     public Key(KeySignature keySignature) {
         this.keySignature = keySignature;
@@ -31,11 +32,13 @@ public class Key {
     }
 
     /**
-     * Process.
-     * 
+     * Process a given Chord and apply the current Key to it. Additionally,
+     * modify the current Key instance if the chord contains an accidental.
+     *
      * @param chord
-     *            the chord
-     * @return the chord
+     *            the chord to process
+     * @return a new chord representing the original chord with the key applied
+     *         to it
      */
     public Chord process(Chord chord) {
         List<Note> processedNotes = new ArrayList<>();
@@ -46,11 +49,12 @@ public class Key {
     }
 
     /**
-     * Applies the current Key object to the
-     * 
+     * Process a given Note and apply the current Key to it. Additionally,
+     * modify the current Key instance if the chord contains an accidental.
+     *
      * @param note
-     *            the note
-     * @return the note
+     *            the note to apply the key to
+     * @return the note after applying the current key
      */
     private Note process(Note note) {
         if (note.unappliedAccidental.type != AccidentalType.NONE) {
@@ -62,9 +66,9 @@ public class Key {
         return new Note(note.pitch.transpose(keySignature.get(note.getLetter())), note.duration);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -74,7 +78,7 @@ public class Key {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -88,7 +92,7 @@ public class Key {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

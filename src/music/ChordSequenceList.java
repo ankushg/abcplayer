@@ -2,17 +2,18 @@ package music;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ChordSequenceList.
+ * The class ChordSequenceList is a wrapper for a list of ChordSequence objects,
+ * so that methods that expect ChordSequences can be (indirectly) passed
+ * ChordSequences
  */
-public class ChordSequenceList implements ChordSequence {
+public final class ChordSequenceList implements ChordSequence {
 
     /** The chord sequences. */
     List<? extends ChordSequence> chordSequences;
 
     /**
-     * Instantiates a new chord sequence list.
+     * Instantiates a new ChordSequenceList.
      * 
      * @param chordSequences
      *            the chord sequences
@@ -22,7 +23,7 @@ public class ChordSequenceList implements ChordSequence {
     }
 
     /**
-     * Instantiates a new chord sequence list.
+     * Instantiates a new ChordSequenceList.
      * 
      * @param chordSequences
      *            the chord sequences
@@ -33,7 +34,7 @@ public class ChordSequenceList implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see music.ChordSequence#getChords()
      */
     @Override
@@ -41,9 +42,9 @@ public class ChordSequenceList implements ChordSequence {
         return Utilities.flatten(chordSequences);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -53,7 +54,7 @@ public class ChordSequenceList implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -66,7 +67,7 @@ public class ChordSequenceList implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

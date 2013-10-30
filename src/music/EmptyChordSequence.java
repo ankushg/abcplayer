@@ -6,10 +6,10 @@ import java.util.List;
 /**
  * The Class EmptyChordSequence represents a ChordSequence with no Chords in it.
  */
-public class EmptyChordSequence implements ChordSequence {
+public final class EmptyChordSequence implements ChordSequence {
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see music.ChordSequence#getChords()
      */
     @Override
@@ -17,9 +17,9 @@ public class EmptyChordSequence implements ChordSequence {
         return Collections.emptyList();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -29,7 +29,7 @@ public class EmptyChordSequence implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -39,7 +39,7 @@ public class EmptyChordSequence implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

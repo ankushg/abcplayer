@@ -2,10 +2,10 @@ package music;
 
 /**
  * The class Accidental represents an accidental for a given note.
- * 
+ *
  * Accidentals are immutable.
  */
-public class Accidental {
+public final class Accidental {
     /**
      * The Constant NONE represents an Accidental object with no accidentals
      * applied.
@@ -23,11 +23,11 @@ public class Accidental {
      * This value is negative for flats, positive for sharps, and zero for
      * naturals.
      */
-    public final int number; // negative for flats, zero for naturals
+    public final int number;
 
     /**
      * Instantiates a new Accidental object.
-     * 
+     *
      * @param type
      *            the type of Accidental. Use the value SHARP for sharps or
      *            flats, with a negative number for flats and positive for
@@ -44,7 +44,7 @@ public class Accidental {
 
     /**
      * Apply this accidental to a given note.
-     * 
+     *
      * @param note
      *            the Note to apply the accidental to. Should not be modified.
      * @return a new Note with the pitch transposed to the correct pitch, and
@@ -54,9 +54,9 @@ public class Accidental {
         return new Note(note.pitch.transpose(number), note.duration, Accidental.NONE);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -66,7 +66,7 @@ public class Accidental {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -78,10 +78,11 @@ public class Accidental {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Two Accidentals are equal if their fields are equal.
+     *
      * @see java.lang.Object#equals(java.lang.Object)
+     * @return if the two objects are equal
      */
     @Override
     public boolean equals(Object obj) {

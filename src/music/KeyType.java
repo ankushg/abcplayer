@@ -2,9 +2,9 @@ package music;
 
 import java.util.HashMap;
 
-// TODO: Auto-generated Javadoc
+// TODO: Document KeyType
 /**
- * The Enum KeyType.
+ * The Enum KeyType represents a variety of possible key signatures.
  */
 public enum KeyType {
     C(0), G(1), D(2), A(3), E(4), B(5), FS(6), CS(7), F(-1), BF(-2), EF(-3), AF(-4), DF(-5), GF(-6), CF(-7), am(0), em(

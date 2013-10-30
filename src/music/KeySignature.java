@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * The Class KeySignature.
  */
-public class KeySignature {
+public final class KeySignature {
 
     /** The Constant DEFAULT. */
     public static final KeySignature DEFAULT = new KeySignature();
@@ -24,7 +24,7 @@ public class KeySignature {
 
     /**
      * Instantiates a new key signature.
-     * 
+     *
      * @param k
      *            the k
      */
@@ -34,7 +34,7 @@ public class KeySignature {
 
     /**
      * Instantiates a new key signature.
-     * 
+     *
      * @param key
      *            the key
      */
@@ -44,7 +44,7 @@ public class KeySignature {
 
     /**
      * Make key.
-     * 
+     *
      * @param k
      *            the k
      * @return the map
@@ -85,7 +85,7 @@ public class KeySignature {
     }
 
     /**
-     * Gets the.
+     * Gets the
      * 
      * @param note
      *            the note
@@ -98,7 +98,7 @@ public class KeySignature {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -108,7 +108,7 @@ public class KeySignature {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -121,7 +121,7 @@ public class KeySignature {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

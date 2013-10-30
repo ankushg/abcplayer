@@ -4,23 +4,26 @@ import sound.SequencePlayer;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ReadyToAddLyric.
+ * ReadyToAddLyric represents a lyric that is ready to be added to the
+ * SequencePlayer.
+ *
+ * ReadyToAddLyrics are immutable
  */
-public class ReadyToAddLyric implements ReadyToAddItem {
+public final class ReadyToAddLyric implements ReadyToAddItem {
 
     /** The text. */
     public final String text;
 
-    /** The tick. */
+    /** The tick at which to display this lyric. */
     public final int tick;
 
     /**
-     * Instantiates a new ready to add lyric.
-     * 
+     * Instantiates a new ReadyToAddLyric with the given text and tick.
+     *
      * @param text
      *            the text
      * @param tick
-     *            the tick
+     *            the tick at which to display this lyric.
      */
     public ReadyToAddLyric(String text, int tick) {
         this.text = text;
@@ -29,7 +32,7 @@ public class ReadyToAddLyric implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see music.ReadyToAddItem#addTo(sound.SequencePlayer)
      */
     @Override
@@ -39,7 +42,7 @@ public class ReadyToAddLyric implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -49,7 +52,7 @@ public class ReadyToAddLyric implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -63,7 +66,7 @@ public class ReadyToAddLyric implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

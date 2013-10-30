@@ -1,10 +1,11 @@
 package music;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Syllable.
+ * The class Syllable represents a single syllable of the lyrics. It contains
+ * text and has a length (in terms of a number of notes). Syllables are
+ * immutable.
  */
-public class Syllable {
+public final class Syllable {
 
     /** The text of the Syllable */
     public final String text;
@@ -13,12 +14,12 @@ public class Syllable {
     public final int length;
 
     /**
-     * Instantiates a new syllable.
-     * 
+     * Instantiates a new syllable
+     *
      * @param text
      *            the text
      * @param length
-     *            the length
+     *            the length in notes (must be greater than zero)
      */
     public Syllable(String text, int length) {
         this.text = text;
@@ -27,7 +28,7 @@ public class Syllable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -37,7 +38,7 @@ public class Syllable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -51,7 +52,7 @@ public class Syllable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

@@ -2,7 +2,6 @@ package music;
 
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The class Voice represents a voice (this is the highest level of
  * ChordSequence). Voice objects are immutable.
@@ -10,11 +9,11 @@ import java.util.List;
 public class Voice implements ChordSequence {
 
     /** All of the chord sequences that make up this Voice. */
-    private List<ChordSequence> chordSequences;
+    private final List<ChordSequence> chordSequences;
 
     /**
      * Instantiates a new Voice.
-     * 
+     *
      * @param chordSequences
      *            the chord sequences comprising this Voice
      */
@@ -24,7 +23,7 @@ public class Voice implements ChordSequence {
 
     /**
      * Instantiates a new Voice.
-     * 
+     *
      * @param chordSequences
      *            the chord sequences comprising this Voice
      */
@@ -33,11 +32,11 @@ public class Voice implements ChordSequence {
     }
 
     /**
-     * Recursively calls getChords() on each ChordSequence in the voice and
-     * concatenates them into a flattened List.
-     * 
+     * Recursively calls getChords() on each ChordSequence and concatenates them
+     * into a flattened List.
+     *
      * @return a list of the chords this voice contains
-     * 
+     *
      * @see music.ChordSequence#getChords()
      */
     @Override
@@ -45,9 +44,9 @@ public class Voice implements ChordSequence {
         return Utilities.flatten(chordSequences);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
      * @see java.lang.Object#toString()
      */
     @Override

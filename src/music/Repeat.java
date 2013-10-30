@@ -9,17 +9,17 @@ import java.util.List;
  * The class Repeat represents a section of music with a repeat, and possibly
  * alternate endings.
  */
-public class Repeat implements ChordSequence {
+public final class Repeat implements ChordSequence {
 
     /** The common portion of the repeated portion */
-    private ChordSequence common;
+    private final ChordSequence common;
 
     /** The possible alternate endings of the repeated portion. */
-    private List<ChordSequence> endings;
+    private final List<ChordSequence> endings;
 
     /**
      * Instantiates a new Repeat without alternate endings.
-     * 
+     *
      * @param common
      *            the ChordSequence to repeat (may be a ChordSequenceList)
      */
@@ -30,11 +30,11 @@ public class Repeat implements ChordSequence {
 
     /**
      * Instantiates a new repeat with alternate endings.
-     * 
+     *
      * @param common
      *            the common ChordSequence to repeat (may be a
      *            ChordSequenceList)
-     * 
+     *
      * @param endings
      *            the ChordSequences representing the alternate endings
      */
@@ -45,11 +45,11 @@ public class Repeat implements ChordSequence {
 
     /**
      * Instantiates a new repeat with alternate endings.
-     * 
+     *
      * @param common
      *            the common ChordSequence to repeat (may be a
      *            ChordSequenceList)
-     * 
+     *
      * @param endings
      *            the ChordSequence objects representing the alternate endings
      */
@@ -60,7 +60,7 @@ public class Repeat implements ChordSequence {
     /**
      * Creates a List of EmptyChordSequence objects of a given length. Used as a
      * helper method when alternate endings are not defined.
-     * 
+     *
      * @param n
      *            the number of empty ChordSequences to create. Must be
      *            nonnegative.
@@ -77,7 +77,7 @@ public class Repeat implements ChordSequence {
     /**
      * Calls getChords() on the contained chord sequences and then returns a
      * list that's common + endings[0] + common + endings[1] + ... + common
-     * 
+     *
      * @return the list of Chords contained in the Repeat object, repeated and
      *         with the proper endings attached as necessary
      * @see music.ChordSequence#getChords()
@@ -96,7 +96,7 @@ public class Repeat implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -106,7 +106,7 @@ public class Repeat implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -120,7 +120,7 @@ public class Repeat implements ChordSequence {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

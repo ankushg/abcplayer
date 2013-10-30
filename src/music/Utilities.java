@@ -6,14 +6,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The Class Utilities.
+ * Common utilities which are used throughout the project
+ * 
+ * Immutable.
  */
-public class Utilities {
+public final class Utilities {
 
     /**
      * Returns an immutable copy of a given list (that is no longer tied to the
      * original list).
-     * 
+     *
      * @param <T>
      *            the generic type
      * @param list
@@ -27,7 +29,7 @@ public class Utilities {
     /**
      * Returns an immutable list copy of a given array (that is no longer tied
      * to the array).
-     * 
+     *
      * @param <T>
      *            the generic type
      * @param array
@@ -41,7 +43,7 @@ public class Utilities {
     /**
      * Returns the greatest common denominator of two integers, which cannot
      * both be zero (since gcd(0, 0) is undefined).
-     * 
+     *
      * @param a
      *            first integer
      * @param b
@@ -64,9 +66,8 @@ public class Utilities {
 
     /**
      * Returns the (positive) least common multiple of two integers, neither of
-     * which can
-     * be zero.
-     * 
+     * which can be zero.
+     *
      * @param a
      *            first integer
      * @param b
@@ -81,7 +82,7 @@ public class Utilities {
 
     /**
      * Flattens a list of ChordSequences into a list of Chords
-     * 
+     *
      * @param chordSequences
      *            the list of chord sequences (so, effectively, a list of lists
      *            of chords)
@@ -98,7 +99,7 @@ public class Utilities {
     /**
      * Computes a value of ticksPerBeat that allows us to represent all the
      * given chords.
-     * 
+     *
      * @param chords
      *            the list of chords that will be played
      * @return a valid value of ticksPerBeat (every duration of every chord/note
@@ -118,7 +119,7 @@ public class Utilities {
     /**
      * Computes a list of ReadyToAddItems (notes and lyrics), given a list of
      * Chords.
-     * 
+     *
      * @param chords
      *            the chords
      * @return the notes/lyrics

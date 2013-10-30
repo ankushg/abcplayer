@@ -4,16 +4,16 @@ package music;
  * The Fraction class is a mathematical fraction with a numerator and
  * denominator. It is used throughout abcplayer to represent durations in terms
  * of musical length.
- * 
+ *
  * Fraction objects are immutable.
  */
-public class Fraction {
+public final class Fraction {
     public final int numerator;
     public final int denominator;
 
     /**
      * Instantiates a new fraction and automatically simplifies it.
-     * 
+     *
      * @param numerator
      *            the numerator of this fraction. Must be nonnegative.
      * @param denominator
@@ -28,7 +28,7 @@ public class Fraction {
     /**
      * Multiply this fragment with the numerator and denominator of another
      * fraction.
-     * 
+     *
      * @param numerator
      *            the numerator of the other fraction
      * @param denominator
@@ -42,7 +42,7 @@ public class Fraction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -56,7 +56,7 @@ public class Fraction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -67,6 +67,11 @@ public class Fraction {
         return numerator * other.denominator == other.numerator * denominator;
     }
 
+    /**
+     * @return a string representation (purely for debugging purposes)
+     *
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return String.format("%d/%d", numerator, denominator);

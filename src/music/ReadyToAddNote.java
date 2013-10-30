@@ -7,11 +7,11 @@ import sound.SequencePlayer;
  * A ReadyToAddNote directly stores the information needed to add a single note
  * to the SequencePlayer. This includes its midiNote value, startTick, and
  * duration in number of ticks.
- * 
+ *
  * ReadyToAddNotes are immutable.
- * 
+ *
  */
-public class ReadyToAddNote implements ReadyToAddItem {
+public final class ReadyToAddNote implements ReadyToAddItem {
 
     /** The midi note. */
     public final int midiNote;
@@ -24,7 +24,7 @@ public class ReadyToAddNote implements ReadyToAddItem {
 
     /**
      * Create a new ReadyToAddNote with the given parameters.
-     * 
+     *
      * @param midiNote
      *            an int value for the pitch of the note
      * @param startTick
@@ -40,7 +40,7 @@ public class ReadyToAddNote implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see music.ReadyToAddItem#addTo(sound.SequencePlayer)
      */
     @Override
@@ -50,7 +50,7 @@ public class ReadyToAddNote implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -60,7 +60,7 @@ public class ReadyToAddNote implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -75,7 +75,7 @@ public class ReadyToAddNote implements ReadyToAddItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
