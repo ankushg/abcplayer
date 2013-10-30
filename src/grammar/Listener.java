@@ -105,8 +105,9 @@ public class Listener extends ABCMusicBaseListener {
             } else if (x instanceof Tuplet) {
                 chords.add((Tuplet) x);
             } else {
-                if (x instanceof String) {
-                    if (x.equals("|")) {
+                if (x instanceof BarLine) {
+                    BarLine bar = (BarLine) x;
+                    if (bar == BarLine.SINGLE_BAR) {
                         Measure m = new Measure(chords);
                         if (inFirstEnding) {
                             firstEnding.add(m);
@@ -116,9 +117,9 @@ public class Listener extends ABCMusicBaseListener {
                             chordSequences.add(m);
                         }
                         chords.clear();
-                    } else if (x.equals("|:")) {
+                    } else if (bar == BarLine.START_REPEAT || bar == BarLine.DOUBLE_BAR) {
                         inRepeat = true;
-                    } else if (x.equals(":|")) {
+                    } else if (bar == BarLine.END_REPEAT) {
                         inRepeat = false;
                         inFirstEnding = false;
                         Measure m = new Measure(chords);
@@ -132,9 +133,8 @@ public class Listener extends ABCMusicBaseListener {
                          * chordSequences.addAll(noEnding);
                          */
                         chords.clear();
-                    } else if (x.equals("[1")) {
+                    } else if (bar == BarLine.REPEAT_ONE) {
                         inFirstEnding = true;
-                    } else if (x.equals("[2")) {
                     } else {
                         Measure m = new Measure(chords);
                         chordSequences.add(m);
@@ -198,7 +198,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitBar_line(ABCMusicParser.Bar_lineContext ctx) {
-        chordsAndBars.add(ctx.getText());
+        chordsAndBars.add(BarLine.getBarLine(ctx.getText()));
     }
 
     @Override
