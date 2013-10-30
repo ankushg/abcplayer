@@ -2,11 +2,11 @@ package sound;
 
 /**
  * Pitch represents the frequency of a musical note.
- * 
+ *
  * Standard music notation represents pitches by letters: A, B, C, ..., G.
  * Pitches can be sharp or flat, or whole octaves up or down from these
  * primitive generators.
- * 
+ *
  * For example: <br/>
  * new Pitch('C') makes middle C. <br/>
  * new Pitch('C').transpose(1) makes C-sharp. <br/>
@@ -14,6 +14,7 @@ package sound;
  * new Pitch('C').transpose(OCTAVE) makes high C. <br/>
  * new Pitch('C').transpose(-OCTAVE) makes low C. <br/>
  */
+@SuppressWarnings(value = { "javadoc" })
 public class Pitch {
     private final int value;
     private final int accidental;
@@ -22,7 +23,7 @@ public class Pitch {
     /*
      * Rep invariant:
      * value in {0, 2, 4, 5, 7, 9, 11}
-     * 
+     *
      * Abstraction function AF(value, accidental, octave):
      * AF(scale[C], 0, 0), AF(scale[D], 0, 0), ..., AF(scale[B], 0, 0)
      * map to middle C, D, E, F, G, A, B respectively
@@ -50,7 +51,7 @@ public class Pitch {
 
     /**
      * Make a Pitch.
-     * 
+     *
      * @param c
      *            a note in {'A',...,'G'}
      * @return Pitch named c in the middle octave of the piano keyboard.
@@ -135,7 +136,7 @@ public class Pitch {
     }
 
     /**
-     * 
+     *
      * @return the midi note of this pitch
      */
     public int toMidiNote() {

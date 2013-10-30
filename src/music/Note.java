@@ -6,7 +6,7 @@ import sound.Pitch;
 /**
  * The Class Note.
  */
-public class Note {
+public final class Note {
 
     /** The pitch. */
     public final Pitch pitch;
@@ -19,7 +19,7 @@ public class Note {
 
     /**
      * Instantiates a new note.
-     * 
+     *
      * @param pitch
      *            the pitch
      * @param duration
@@ -35,7 +35,7 @@ public class Note {
 
     /**
      * Instantiates a new note.
-     * 
+     *
      * @param pitch
      *            the pitch
      * @param duration
@@ -47,7 +47,7 @@ public class Note {
 
     /**
      * Multiply.
-     * 
+     *
      * @param numerator
      *            the numerator
      * @param denominator
@@ -60,7 +60,7 @@ public class Note {
 
     /**
      * Gets the letter.
-     * 
+     *
      * @return the letter
      */
     public char getLetter() {
@@ -69,7 +69,7 @@ public class Note {
 
     /**
      * Gets the letter.
-     * 
+     *
      * @param pitch
      *            the pitch
      * @return the letter
@@ -101,7 +101,7 @@ public class Note {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -112,7 +112,7 @@ public class Note {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -127,7 +127,7 @@ public class Note {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
