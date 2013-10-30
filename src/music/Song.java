@@ -41,7 +41,7 @@ public final class Song {
 
         for (Voice voice : voices) {
             List<Chord> chords = voice.getChords();
-            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(chords);
+            List<ReadyToAddItem> items = Utilities.getReadyToAddItems(chords, ticksPerBeat);
 
             for (ReadyToAddItem item : items) {
                 item.addTo(player);

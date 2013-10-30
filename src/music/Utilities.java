@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Common utilities which are used throughout the project
- * 
+ *
  * Immutable.
  */
 public final class Utilities {
@@ -118,15 +118,16 @@ public final class Utilities {
 
     /**
      * Computes a list of ReadyToAddItems (notes and lyrics), given a list of
-     * Chords.
+     * Chords and the desired granularity of ticks (i.e., the number of ticks
+     * per beat).
      *
      * @param chords
      *            the chords
+     * @param ticksPerBeat
+     *            the number of ticks in a beat
      * @return the notes/lyrics
      */
-    public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords) {
-        int ticksPerBeat = computeTicksPerBeat(chords);
-
+    public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords, int ticksPerBeat) {
         List<ReadyToAddItem> items = new ArrayList<>();
         int tick = 0;
         for (Chord chord : chords) {
@@ -139,5 +140,17 @@ public final class Utilities {
         }
 
         return items;
+    }
+
+    /**
+     * Computes a list of ReadyToAddItems (notes and lyrics), given a list of
+     * Chords.
+     *
+     * @param chords
+     *            the chords
+     * @return the notes/lyrics
+     */
+    public static List<ReadyToAddItem> getReadyToAddItems(List<Chord> chords) {
+        return getReadyToAddItems(chords, computeTicksPerBeat(chords));
     }
 }
