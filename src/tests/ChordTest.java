@@ -18,9 +18,9 @@ import org.junit.Test;
 public class ChordTest {
 
     public static final Chord chordA = new Chord(NoteTest.halfNoteASharp.duration, NoteTest.halfNoteASharp,
-            NoteTest.halfNoteASharpUnappliedNone, NoteTest.halfNoteASharp);
-    public static final Chord chordB = new Chord(NoteTest.quarterNoteBFlat.duration, NoteTest.quarterNoteBFlat,
             NoteTest.quarterNoteBFlatUnappliedFlat, NoteTest.quarterNoteBFlat);
+    public static final Chord chordB = new Chord(NoteTest.quarterNoteBFlat.duration, NoteTest.quarterNoteBFlat,
+            NoteTest.halfNoteASharpUnappliedNone, NoteTest.halfNoteASharp);
     public static final Chord quarterRest = new Chord(FractionTest.oneFourth);
     public static final Chord highCNoteChord = new Chord(NoteTest.wholeNoteHighC.duration, NoteTest.wholeNoteHighC);
 
@@ -45,7 +45,7 @@ public class ChordTest {
     @Test
     public void testMultiply() {
         assertEquals(new Chord(NoteTest.halfNoteASharp.duration, NoteTest.halfNoteASharp,
-                NoteTest.halfNoteASharpUnappliedNone, NoteTest.halfNoteASharp), chordA.multiply(1, 1));
+                NoteTest.quarterNoteBFlatUnappliedFlat, NoteTest.quarterNoteBFlat), chordA.multiply(1, 1));
 
         assertEquals(new Chord(FractionTest.oneFourth.multiply(10, 1)), quarterRest.multiply(10, 1));
 
