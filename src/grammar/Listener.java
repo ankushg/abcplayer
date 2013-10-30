@@ -43,6 +43,8 @@ public class Listener extends ABCMusicBaseListener {
     List<Object> voiceFragments = new ArrayList<Object>();
     Map<String, ArrayList<ChordSequence>> map = new HashMap<String, ArrayList<ChordSequence>>();
     String currentVoice = "";
+    boolean isRest;
+    Fraction restDuration;
 
     public Song getSong() {
         System.out.println("merp");
@@ -222,18 +224,25 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void enterChord(ABCMusicParser.ChordContext ctx) {
+
     }
 
     @Override
     public void exitChord(ABCMusicParser.ChordContext ctx) {
-        Fraction duration = notes.get(0).duration;
-        Chord chord = new Chord(duration, notes);
-        if (inTuplet) {
-            tupletList.add(chord);
-        } else {
+        if (notes.size() == 0 && ctx.note() != null && isRest) {
+            Chord chord = new Chord(restDuration, new ArrayList<Note>());
             chordsAndBars.add(chord);
+            restDuration = null;
+        } else {
+            Fraction duration = notes.get(0).duration;
+            Chord chord = new Chord(duration, notes);
+            if (inTuplet) {
+                tupletList.add(chord);
+            } else {
+                chordsAndBars.add(chord);
+            }
+            notes.clear();
         }
-        notes.clear();
     }
 
     @Override
@@ -286,9 +295,11 @@ public class Listener extends ABCMusicBaseListener {
             } else {
                 duration = null;
             }
-        }
-
-        else {
+        } else if (ctx.INTEGER() != null) {
+            int numerator = Integer.parseInt(ctx.INTEGER().getText());
+            int denom = 1;
+            duration = new Fraction(numerator, denom);
+        } else {
             duration = new Fraction(1, 1);
         }
         if (ctx.pitch() != null) {
@@ -337,8 +348,12 @@ public class Listener extends ABCMusicBaseListener {
             notes.add(n);
 
         } else {
-
             note = ctx.REST().getText();
+            if (ctx.fraction() != null) {
+
+            }
+            restDuration = duration;
+            isRest = true;
 
         }
 
@@ -441,12 +456,20 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitField_meter(ABCMusicParser.Field_meterContext ctx) {
-        String meterString = ctx.fraction().getText();
+        if (ctx.NON_FRACTION_METER() != null) {
+            if (ctx.NON_FRACTION_METER().getText().equals("C")) {
+                meter = new Fraction(4, 4);
+            } else if (ctx.NON_FRACTION_METER().getText().equals("C")) {
+                meter = new Fraction(2, 2);
+            }
+        } else {
+            String meterString = ctx.fraction().getText();
 
-        int numerator = Character.getNumericValue(meterString.charAt(0));
-        int denom = Character.getNumericValue(meterString.charAt(2));
+            int numerator = Character.getNumericValue(meterString.charAt(0));
+            int denom = Character.getNumericValue(meterString.charAt(2));
 
-        meter = new Fraction(numerator, denom);
+            meter = new Fraction(numerator, denom);
+        }
     }
 
     @Override
