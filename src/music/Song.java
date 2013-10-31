@@ -1,8 +1,6 @@
 package music;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -88,45 +86,6 @@ public final class Song {
         this.fracTempo = new Fraction(1, 8);
         this.keySignature = "C";
         this.tempo = 200;
-
-    }
-
-    public KeySignature makeKeySig(String key) {
-        Map<String, KeyType> map = new HashMap<String, KeyType>();
-        map.put("C", KeyType.C);
-        map.put("G", KeyType.G);
-        map.put("D", KeyType.D);
-        map.put("A", KeyType.A);
-        map.put("E", KeyType.E);
-        map.put("B", KeyType.B);
-        map.put("F#", KeyType.FS);
-        map.put("C#", KeyType.CS);
-        map.put("F", KeyType.F);
-        map.put("Bb", KeyType.BF);
-        map.put("Eb", KeyType.EF);
-        map.put("Ab", KeyType.AF);
-        map.put("Db", KeyType.DF);
-        map.put("Gb", KeyType.GF);
-        map.put("Cb", KeyType.CF);
-
-        map.put("Am", KeyType.am);
-        map.put("Em", KeyType.em);
-        map.put("Bm", KeyType.bm);
-        map.put("F#m", KeyType.fsm);
-        map.put("C#m", KeyType.csm);
-        map.put("G#m", KeyType.gsm);
-        map.put("D#m", KeyType.dsm);
-        map.put("A#m", KeyType.asm);
-        map.put("Dm", KeyType.dm);
-        map.put("Gm", KeyType.gm);
-        map.put("Cm", KeyType.cm);
-        map.put("Fm", KeyType.fm);
-        map.put("Bbm", KeyType.bfm);
-        map.put("Ebm", KeyType.efm);
-        map.put("Abm", KeyType.afm);
-
-        return new KeySignature(map.get(key));
-
     }
 
     public Song(Voice... voices) {

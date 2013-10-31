@@ -19,4 +19,15 @@ public enum KeyType {
     int getSharps() {
         return sharps;
     }
+
+    public static KeyType getKeyType(String string) {
+        boolean minor = string.contains("m");
+        string = string.replace('#', 'S');
+        string = string.replace('b', 'F');
+        if (minor)
+            string = string.toLowerCase();
+        else
+            string = string.toUpperCase();
+        return valueOf(string);
+    }
 }
