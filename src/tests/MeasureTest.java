@@ -24,7 +24,15 @@ public class MeasureTest {
     Measure measure = new Measure();
 
     // TODO: test measure with syllable list
-    // TODO: test measure with key signature
+
+    public static final Measure measureWithKeySig = new Measure(new KeySignature(KeyType.D), new Chord(new Fraction(2,
+            1), new Note(new Pitch('D'), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(new Pitch('E'),
+            new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))),
+            new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))), new Chord(new Fraction(2, 1),
+                    new Note(new Pitch('A'), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(
+                    new Pitch('B'), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(
+                    new Pitch('C').octaveTranspose(1), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(
+                    new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
 
     /**
      * Measures can contain Chords or Tuples. Additionally, getChords() in a
@@ -62,18 +70,6 @@ public class MeasureTest {
     // Tests that a measure correctly applies a key signature on getChords().
     @Test
     public void testGetChordsWithKeySig() {
-        List<ChordSequence> noKeyCS = new ArrayList<>();
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('A'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('B'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C').octaveTranspose(1), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
-
-        Measure m = new Measure(new KeySignature(KeyType.D), noKeyCS);
-
         List<Chord> expected = new ArrayList<Chord>();
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
@@ -85,7 +81,7 @@ public class MeasureTest {
                 new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
 
-        assertEquals(expected, m.getChords());
+        assertEquals(expected, measureWithKeySig.getChords());
     }
 
     // Tests that a measure correctly applies accidentals. Also tests that

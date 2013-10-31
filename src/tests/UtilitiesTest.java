@@ -1,23 +1,69 @@
 package tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import music.Utilities;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class UtilitiesTest {
+    ArrayList<Integer> emptyIntegerList;
+    List<Character> alphabetLoopList;
+    final Character[] alphabetLoop = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+            'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a',
+            'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+            'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
+    @Before
+    public void setUp() {
+        emptyIntegerList = new ArrayList<>();
+        alphabetLoopList = new ArrayList<>(Arrays.asList(alphabetLoop));
+    }
+
+    /**
+     * Tests that the Utilities class's copyList method works properly by
+     * copying ArrayLists and comparing them to the original. Tests both lists
+     * of size zero and lists with large sizes.
+     */
     @Test
     public void testCopyList() {
-        fail("Not yet implemented"); // TODO test utilities copylist
+        List<Integer> copyIntegerList = Utilities.copyList(emptyIntegerList);
+        assertEquals(copyIntegerList, emptyIntegerList);
+
+        List<Character> copyAlphabetList = Utilities.copyList(alphabetLoopList);
+        assertEquals(copyAlphabetList, alphabetLoopList);
+
     }
 
+    /**
+     * Tests that the Utilities class's arrayToList method works properly by
+     * converting arrays into ArrayLists and comparing the Array backing the
+     * List with the original array.Tests both lists of size zero and lists with
+     * large sizes.
+     */
     @Test
     public void testArrayToList() {
-        fail("Not yet implemented"); // TODO test utilities arraytolist
+        List<Integer> copyIntegerList = Utilities.arrayToList(new Integer[] {});
+        assertArrayEquals(copyIntegerList.toArray(), new Integer[] {});
+
+        List<Character> copyAlphabetList = Utilities.arrayToList(alphabetLoop);
+        assertArrayEquals(copyAlphabetList.toArray(), alphabetLoop);
     }
 
+    /**
+     * Tests the Utilities.gcd method with integers. Partition space split as
+     * follows: a>b a=b a<b a=0, b>0 a>0, b>0
+     */
     @Test
     public void testGcd() {
 
@@ -38,6 +84,10 @@ public class UtilitiesTest {
 
     }
 
+    /**
+     * Tests the Utilities.lcm method with integers. Partition space split as
+     * follows: a>b a=b a<b a=0, b>0 a>0, b>0
+     */
     @Test
     public void testLcm() {
 

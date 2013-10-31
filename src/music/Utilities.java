@@ -41,9 +41,9 @@ public final class Utilities {
     }
 
     /**
-     * Returns the greatest common denominator of two integers, which cannot
-     * both be zero (since gcd(0, 0) is undefined).
-     *
+     * Returns the greatest common denominator of two non-negative integers,
+     * which cannot both be zero (since gcd(0, 0) is undefined).
+     * 
      * @param a
      *            first integer
      * @param b
