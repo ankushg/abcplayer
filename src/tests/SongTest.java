@@ -22,7 +22,9 @@ import sound.Pitch;
 public class SongTest {
 
     /**
-     * Songs can contain
+     * Tests the Song class. Songs can contain Voices and combinations of
+     * everything they can contain. They have varying tempos and
+     * default_length_notes as well.
      */
 
     public static Measure ZeroNotes = new Measure(new Chord(new Fraction(1, 2), new ArrayList<Note>()));
@@ -61,11 +63,6 @@ public class SongTest {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-    }
-
-    @Test
-    public void testToString() {
-        fail("Not yet implemented"); // TODO test song tostring
     }
 
     @Test

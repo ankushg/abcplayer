@@ -21,9 +21,10 @@ import org.junit.Test;
 import sound.Pitch;
 
 /**
- * Tests the Repeat class with a variety of inputs. Test partitions: Measures
- * with key differences, chords of various pitches with all possible accidentals
- * applied, chords with 0/1/many notes, repeats with alternate endings
+ * Tests the Repeat class with a variety of inputs. Test partitions for all
+ * methods: Measures with key differences, chords of various pitches with all
+ * possible accidentals applied, chords with 0/1/many notes, repeats with
+ * alternate endings.
  */
 public class RepeatTest {
 

@@ -12,6 +12,10 @@ import music.Utilities;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Tests some relevant utility methods that are used in other classes.
+ *
+ */
 public class UtilitiesTest {
     ArrayList<Integer> emptyIntegerList;
     List<Character> alphabetLoopList;
@@ -62,7 +66,8 @@ public class UtilitiesTest {
 
     /**
      * Tests the Utilities.gcd method with integers. Partition space split as
-     * follows: a>b a=b a<b a=0, b>0 a>0, b>0
+     * follows: a>b a=b a<b a=0, b>0 a>0, b>0, relatively prime numbers, common
+     * factors, boundary cases of 0 and 1
      */
     @Test
     public void testGcd() {
@@ -86,7 +91,8 @@ public class UtilitiesTest {
 
     /**
      * Tests the Utilities.lcm method with integers. Partition space split as
-     * follows: a>b a=b a<b a=0, b>0 a>0, b>0
+     * follows: a>b a=b a<b a=0, b>0 a>0, b>0, numbers with common factors,
+     * boundary case of 1, relatively prime numbers
      */
     @Test
     public void testLcm() {

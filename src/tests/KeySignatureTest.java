@@ -135,11 +135,6 @@ public class KeySignatureTest {
     }
 
     @Test
-    public void testToString() {
-        fail("Not yet implemented"); // TODO test KeySignature.toString
-    }
-
-    @Test
     public void testEqualsObject() {
         fail("Not yet implemented"); // TODO test KeySignature.equals
     }

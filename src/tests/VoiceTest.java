@@ -20,10 +20,18 @@ import org.junit.Test;
 
 import sound.Pitch;
 
-/* Testing strategy: A Voice can be made up of Measures, Repeats, and ChordSequenceLists. We're testing a voice only made up of Measures, a voice made up of Measures and Repeats, and a voice made up of Measures, Repeats, and ChordSequenceLists.*/
-
+/**
+ * Tests the Voice class. Testing strategy: A Voice can be made up of Measures,
+ * Repeats, and ChordSequenceLists. We're testing a voice only made up of
+ * Measures, a voice made up of Measures and Repeats, and a voice made up of
+ * Measures, Repeats, and ChordSequenceLists.
+ */
 public class VoiceTest {
 
+    /**
+     * Tests getChords on a simple voice with three measures and no repeats or
+     * chordsequencelists
+     */
     @Test
     public void testGetChords() {
 
@@ -53,6 +61,9 @@ public class VoiceTest {
         assertEquals(expected, v.getChords());
     }
 
+    /**
+     * Tests getChords on a Voice with a mixture of measures and repeats.
+     */
     @Test
     public void testGetChordsWithMixtureOfMeasuresAndRepeats() {
         Chord c1 = new Chord(FractionTest.oneFourth, new Note(PitchTest.middleC, FractionTest.oneFourth), new Note(
@@ -113,10 +124,14 @@ public class VoiceTest {
         assertEquals(expected, repeats.getChords());
     }
 
+    /**
+     * Tets getChords on a voice with a combination of measures, repeats, and
+     * chordsequencelists
+     */
     @Test
     public void testGetChordsWithMeasuresRepeatsAndChordSequenceLists() {
 
-        // Makes ChordSequenceList that contains two repeats.
+        /** Makes ChordSequenceList that contains two repeats. */
         Chord c1 = new Chord(FractionTest.oneFourth, new Note(PitchTest.middleC, FractionTest.oneFourth), new Note(
                 PitchTest.lowG, FractionTest.oneFourth));
         Chord c2 = new Chord(FractionTest.oneHalf, new Note(PitchTest.middleC, FractionTest.oneHalf), new Note(
@@ -141,14 +156,16 @@ public class VoiceTest {
 
         ChordSequenceList repeats = new ChordSequenceList(r1, r2);
 
-        // Makes a voice with the ChordSequenceList containing repeats followed
-        // by two measures.
+        /**
+         * Makes a voice with the ChordSequenceList containing repeats followed
+         * by two measures.
+         **/
 
         Voice v = new Voice(repeats, m1, m2);
 
         List<Chord> expected = new ArrayList<Chord>();
 
-        // Adds first repeat in ChordSequence
+        /** Adds first repeat in ChordSequence */
         expected.add(c1);
         expected.add(c2);
         expected.add(c3);
@@ -160,7 +177,7 @@ public class VoiceTest {
         expected.add(c2);
         expected.add(c3);
 
-        // Adds second repeat in ChordSequence
+        /** Adds second repeat in ChordSequence */
         expected.add(c1);
         expected.add(c2);
         expected.add(c3);
@@ -172,12 +189,12 @@ public class VoiceTest {
         expected.add(c2);
         expected.add(c3);
 
-        // Adds measure 1
+        /** Adds measure 1 */
         expected.add(c1);
         expected.add(c2);
         expected.add(c3);
 
-        // Adds measure 2
+        /** Adds measure 2 */
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F').transpose(1), new Fraction(2, 1))));

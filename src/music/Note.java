@@ -2,10 +2,9 @@ package music;
 
 import sound.Pitch;
 
-// TODO: Auto-generated Javadoc
-// TODO: Document the Note class
 /**
- * The Class Note.
+ * The class Note represents a note and contains its pitch, duration and
+ * accidentals. It's immutable.
  */
 public final class Note {
 
@@ -62,7 +61,7 @@ public final class Note {
     }
 
     /**
-     * Gets the letter.
+     * Gets the letter for the pitch of this Note
      *
      * @return the letter
      */
@@ -71,11 +70,12 @@ public final class Note {
     }
 
     /**
-     * Gets the letter.
+     * Gets the letter associated with the given pitch
      *
      * @param pitch
-     *            the pitch
-     * @return the letter
+     *            the pitch to check
+     * @return the letter for the note, or 0 if the note has an accidental
+     *         applied
      */
     public static char getLetter(Pitch pitch) {
         char[] scale = "CDEFGAB".toCharArray();
