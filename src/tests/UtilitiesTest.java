@@ -1,6 +1,7 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import org.junit.Test;
 
 /**
  * Tests some relevant utility methods that are used in other classes.
- *
+ * 
  */
 public class UtilitiesTest {
     ArrayList<Integer> emptyIntegerList;
@@ -99,8 +100,6 @@ public class UtilitiesTest {
 
         // Tests boundary cases of 1.
         assertEquals(7, Utilities.lcm(1, 7));
-        assertEquals(7, Utilities.lcm(0, 7));
-        assertEquals(0, Utilities.lcm(0, 0));
 
         // Tests relatively prime numbers.
         assertEquals(21, Utilities.lcm(3, 7));
