@@ -124,9 +124,12 @@ public class LexerTest {
     }
 
     /**
-     * Tests a very long, complex file with almost every element.
+     * Tests a very long, complex file with almost every element. Mainly just to
+     * ensure that the lexer is working properly, but also to ensure that it's
+     * reasonably performant. It tests that it takes no more than 1 second to
+     * parse the file.
      */
-    @Test
+    @Test(timeout = 1000)
     public void testComplexFile() {
         String file = "sample_abc/tests/greensleeves.abc";
         String[] singleTokens = { "X:", " ", "1", "\n", "T:", " ", "G", "r", "e", "e", "n", "s", "l", "e", "e", "v",
