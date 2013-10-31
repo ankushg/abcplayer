@@ -1,0 +1,9 @@
+X: 1
+T:Piece No.6
+M:2/4
+L:1/4
+Q:1/4=140
+K:G
+%Tests the different lyrics symbols.
+| G B G D | G A B | C D E |
+w: moo-moo--moo moo__ moo~moo~moo

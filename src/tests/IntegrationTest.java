@@ -30,12 +30,11 @@ public class IntegrationTest {
     }
 
     /**
-     * Tests multiple voices separated into different chunks, non-fraction
-     * meter, multiple octave changes, accidentals, naturals
+     * Tests the different lyrics symbols.
      */
     @Test
     public void integrationTestThree() {
-        Main.play("/sample_abc/tests/enya.abc");
+        Main.play("/sample_abc/tests/test3.abc");
     }
 
     /**
@@ -45,5 +44,14 @@ public class IntegrationTest {
     @Test
     public void integrationTestFour() {
         Main.play("/sample_abc/tests/greensleeves.abc");
+    }
+
+    /**
+     * Tests multiple voices separated into different chunks, non-fraction
+     * meter, multiple octave changes, accidentals, naturals
+     */
+    @Test
+    public void integrationTestFive() {
+        Main.play("/sample_abc/tests/enya.abc");
     }
 }

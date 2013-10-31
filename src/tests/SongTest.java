@@ -45,8 +45,10 @@ public class SongTest {
 
         Measure m = new Measure(c1, c2);
         Voice v = new Voice(m);
-
-        Song s = new Song(v);
+        List<Voice> voices = new ArrayList<>();
+        voices.add(v);
+        Song s = new Song(voices, "Track 2", "testing", "6.005", new Fraction(4, 4), new Fraction(1, 4),
+                new Fraction(1, 4), KeySignature.DEFAULT, 120);
 
         String expected = "Event: NOTE_ON  Pitch: 74  Tick: 0\n***** End of track *****   Tick: 0\nEvent: NOTE_OFF Pitch: 74  Tick: 2\nEvent: NOTE_ON  Pitch: 86  Tick: 2\n***** End of track *****   Tick: 2\nEvent: NOTE_OFF Pitch: 86  Tick: 4\n***** End of track *****   Tick: 4\n";
         try {
@@ -78,8 +80,10 @@ public class SongTest {
         Measure m1 = new Measure(c1, c2);
         Measure m2 = new Measure(c3, ZeroNotes, TupletTest.highCTriplet);
         Voice v1 = new Voice(m1, m2);
-
-        Song s = new Song(v1);
+        List<Voice> voices = new ArrayList<>();
+        voices.add(v1);
+        Song s = new Song(voices, "Track 0", "test", "6.005", new Fraction(4, 4), new Fraction(1, 4),
+                new Fraction(1, 4), KeySignature.DEFAULT, 120);
 
         String expected = "Event: NOTE_ON  Pitch: 60  Tick: 0\nEvent: NOTE_ON  Pitch: 55  Tick: 0\n***** End of track *****   Tick: 0\nEvent: NOTE_OFF Pitch: 60  Tick: 3\nEvent: NOTE_OFF Pitch: 55  Tick: 3\nEvent: NOTE_ON  Pitch: 60  Tick: 3\nEvent: NOTE_ON  Pitch: 72  Tick: 3\n***** End of track *****   Tick: 3\nEvent: NOTE_OFF Pitch: 72  Tick: 6\nEvent: NOTE_OFF Pitch: 60  Tick: 9\nEvent: NOTE_ON  Pitch: 72  Tick: 9\nEvent: NOTE_ON  Pitch: 55  Tick: 9\n***** End of track *****   Tick: 9\nEvent: NOTE_OFF Pitch: 72  Tick: 12\nEvent: NOTE_OFF Pitch: 55  Tick: 12\n***** End of track *****   Tick: 12\nEvent: NOTE_ON  Pitch: 72  Tick: 18\n***** End of track *****   Tick: 18\nEvent: NOTE_OFF Pitch: 72  Tick: 26\nEvent: NOTE_ON  Pitch: 72  Tick: 26\n***** End of track *****   Tick: 26\nEvent: NOTE_OFF Pitch: 72  Tick: 34\nEvent: NOTE_ON  Pitch: 72  Tick: 34\n***** End of track *****   Tick: 34\nEvent: NOTE_OFF Pitch: 72  Tick: 42\n***** End of track *****   Tick: 42\n";
 
@@ -119,7 +123,11 @@ public class SongTest {
         Measure m = new Measure(c3, c4);
         Voice v2 = new Voice(m);
 
-        Song s = new Song(v1, v2);
+        List<Voice> voices = new ArrayList<>();
+        voices.add(v1);
+        voices.add(v2);
+        Song s = new Song(voices, "Track 0", "test", "6.005", new Fraction(4, 4), new Fraction(1, 4),
+                new Fraction(1, 4), KeySignature.DEFAULT, 120);
 
         String expected = "Event: NOTE_ON  Pitch: 55  Tick: 0\n***** End of track *****   Tick: 0\nEvent: NOTE_ON  Pitch: 74  Tick: 0\n***** End of track *****   Tick: 0\nEvent: NOTE_OFF Pitch: 60  Tick: 1\nEvent: NOTE_OFF Pitch: 55  Tick: 1\nEvent: NOTE_ON  Pitch: 66  Tick: 1\n***** End of track *****   Tick: 1\nEvent: NOTE_OFF Pitch: 74  Tick: 8\nEvent: NOTE_ON  Pitch: 86  Tick: 8\n***** End of track *****   Tick: 8\nEvent: NOTE_OFF Pitch: 66  Tick: 9\nEvent: NOTE_ON  Pitch: 67  Tick: 9\n***** End of track *****   Tick: 9\nEvent: NOTE_OFF Pitch: 86  Tick: 16\nEvent: NOTE_OFF Pitch: 67  Tick: 17\nEvent: NOTE_ON  Pitch: 60  Tick: 17\nEvent: NOTE_ON  Pitch: 55  Tick: 17\n***** End of track *****   Tick: 17\nEvent: NOTE_OFF Pitch: 60  Tick: 18\nEvent: NOTE_OFF Pitch: 55  Tick: 18\n***** End of track *****   Tick: 18\n";
 
