@@ -86,6 +86,8 @@ public class Listener extends ABCMusicBaseListener {
             Iterator<Object> chordsIterator = flattenedChordsAndBars.iterator();
             int count = 0;
             List<List<Syllable>> lyrics = new ArrayList<>();
+
+            // TODO these loops have indexing errors
             if (lyricsIterator.hasNext()) {
                 List<Syllable> currentMeasure = new ArrayList<>();
                 Object c, s = lyricsIterator.next();
@@ -107,21 +109,28 @@ public class Listener extends ABCMusicBaseListener {
                     }
                 }
             }
+
             System.out.println("LYRICS " + lyrics);
             Iterator<List<Syllable>> lyricsMeasureIterator = lyrics.iterator();
-            List<Measure> measures = new ArrayList<>();
+            List<Object> measuresAndBars = new ArrayList<>();
             List<ChordSequence> currentMeasureChords = new ArrayList<>();
             for (Object o : chordsAndBars) {
                 if (o instanceof ChordSequence) {
                     currentMeasureChords.add((ChordSequence) o);
                 } else {
-                    measures.add(new Measure(keySignature, lyricsMeasureIterator.hasNext() ? lyricsMeasureIterator
-                            .next() : new ArrayList<Syllable>(), currentMeasureChords));
-                    System.out.println(measures.get(measures.size() - 1));
+                    measuresAndBars.add(new Measure(keySignature,
+                            lyricsMeasureIterator.hasNext() ? lyricsMeasureIterator.next() : new ArrayList<Syllable>(),
+                            currentMeasureChords));
+                    if (o != BarLine.MEASURE) {
+                        measuresAndBars.add(o);
+                    }
                     currentMeasureChords = new ArrayList<>();
                 }
             }
-            voices.add(new Voice(new ChordSequenceList(measures)));
+
+            // TODO deal with repeats
+
+            voices.add(new Voice(new ChordSequenceList(measuresAndBars)));
         }
 
         if (meter == null) {
