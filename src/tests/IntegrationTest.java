@@ -14,11 +14,28 @@ import player.Main;
 public class IntegrationTest {
 
     /**
-     * Plays file test_one. This file tests for
+     * Tests multiple voices separated into different chunks.
      */
     @Test
     public void integrationTestOne() {
-        Main.play("/sample_abc/tests/test_one.abc");
+        Main.play("/sample_abc/tests/test1.abc");
     }
 
+    /**
+     * Tests large piece in A flat minor (two modifications to key), triplets,
+     * duplets, chords, octave changes, accidentals, naturals
+     */
+    @Test
+    public void integrationTestTwo() {
+        Main.play("/sample_abc/tests/greensleeves.abc");
+    }
+
+    /**
+     * Tests multiple voices separated into different chunks, non-fraction
+     * meter, multiple octave changes, accidentals, naturals
+     */
+    @Test
+    public void integrationTestThree() {
+        Main.play("/sample_abc/tests/enya.abc");
+    }
 }

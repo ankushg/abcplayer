@@ -37,7 +37,6 @@ public class SongTest {
      * Basic getPlayer() test testing a measure with length greater than 1 and
      * only one voice.
      **/
-
     @Test
     public void testGetPlayer() {
 
@@ -55,10 +54,8 @@ public class SongTest {
             assertEquals(expected, s.getPlayer().toString());
 
         } catch (MidiUnavailableException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InvalidMidiDataException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -89,7 +86,6 @@ public class SongTest {
         try {
             assertEquals(expected, s.getPlayer().toString());
         } catch (MidiUnavailableException | InvalidMidiDataException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
