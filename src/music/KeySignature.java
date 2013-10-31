@@ -67,7 +67,6 @@ public final class KeySignature {
         if (k.getSharps() > 0) {
             char[] sharps = new char[] { 'F', 'C', 'G', 'D', 'A', 'E', 'B' };
             for (int i = 0; i < k.getSharps(); i++) {
-                map.remove(sharps[i]);
                 map.put(sharps[i], 1);
             }
             return map;
@@ -77,7 +76,6 @@ public final class KeySignature {
             int numFlats = Math.abs(k.getSharps());
             char[] flats = new char[] { 'B', 'E', 'A', 'D', 'G', 'C', 'F' };
             for (int i = 0; i < numFlats; i++) {
-                map.remove(flats[i]);
                 map.put(flats[i], -1);
             }
             return map;
