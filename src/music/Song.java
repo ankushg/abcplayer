@@ -21,14 +21,12 @@ public final class Song {
     private final Fraction meter;
     private Fraction defaultLength;
     private final Fraction fracTempo;
-    private String keySignature;
+    private KeySignature keySignature;
 
     private int tempo = 100;
 
-    // TODO add other fields + appropriate constructors + comments for those
-    // constructors
     public Song(List<Voice> voices, String trackNumber, String title, String composer, Fraction meter,
-            Fraction defaultLength, Fraction fracTempo, String keySignature, String tempo) {
+            Fraction defaultLength, Fraction fracTempo, KeySignature keySignature, int tempo) {
         this.voices = voices;
         this.trackNumber = trackNumber;
         this.title = title;
@@ -37,54 +35,7 @@ public final class Song {
         this.defaultLength = defaultLength;
         this.fracTempo = fracTempo;
         this.keySignature = keySignature;
-        this.tempo = Integer.parseInt(tempo);
-    }
-
-    public Song(List<Voice> voices, String tN, String title, String keySignature) {
-        this.voices = voices;
-        this.trackNumber = tN;
-        this.title = title;
-        this.keySignature = keySignature;
-        this.meter = new Fraction(4, 4);
-        this.composer = "Unknown";
-        this.defaultLength = new Fraction(1, 8);
-        this.fracTempo = new Fraction(1, 8);
-        this.tempo = 100;
-    }
-
-    public Song(List<Voice> voices, Fraction meter, String tN, String title, String keySignature) {
-        this.voices = voices;
-        this.trackNumber = tN;
-        this.title = title;
-        this.keySignature = keySignature;
-        this.meter = meter;
-
-        this.composer = "Unknown";
-
-        // Calculating default length if not specified and meter is specified.
-        if (meter.numerator * 4 < 3 * meter.denominator) {
-            this.defaultLength = new Fraction(1, 16);
-        } else {
-            this.defaultLength = new Fraction(1, 8);
-        }
-        this.fracTempo = new Fraction(1, 8);
-        this.tempo = 100;
-    }
-
-    public Song(List<Voice> voices) {
-        this.voices = Utilities.copyList(voices);
-        this.trackNumber = "";
-        this.title = "";
-        this.composer = "Unknown";
-        this.meter = new Fraction(4, 4);
-        this.defaultLength = new Fraction(1, 4);
-        this.fracTempo = new Fraction(1, 8);
-        this.keySignature = "C";
-        this.tempo = 200;
-    }
-
-    public Song(Voice... voices) {
-        this(Utilities.arrayToList(voices));
+        this.tempo = tempo;
     }
 
     public SequencePlayer getPlayer() throws MidiUnavailableException, InvalidMidiDataException {
