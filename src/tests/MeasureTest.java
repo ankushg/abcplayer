@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import music.Accidental;
+import music.AccidentalType;
 import music.Chord;
 import music.ChordSequence;
 import music.Fraction;
@@ -105,42 +107,50 @@ public class MeasureTest {
     }
 
     /**
-     * Tests that a measure correctly applies accidentals with getChords(). Also
-     * tests that accidentals are not "doubly applied" when specified in both a
-     * key signature and an accidental on the note. For example, if there was an
-     * F# in E Major, it would remain as F# and not F double sharp.
+     * Tests that a measure correctly applies accidentals with getChords().
+     * Tests both single and double accidentals. Tests both single and double
+     * octave transposes. Also tests that accidentals are not "doubly applied"
+     * when specified in both a key signature and an accidental on the note. For
+     * example, if there was an F# in E Major, it would remain as F# and not F
+     * double sharp.
      **/
     @Test
     public void testGetChordsWithAccidentals() {
         List<ChordSequence> noKeyCS = new ArrayList<>();
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1), AccidentalTest.oneSharp)));
+        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1), new Accidental(
+                AccidentalType.SHARP, 2))));
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('A'), new Fraction(2, 1), AccidentalTest.oneFlat)));
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('B'), new Fraction(2, 1))));
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C').octaveTranspose(1).transpose(1),
                 new Fraction(2, 1))));
         noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
-        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E').octaveTranspose(1), new Fraction(2, 1))));
+        noKeyCS.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E').octaveTranspose(2), new Fraction(2, 1))));
 
         Measure m = new Measure(new KeySignature(KeyType.E), noKeyCS);
 
         List<Chord> expected = new ArrayList<Chord>();
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F').transpose(1), new Fraction(2, 1))));
-        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G').transpose(1), new Fraction(2, 1))));
+        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G').transpose(2), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('A').transpose(-1), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('B'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('C').octaveTranspose(1).transpose(1),
                 new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D').octaveTranspose(1).transpose(1),
                 new Fraction(2, 1))));
-        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E').octaveTranspose(1), new Fraction(2, 1))));
+        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E').octaveTranspose(2), new Fraction(2, 1))));
 
         assertEquals(expected, m.getChords());
     }
 
-    /** Tests that getChords() correctly applies syllables to chords. **/
+    /**
+     * Tests that getChords() correctly applies syllables to chords. This case
+     * tests for when there are fewer syllables than notes, when a syllable is
+     * held for more than one note, and when a syllable is held for exactly one
+     * note.
+     **/
     @Test
     public void testgetChordsWithSyllables() {
         List<Syllable> s = new ArrayList<Syllable>();
