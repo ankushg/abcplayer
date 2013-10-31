@@ -46,16 +46,16 @@ public class Listener extends ABCMusicBaseListener {
     private KeySignature keySignature;
     private Song song;
 
-    private List<Note> notes = new ArrayList<Note>();
+    private final List<Note> notes = new ArrayList<Note>();
     private Fraction chordDuration = null;
-    private Map<String, List<ChordSequence>> map = new HashMap<>();
-    private Deque<Object> chordsAndBars = new LinkedList<>();
-    private Map<String, List<Object>> chordsAndBarsByVoice = new HashMap<>();
-    private Deque<Object> lyricsAndBars = new LinkedList<>();
-    private Map<String, List<Object>> lyricsAndBarsByVoice = new HashMap<>();
+    private final Map<String, List<ChordSequence>> map = new HashMap<>();
+    private final Deque<Object> chordsAndBars = new LinkedList<>();
+    private final Map<String, List<Object>> chordsAndBarsByVoice = new HashMap<>();
+    private final Deque<Object> lyricsAndBars = new LinkedList<>();
+    private final Map<String, List<Object>> lyricsAndBarsByVoice = new HashMap<>();
 
     private String currentVoice = "";
-    private Set<String> voiceNames = new HashSet<>();
+    private final Set<String> voiceNames = new HashSet<>();
     private int tupletLength = 0;
 
     public Song getSong() {
@@ -129,8 +129,14 @@ public class Listener extends ABCMusicBaseListener {
             }
 
             // TODO deal with repeats
+            List<ChordSequence> measuresAndRepeats = new ArrayList<>();
+            for (Object o : measuresAndBars) {
+                if (o instanceof ChordSequence) {
+                    measuresAndRepeats.add((ChordSequence) o);
+                }
+            }
 
-            voices.add(new Voice(new ChordSequenceList(measuresAndBars)));
+            voices.add(new Voice(new ChordSequenceList(measuresAndRepeats)));
         }
 
         if (meter == null) {
