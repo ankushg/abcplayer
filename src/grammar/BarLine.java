@@ -1,7 +1,7 @@
 package grammar;
 
 public enum BarLine {
-    SINGLE_BAR("|", "[|"), DOUBLE_BAR("||", "|]"), START_REPEAT("|:"), END_REPEAT(":|"), REPEAT_ONE("[1");
+    MEASURE("|", "[|"), START_REPEAT("|:", "[2", "||", "|]"), END_REPEAT(":|"), REPEAT_ONE("[1"), LYRIC_BARLINE;
 
     private String[] strings;
 

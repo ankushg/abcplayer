@@ -1,12 +1,17 @@
 package grammar;
 
+import grammar.ABCMusicParser.FractionContext;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import music.Accidental;
 import music.AccidentalType;
@@ -14,10 +19,12 @@ import music.Chord;
 import music.ChordSequence;
 import music.ChordSequenceList;
 import music.Fraction;
+import music.KeySignature;
+import music.KeyType;
 import music.Measure;
 import music.Note;
-import music.Repeat;
 import music.Song;
+import music.Syllable;
 import music.Tuplet;
 import music.Voice;
 
@@ -31,18 +38,24 @@ import sound.Pitch;
 public class Listener extends ABCMusicBaseListener {
     private String trackNumber;
     private String title;
+    private String composer;
     private Fraction meter;
     private Fraction defaultLength;
-    private String tempo;
-    private String keySignature;
+    private Fraction fracTempo;
+    private int tempo;
+    private KeySignature keySignature;
     private Song song;
 
     private List<Note> notes = new ArrayList<Note>();
     private Fraction chordDuration = null;
-    private Deque<Object> chordsAndBars = new LinkedList<>();
-    private List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
     private Map<String, List<ChordSequence>> map = new HashMap<>();
+    private Deque<Object> chordsAndBars = new LinkedList<>();
+    private Map<String, List<Object>> chordsAndBarsByVoice = new HashMap<>();
+    private Deque<Object> lyricsAndBars = new LinkedList<>();
+    private Map<String, List<Object>> lyricsAndBarsByVoice = new HashMap<>();
+
     private String currentVoice = "";
+    private Set<String> voiceNames = new HashSet<>();
     private int tupletLength = 0;
 
     public Song getSong() {
@@ -53,98 +66,103 @@ public class Listener extends ABCMusicBaseListener {
     public void enterAbc_music(ABCMusicParser.Abc_musicContext ctx) {
     }
 
-    // TODO: How do we take care of invalid inputs? For example if the name of a
-    // voice wasn't followed by the voice itself
     @Override
     public void exitAbc_music(ABCMusicParser.Abc_musicContext ctx) {
-
         List<Voice> voices = new ArrayList<Voice>();
-        for (List<ChordSequence> sequence : map.values()) {
-            voices.add(new Voice(sequence));
+        for (String voiceName : voiceNames) {
+            List<Object> chordsAndBars = chordsAndBarsByVoice.get(voiceName);
+            List<Object> lyricsAndBars = lyricsAndBarsByVoice.get(voiceName);
+
+            List<Object> flattenedChordsAndBars = new ArrayList<>();
+            for (Object o : chordsAndBars) {
+                if (o instanceof ChordSequence) {
+                    flattenedChordsAndBars.addAll(((ChordSequence) o).getChords());
+                } else {
+                    flattenedChordsAndBars.add(o);
+                }
+            }
+
+            Iterator<Object> lyricsIterator = lyricsAndBars.iterator();
+            Iterator<Object> chordsIterator = flattenedChordsAndBars.iterator();
+            int count = 0;
+            List<List<Syllable>> lyrics = new ArrayList<>();
+            List<Syllable> currentMeasure = new ArrayList<>();
+            Object c, s = lyricsIterator.next();
+            System.out.println("SSSSSS" + s);
+            while (chordsIterator.hasNext()) {
+                if (s instanceof Syllable && count == 0) {
+                    count = ((Syllable) s).length;
+                    currentMeasure.add((Syllable) s);
+                    s = lyricsIterator.next();
+                }
+                c = chordsIterator.next();
+                if (c instanceof Chord) {
+                    count--;
+                } else {
+                    if (s instanceof BarLine) {
+                        s = lyricsIterator.next();
+                    }
+                    lyrics.add(currentMeasure);
+                    currentMeasure = new ArrayList<>();
+                }
+            }
+            System.out.println("LYRICS " + lyrics);
+            Iterator<List<Syllable>> lyricsMeasureIterator = lyrics.iterator();
+            List<Measure> measures = new ArrayList<>();
+            List<ChordSequence> currentMeasureChords = new ArrayList<>();
+            for (Object o : chordsAndBars) {
+                if (o instanceof ChordSequence) {
+                    currentMeasureChords.add((ChordSequence) o);
+                } else {
+                    measures.add(new Measure(keySignature, lyricsMeasureIterator.hasNext() ? lyricsMeasureIterator
+                            .next() : new ArrayList<Syllable>(), currentMeasureChords));
+                    System.out.println(measures.get(measures.size() - 1));
+                    currentMeasureChords = new ArrayList<>();
+                }
+            }
+            voices.add(new Voice(new ChordSequenceList(measures)));
         }
-        System.out.println(map);
-        System.out.println("The number of voices is " + voices.size());
-        song = new Song(voices);
-        /*
-         * // Stuff to test playing chords
-         * System.out.println("now playing...1");
-         * 
-         * ChordSequenceList csl = new ChordSequenceList(chordSequences);
-         * List<Chord> finalChords = csl.getChords(); int ticksPerBeat =
-         * Utilities.computeTicksPerBeat(finalChords); List<ReadyToAddItem>
-         * items = Utilities.getReadyToAddItems(finalChords);
-         * 
-         * LyricListener listener = new LyricListener() { public void
-         * processLyricEvent(String text) { System.out.print(text); } };
-         * 
-         * SequencePlayer player; try { player = new SequencePlayer(140,
-         * ticksPerBeat, listener); for (ReadyToAddItem item : items) {
-         * item.addTo(player); } player.play(); } catch (Exception e) {
-         * e.printStackTrace(); }
-         */
+
+        if (meter == null) {
+            meter = new Fraction(4, 4);
+        }
+        if (composer == null) {
+            composer = "Unknown";
+        }
+        if (defaultLength == null) {
+            if (meter.numerator * 4 < 3 * meter.denominator) {
+                defaultLength = new Fraction(1, 16);
+            } else {
+                defaultLength = new Fraction(1, 8);
+            }
+        }
+        if (fracTempo == null) {
+            fracTempo = defaultLength;
+            tempo = 100;
+        }
+
+        song = new Song(voices, trackNumber, title, composer, meter, defaultLength, fracTempo, keySignature, tempo);
+        System.out.println(lyricsAndBarsByVoice);
+        System.out.println(chordsAndBarsByVoice);
     }
 
     @Override
     public void enterVoice(ABCMusicParser.VoiceContext ctx) {
-        chordsAndBars.clear();
     }
 
     @Override
-    // TODO: handle repeats and alternate endings. Handle repeats when there's
-    // no |:
     public void exitVoice(ABCMusicParser.VoiceContext ctx) {
-        List<ChordSequence> chordSequences = new ArrayList<ChordSequence>();
-        List<ChordSequence> noEnding = new ArrayList<ChordSequence>();
-        List<ChordSequence> firstEnding = new ArrayList<ChordSequence>();
-        boolean inRepeat = false;
-        boolean inFirstEnding = false;
-        for (Object x : chordsAndBars) {
-            if (x instanceof ChordSequence) {
-                chordSequences.add((ChordSequence) x);
-            } else {
-                if (x instanceof BarLine) {
-                    BarLine bar = (BarLine) x;
-                    if (bar == BarLine.SINGLE_BAR) {
-                        Measure m = new Measure(chordSequences);
-                        if (inFirstEnding) {
-                            firstEnding.add(m);
-                        } else if (inRepeat && !inFirstEnding) {
-                            noEnding.add(m);
-                        } else {
-                            chordSequences.add(m);
-                        }
-                        chordSequences.clear();
-                    } else if (bar == BarLine.START_REPEAT || bar == BarLine.DOUBLE_BAR) {
-                        inRepeat = true;
-                    } else if (bar == BarLine.END_REPEAT) {
-                        inRepeat = false;
-                        inFirstEnding = false;
-                        Measure m = new Measure(chordSequences);
-                        firstEnding.add(m);
-                        ChordSequence repeat = new Repeat(new ChordSequenceList(noEnding), new ChordSequenceList(
-                                firstEnding));
-                        chordSequences.add(repeat);
-                        chordSequences.clear();
-                    } else if (bar == BarLine.REPEAT_ONE) {
-                        inFirstEnding = true;
-                    } else {
-                        Measure m = new Measure(chordSequences);
-                        chordSequences.add(m);
-                        chordSequences.clear();
-                    }
-                }
-            }
-
+        voiceNames.add(currentVoice);
+        if (!chordsAndBarsByVoice.containsKey(currentVoice)) {
+            chordsAndBarsByVoice.put(currentVoice, new ArrayList<>());
         }
-        List<ChordSequence> newList = map.remove(currentVoice);
-
-        if (newList == null) {
-            newList = new ArrayList<ChordSequence>();
+        chordsAndBarsByVoice.get(currentVoice).addAll(chordsAndBars);
+        chordsAndBars.clear();
+        if (!lyricsAndBarsByVoice.containsKey(currentVoice)) {
+            lyricsAndBarsByVoice.put(currentVoice, new ArrayList<>());
         }
-        newList.addAll(chordSequences);
-
-        map.put(currentVoice, newList);
-        chordSequences = new ArrayList<ChordSequence>();
+        lyricsAndBarsByVoice.get(currentVoice).addAll(lyricsAndBars);
+        lyricsAndBars.clear();
     }
 
     @Override
@@ -179,7 +197,8 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitTempo(ABCMusicParser.TempoContext ctx) {
-        tempo = ctx.getText();
+        fracTempo = buildFraction(ctx.fraction());
+        tempo = Integer.parseInt(ctx.INTEGER().getText());
     }
 
     @Override
@@ -255,29 +274,7 @@ public class Listener extends ABCMusicBaseListener {
         Pitch pitch;
         Fraction duration;
         if (ctx.fraction() != null) {
-            int numerator = -1;
-            int denominator = -1;
-            boolean seenSlash = false;
-            for (ParseTree child : ctx.fraction().children) {
-                TerminalNode fractionFragment = (TerminalNode) child;
-                if (fractionFragment.getSymbol().getType() == ABCMusicLexer.OVER) {
-                    seenSlash = true;
-                } else if (fractionFragment.getSymbol().getType() == ABCMusicParser.INTEGER) {
-                    int integer = Integer.parseInt(fractionFragment.getText());
-                    if (!seenSlash) {
-                        numerator = integer;
-                    } else {
-                        denominator = integer;
-                    }
-                }
-            }
-            if (numerator == -1) {
-                numerator = 1;
-            }
-            if (denominator == -1) {
-                denominator = 2;
-            }
-            duration = new Fraction(numerator, denominator);
+            duration = buildFraction(ctx.fraction());
         } else if (ctx.INTEGER() != null) {
             int numerator = Integer.parseInt(ctx.INTEGER().getText());
             duration = new Fraction(numerator, 1);
@@ -370,7 +367,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitKey_signature(ABCMusicParser.Key_signatureContext ctx) {
-        String key = ctx.getText();
+        keySignature = new KeySignature(KeyType.getKeyType(ctx.getText()));
     }
 
     @Override
@@ -379,6 +376,22 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitSyllable(ABCMusicParser.SyllableContext ctx) {
+        String syl = ctx.getText();
+        int length = 1;
+        while (syl.endsWith("_")) {
+            syl = syl.substring(0, syl.length() - 1);
+            length++;
+        }
+        lyricsAndBars.add(new Syllable(syl, length));
+    }
+
+    @Override
+    public void enterLyric_barline(ABCMusicParser.Lyric_barlineContext ctx) {
+    }
+
+    @Override
+    public void exitLyric_barline(ABCMusicParser.Lyric_barlineContext ctx) {
+        lyricsAndBars.add(BarLine.LYRIC_BARLINE);
     }
 
     @Override
@@ -395,12 +408,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitField_default_length(ABCMusicParser.Field_default_lengthContext ctx) {
-        String lengthString = ctx.fraction().toString();
-
-        int numerator = Character.getNumericValue(lengthString.charAt(0));
-        int denominator = Character.getNumericValue(lengthString.charAt(2));
-
-        defaultLength = new Fraction(numerator, denominator);
+        defaultLength = buildFraction(ctx.fraction());
     }
 
     @Override
@@ -429,16 +437,11 @@ public class Listener extends ABCMusicBaseListener {
         if (ctx.NON_FRACTION_METER() != null) {
             if (ctx.NON_FRACTION_METER().getText().equals("C")) {
                 meter = new Fraction(4, 4);
-            } else if (ctx.NON_FRACTION_METER().getText().equals("C")) {
+            } else if (ctx.NON_FRACTION_METER().getText().equals("C|")) {
                 meter = new Fraction(2, 2);
             }
         } else {
-            String meterString = ctx.fraction().getText();
-
-            int numerator = Character.getNumericValue(meterString.charAt(0));
-            int denom = Character.getNumericValue(meterString.charAt(2));
-
-            meter = new Fraction(numerator, denom);
+            meter = buildFraction(ctx.fraction());
         }
     }
 
@@ -497,8 +500,7 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void exitField_voice(ABCMusicParser.Field_voiceContext ctx) {
-        String name = ctx.string().getText();
-        currentVoice = name;
+        currentVoice = ctx.string().getText();
     }
 
     @Override
@@ -515,5 +517,31 @@ public class Listener extends ABCMusicBaseListener {
 
     @Override
     public void visitErrorNode(ErrorNode node) {
+    }
+
+    public Fraction buildFraction(FractionContext ctx) {
+        int numerator = -1;
+        int denominator = -1;
+        boolean seenSlash = false;
+        for (ParseTree child : ctx.children) {
+            TerminalNode fractionFragment = (TerminalNode) child;
+            if (fractionFragment.getSymbol().getType() == ABCMusicLexer.OVER) {
+                seenSlash = true;
+            } else if (fractionFragment.getSymbol().getType() == ABCMusicParser.INTEGER) {
+                int integer = Integer.parseInt(fractionFragment.getText());
+                if (!seenSlash) {
+                    numerator = integer;
+                } else {
+                    denominator = integer;
+                }
+            }
+        }
+        if (numerator == -1) {
+            numerator = 1;
+        }
+        if (denominator == -1) {
+            denominator = 2;
+        }
+        return new Fraction(numerator, denominator);
     }
 }
