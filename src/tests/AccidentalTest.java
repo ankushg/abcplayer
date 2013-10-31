@@ -11,6 +11,11 @@ import org.junit.Test;
 
 import sound.Pitch;
 
+/**
+ * Contains test cases for the Accidental class. Tests Accidentals of type NONE,
+ * SHARP and NATURAL with positive, negative and zero values.
+ *
+ */
 public class AccidentalTest {
 
     public static Accidental noAcc = Accidental.NONE;

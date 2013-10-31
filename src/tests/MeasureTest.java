@@ -18,11 +18,14 @@ import org.junit.Test;
 
 import sound.Pitch;
 
+/**
+ * Tests the Measure class with a variety of inputs. Test partitions: Major keys
+ * with flats, major keys with sharps, minor keys with flats, minor keys with
+ * sharps, C Major (key with no flats or sharps).
+ */
 public class MeasureTest {
 
     Measure measure = new Measure();
-
-    // TODO: test measure with syllable list
 
     public static final Measure measureWithKeySig = new Measure(new KeySignature(KeyType.D), new Chord(new Fraction(2,
             1), new Note(new Pitch('D'), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(new Pitch('E'),
@@ -32,12 +35,6 @@ public class MeasureTest {
                     new Pitch('B'), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(
                     new Pitch('C').octaveTranspose(1), new Fraction(2, 1))), new Chord(new Fraction(2, 1), new Note(
                     new Pitch('D').octaveTranspose(1), new Fraction(2, 1))));
-
-    /**
-     * The input space is partitioned as follows: Measures can contain Chords or
-     * Tuples. Additionally, getChords() in a Measure applies all accidentals,
-     * key signatures, and syllables to the chords and tuples in a measure.
-     */
 
     /**
      * Tests hash codes for equal and unequal Measure objects that just contain
@@ -60,7 +57,6 @@ public class MeasureTest {
         assertEquals(false, m1.hashCode() == m3.hashCode());
     }
 
-    // TODO: Add more hash code tests.
     /**
      * Tests getChords() on a measure with both Chords and Tuplets. This measure
      * has no accidentals, key signature, or syllables.

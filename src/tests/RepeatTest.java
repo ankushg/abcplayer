@@ -20,16 +20,21 @@ import org.junit.Test;
 
 import sound.Pitch;
 
+/**
+ * Tests the Repeat class with a variety of inputs. Test partitions: Measures
+ * with key differences, chords of various pitches with all possible accidentals
+ * applied, chords with 0/1/many notes, repeats with alternate endings
+ */
 public class RepeatTest {
 
     @Test
     public void testHashCode() {
-        fail("Not yet implemented"); // TODO: test repeat hashcode
+        fail("Not yet implemented");
+        // TODO: test repeat hashcode
     }
 
     @Test
     public void testGetChords() {
-
         Chord c1 = new Chord(FractionTest.oneFourth, new Note(PitchTest.middleC, FractionTest.oneFourth), new Note(
                 PitchTest.lowG, FractionTest.oneFourth));
         Chord c2 = new Chord(FractionTest.oneHalf, new Note(PitchTest.middleC, FractionTest.oneHalf), new Note(
@@ -120,11 +125,6 @@ public class RepeatTest {
 
         assertEquals(expected, r.getChords());
 
-    }
-
-    @Test
-    public void testToString() {
-        fail("Not yet implemented"); // TODO test repeat tostring
     }
 
     @Test

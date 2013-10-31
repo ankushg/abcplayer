@@ -19,9 +19,17 @@ import org.junit.Test;
 
 import sound.Pitch;
 
+/**
+ * Contains test cases for the ChordSequenceList class. Tests ChordSequenceLists
+ * comprised of varying elements of type ChordSequence, including measures and
+ * repeats consisting of chords of length 0, 1 and more.
+ *
+ */
 public class ChordSequenceListTest {
 
-    // Tests a ChordSequenceList only made up of measures.
+    /**
+     * Tests a ChordSequenceList only made up of measures.
+     */
     @Test
     public void testGetChords() {
 
@@ -51,7 +59,9 @@ public class ChordSequenceListTest {
         assertEquals(expected, common.getChords());
     }
 
-    // Tests a ChordSequenceList only made up of repeats.
+    /**
+     * Tests a ChordSequenceList only made up of repeats.
+     */
     @Test
     public void testGetChordsWithRepeats() {
         Chord c1 = new Chord(FractionTest.oneFourth, new Note(PitchTest.middleC, FractionTest.oneFourth), new Note(

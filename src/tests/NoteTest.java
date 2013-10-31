@@ -11,7 +11,7 @@ import sound.Pitch;
 /**
  * Tests notes of varying lengths, tests notes with both sharps and flats, and
  * tests notes with unapplied accidentals.
- * 
+ *
  */
 public class NoteTest {
 
@@ -41,11 +41,9 @@ public class NoteTest {
         assertEquals(new Note(PitchTest.bFlat, FractionTest.oneFourth.multiply(5, 2)), quarterNoteBFlat.multiply(5, 2));
     }
 
-    @Test
-    public void testToString() {
-        // TODO test note toString
-    }
-
+    /**
+     * Tests that equal objects have the same hashcodes
+     */
     @Test
     public void testHashCode() {
         Note n1 = new Note(new Pitch('B').accidentalTranspose(-1), new Fraction(1, 4));
@@ -53,12 +51,12 @@ public class NoteTest {
         assertEquals(true, halfNoteASharp.hashCode() == halfNoteASharpUnappliedNone.hashCode());
         assertEquals(true, quarterNoteBFlat.hashCode() == n1.hashCode());
         assertEquals(true, wholeNoteHighC.hashCode() == n2.hashCode());
-
-        assertEquals(false, quarterNoteBFlat.hashCode() == n2.hashCode());
-        assertEquals(false, halfNoteASharp.hashCode() == n1.hashCode());
-        assertEquals(false, wholeNoteHighC.hashCode() == halfNoteASharp.hashCode());
     }
 
+    /**
+     * Tests for equality with notes with both sharps and flats, and tests notes
+     * with unapplied accidentals.
+     */
     @Test
     public void testEqual() {
         Note n1 = new Note(new Pitch('B').accidentalTranspose(-1), new Fraction(1, 4));
