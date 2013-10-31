@@ -1,6 +1,5 @@
 package music;
 
-// TODO: Document KeyType
 /**
  * The Enum KeyType represents a variety of possible key signatures. Each
  * KeyType has an int signifying how many sharps or flats it has. A flat is a

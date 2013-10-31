@@ -26,11 +26,6 @@ public class NoteTest {
     public static final Note halfNoteASharpUnappliedNone = new Note(PitchTest.aSharp, FractionTest.oneHalf,
             AccidentalTest.noAcc);
 
-    @Test
-    public void testGetLetter() {
-        // TODO test note getletter
-    }
-
     /**
      * Multiplies by fractions with num>denom, num=denom, num<denom.
      */

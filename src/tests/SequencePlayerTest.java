@@ -3,15 +3,14 @@ package tests;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sound.LyricListener;
 import sound.Pitch;
 import sound.SequencePlayer;
 
-// TODO: verify that these are correct since there were errors in the files.
-// TODO: Use these as end-to-end tests since we've hardcoded in everything from the piece1, piece2 and piece3 abc files and can compare the toStrings of the players
-//@Ignore("No need to play these out loud")
+@Ignore("No need to play these out loud")
 public class SequencePlayerTest {
 
     @Test

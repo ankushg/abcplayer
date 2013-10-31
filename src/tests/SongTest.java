@@ -126,7 +126,6 @@ public class SongTest {
         try {
             System.out.println(s.getPlayer().toString());
         } catch (MidiUnavailableException | InvalidMidiDataException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

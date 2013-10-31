@@ -32,8 +32,7 @@ import sound.LyricListener;
 import sound.Pitch;
 import sound.SequencePlayer;
 
-@Ignore("super long and annoying tests")
-// TODO: either delete these or move them somewhere that they actually belong
+@Ignore("No need to play these out loud")
 public class ChordSequenceTest {
     @Test
     public void testTuplet() {

@@ -22,12 +22,11 @@ public class IntegrationTest {
     }
 
     /**
-     * Tests large piece in A flat minor (two modifications to key), triplets,
-     * duplets, chords, octave changes, accidentals, naturals
+     * Tests octave transposes, 2/4 meter, and a key signature with one sharp.
      */
     @Test
     public void integrationTestTwo() {
-        Main.play("/sample_abc/tests/greensleeves.abc");
+        Main.play("/sample_abc/tests/test2.abc");
     }
 
     /**
@@ -37,5 +36,14 @@ public class IntegrationTest {
     @Test
     public void integrationTestThree() {
         Main.play("/sample_abc/tests/enya.abc");
+    }
+
+    /**
+     * Tests large piece in A flat minor (two modifications to key), triplets,
+     * duplets, chords, octave changes, accidentals, naturals
+     */
+    @Test
+    public void integrationTestFour() {
+        Main.play("/sample_abc/tests/greensleeves.abc");
     }
 }

@@ -113,19 +113,4 @@ public class UtilitiesTest {
 
     }
 
-    @Test
-    public void testFlatten() {
-        fail("Not yet implemented"); // TODO test utilities flatten
-    }
-
-    @Test
-    public void testComputeTicksPerBeat() {
-        fail("Not yet implemented"); // TODO test utilities computeticksperbeat
-    }
-
-    @Test
-    public void testGetReadyToAddItems() {
-        fail("Not yet implemented"); // TODO test utilities getreadytoadditems
-    }
-
 }
