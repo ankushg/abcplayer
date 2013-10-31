@@ -86,24 +86,25 @@ public class Listener extends ABCMusicBaseListener {
             Iterator<Object> chordsIterator = flattenedChordsAndBars.iterator();
             int count = 0;
             List<List<Syllable>> lyrics = new ArrayList<>();
-            List<Syllable> currentMeasure = new ArrayList<>();
-            Object c, s = lyricsIterator.next();
-            System.out.println("SSSSSS" + s);
-            while (chordsIterator.hasNext()) {
-                if (s instanceof Syllable && count == 0) {
-                    count = ((Syllable) s).length;
-                    currentMeasure.add((Syllable) s);
-                    s = lyricsIterator.next();
-                }
-                c = chordsIterator.next();
-                if (c instanceof Chord) {
-                    count--;
-                } else {
-                    if (s instanceof BarLine) {
+            if (lyricsIterator.hasNext()) {
+                List<Syllable> currentMeasure = new ArrayList<>();
+                Object c, s = lyricsIterator.next();
+                while (chordsIterator.hasNext()) {
+                    if (s instanceof Syllable && count == 0) {
+                        count = ((Syllable) s).length;
+                        currentMeasure.add((Syllable) s);
                         s = lyricsIterator.next();
                     }
-                    lyrics.add(currentMeasure);
-                    currentMeasure = new ArrayList<>();
+                    c = chordsIterator.next();
+                    if (c instanceof Chord) {
+                        count--;
+                    } else {
+                        if (s instanceof BarLine) {
+                            s = lyricsIterator.next();
+                        }
+                        lyrics.add(currentMeasure);
+                        currentMeasure = new ArrayList<>();
+                    }
                 }
             }
             System.out.println("LYRICS " + lyrics);
