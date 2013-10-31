@@ -42,7 +42,7 @@ public final class Song {
         int ticksPerBeat = Utilities.computeTicksPerBeat(Utilities.flatten(voices));
 
         SequencePlayer player = new SequencePlayer((defaultLength.numerator * fracTempo.denominator * tempo)
-                / (defaultLength.numerator * fracTempo.numerator), ticksPerBeat, new LyricListener() {
+                / (defaultLength.denominator * fracTempo.numerator), ticksPerBeat, new LyricListener() {
             @Override
             public void processLyricEvent(String text) {
                 System.out.print(text);
