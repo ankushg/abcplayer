@@ -143,7 +143,7 @@ public class Measure implements ChordSequence {
             count--;
         }
 
-        return processedChords;
+        return processedChordsWithSyllables;
     }
 
     /*
