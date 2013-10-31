@@ -1,10 +1,23 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+
+import music.Chord;
+import music.Fraction;
+import music.Measure;
+import music.Note;
 
 import org.junit.Test;
 
 public class SongTest {
+
+    /**
+     * Songs can contain
+     */
+
+    public static Measure ZeroNoteMeasure = new Measure(new Chord(new Fraction(1, 2), new ArrayList<Note>()));
 
     @Test
     public void testHashCode() {

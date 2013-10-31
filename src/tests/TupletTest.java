@@ -36,8 +36,4 @@ public class TupletTest {
                 ChordTest.highCNoteChord.multiply(3, 4), ChordTest.chordB.multiply(3, 4)), mixedQuadruplet.getChords());
     }
 
-    // TODO test tuplet tostring
-    @Test
-    public void testToString() {
-    }
 }
