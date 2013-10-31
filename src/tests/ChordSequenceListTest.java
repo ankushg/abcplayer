@@ -23,7 +23,7 @@ import sound.Pitch;
  * Contains test cases for the ChordSequenceList class. Tests ChordSequenceLists
  * comprised of varying elements of type ChordSequence, including measures and
  * repeats consisting of chords of length 0, 1 and more.
- *
+ * 
  */
 public class ChordSequenceListTest {
 
@@ -94,7 +94,7 @@ public class ChordSequenceListTest {
         expected.add(c3);
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
-        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
+        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F').transpose(1), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))));
         expected.add(c1);
         expected.add(c2);
@@ -105,7 +105,7 @@ public class ChordSequenceListTest {
         expected.add(c3);
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('D'), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('E'), new Fraction(2, 1))));
-        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F'), new Fraction(2, 1))));
+        expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('F').transpose(1), new Fraction(2, 1))));
         expected.add(new Chord(new Fraction(2, 1), new Note(new Pitch('G'), new Fraction(2, 1))));
         expected.add(c1);
         expected.add(c2);
