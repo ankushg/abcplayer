@@ -1,7 +1,6 @@
 package tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +26,6 @@ import sound.Pitch;
  * alternate endings.
  */
 public class RepeatTest {
-
-    @Test
-    public void testHashCode() {
-        fail("Not yet implemented");
-        // TODO: test repeat hashcode
-    }
 
     @Test
     public void testGetChords() {
@@ -126,11 +119,6 @@ public class RepeatTest {
 
         assertEquals(expected, r.getChords());
 
-    }
-
-    @Test
-    public void testEqualsObject() {
-        fail("Not yet implemented"); // TODO test repeat equals
     }
 
 }

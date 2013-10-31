@@ -1,7 +1,6 @@
 package tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,7 @@ import org.junit.Test;
  * Tests the KeySignature class. Test partitions: Major keys with flats, major
  * keys with sharps, minor keys with flats, minor keys with sharps, key with no
  * flats or sharps.
- *
+ * 
  */
 public class KeySignatureTest {
 
@@ -24,10 +23,6 @@ public class KeySignatureTest {
      * keys with flats, minor keys with sharps, C Major (key with no flats or
      * sharps).
      */
-    @Test
-    public void testHashCode() {
-        fail("Not yet implemented"); // TODO: test KeySignature.hashCode
-    }
 
     @Test
     public void testMakeKey() {
@@ -132,11 +127,6 @@ public class KeySignatureTest {
         assertEquals(0, gmkeysig.get('D'));
         assertEquals(0, gmkeysig.get('G'));
 
-    }
-
-    @Test
-    public void testEqualsObject() {
-        fail("Not yet implemented"); // TODO test KeySignature.equals
     }
 
 }
