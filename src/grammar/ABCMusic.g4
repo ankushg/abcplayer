@@ -109,14 +109,12 @@ SINGLE_BAR              : {!inLyric}? '|';
 COMMENT_START           : '%';
 
 LYRIC_START             : 'w:' {inLyric = true;};
-LYRIC_MODIFIER          : {inLyric}?
-                        ( '_'
-                        | '*'
-                        | '~'
-                        | '\\-'
-                        );
+BLANK_SYLLABLE          : {inLyric}? '*';
+SYLLABLE_JOINER         : {inLyric}? ('~' | '\\-');
+SYLLABLE_EXTENDER       : {inLyric}? '_';
                         
-LYRIC_SEPARATOR         : {inLyric}? ('-' | '|')+;
+LYRIC_HYPHEN            : {inLyric}? '-';
+LYRIC_BARLINE           : {inLyric}? '|';
                                           
 NONBASENOTE             : {!inKey}? ('H'..'Z' | 'h'..'y');
 PUNCTUATION             : '.'
@@ -151,7 +149,7 @@ field_track_number      : TRACK_NUMBER_START WHITESPACE? INTEGER WHITESPACE? eol
 field_title             : TITLE_START WHITESPACE? string WHITESPACE? eol*;
 field_key               : KEY_START WHITESPACE? key_signature WHITESPACE? eol*;
 field_composer          : COMPOSER_START WHITESPACE? string WHITESPACE? eol*;
-field_default_length    : DEFAULT_LENGTH_START WHITESPACE? (fraction EQUALS)? fraction WHITESPACE? eol*;
+field_default_length    : DEFAULT_LENGTH_START WHITESPACE? fraction WHITESPACE? eol*;
 field_meter             : METER_START WHITESPACE? (NON_FRACTION_METER | fraction) WHITESPACE? eol*;
 field_tempo             : TEMPO_START WHITESPACE? tempo WHITESPACE? eol*;
 field_voice             : VOICE_START WHITESPACE? string WHITESPACE? eol+;
@@ -162,7 +160,7 @@ field_optional          : field_composer
                         | field_voice
                         | comment;
                         
-tempo                   : (fraction EQUALS)? INTEGER;
+tempo                   : fraction EQUALS INTEGER;
 
 
 // Music parser rules
@@ -171,8 +169,7 @@ abc_music       : (field_voice? voice)+ eol*;
 voice           : (tune (eol lyric)?)+
                 | comment;
 // Lyrics
-syllable        : ( LYRIC_MODIFIER
-                    | BASE
+syllable        : ( BASE
                     | NONBASENOTE
                     | PUNCTUATION
                     | REST
@@ -180,8 +177,11 @@ syllable        : ( LYRIC_MODIFIER
                     | EQUALS
                     | OCTAVE
                     | OTHER_CHAR
-                  )+ (LYRIC_SEPARATOR|WHITESPACE)*;
-lyric           : LYRIC_START WHITESPACE? syllable* eol*;
+                    | SYLLABLE_JOINER
+                    | SYLLABLE_EXTENDER
+                  )+;
+lyric_barline   : LYRIC_BARLINE;
+lyric           : LYRIC_START WHITESPACE? (syllable | LYRIC_HYPHEN | lyric_barline | BLANK_SYLLABLE | WHITESPACE)* eol*;
 
 // Music
 tune            : (chord | tuplet | bar_line | WHITESPACE)+ eol*;

@@ -78,6 +78,9 @@ public class ABCMusicBaseListener implements ABCMusicListener {
 	@Override public void enterField_track_number(ABCMusicParser.Field_track_numberContext ctx) { }
 	@Override public void exitField_track_number(ABCMusicParser.Field_track_numberContext ctx) { }
 
+	@Override public void enterLyric_barline(ABCMusicParser.Lyric_barlineContext ctx) { }
+	@Override public void exitLyric_barline(ABCMusicParser.Lyric_barlineContext ctx) { }
+
 	@Override public void enterString(ABCMusicParser.StringContext ctx) { }
 	@Override public void exitString(ABCMusicParser.StringContext ctx) { }
 
