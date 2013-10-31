@@ -27,10 +27,10 @@ public final class Song {
 
     // TODO add other fields + appropriate constructors + comments for those
     // constructors
-    public Song(List<Voice> voices, String tN, String title, String composer, Fraction meter, Fraction defaultLength,
-            Fraction fracTempo, String keySignature, String tempo) {
+    public Song(List<Voice> voices, String trackNumber, String title, String composer, Fraction meter,
+            Fraction defaultLength, Fraction fracTempo, String keySignature, String tempo) {
         this.voices = voices;
-        this.trackNumber = tN;
+        this.trackNumber = trackNumber;
         this.title = title;
         this.composer = composer;
         this.meter = meter;
@@ -62,12 +62,7 @@ public final class Song {
         this.composer = "Unknown";
 
         // Calculating default length if not specified and meter is specified.
-        double num = (double) meter.numerator;
-        double denom = (double) meter.denominator;
-
-        double result = num / denom;
-
-        if (result < 0.75) {
+        if (meter.numerator * 4 < 3 * meter.denominator) {
             this.defaultLength = new Fraction(1, 16);
         } else {
             this.defaultLength = new Fraction(1, 8);
@@ -95,8 +90,8 @@ public final class Song {
     public SequencePlayer getPlayer() throws MidiUnavailableException, InvalidMidiDataException {
         int ticksPerBeat = Utilities.computeTicksPerBeat(Utilities.flatten(voices));
 
-        // TODO replace "140" based on the meter/tempo/etc
-        SequencePlayer player = new SequencePlayer(tempo, ticksPerBeat, new LyricListener() {
+        SequencePlayer player = new SequencePlayer((defaultLength.numerator * fracTempo.denominator * tempo)
+                / (defaultLength.numerator * fracTempo.numerator), ticksPerBeat, new LyricListener() {
             @Override
             public void processLyricEvent(String text) {
                 System.out.print(text);
