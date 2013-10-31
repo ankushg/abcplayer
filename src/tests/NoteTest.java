@@ -1,14 +1,17 @@
 package tests;
 
 import static org.junit.Assert.assertEquals;
+import music.Fraction;
 import music.Note;
 
 import org.junit.Test;
 
+import sound.Pitch;
+
 /**
  * Tests notes of varying lengths, tests notes with both sharps and flats, and
  * tests notes with unapplied accidentals.
- *
+ * 
  */
 public class NoteTest {
 
@@ -45,12 +48,28 @@ public class NoteTest {
 
     @Test
     public void testHashCode() {
-        // TODO test note hashcode
+        Note n1 = new Note(new Pitch('B').accidentalTranspose(-1), new Fraction(1, 4));
+        Note n2 = new Note(PitchTest.highC, FractionTest.unitFraction);
+        assertEquals(true, halfNoteASharp.hashCode() == halfNoteASharpUnappliedNone.hashCode());
+        assertEquals(true, quarterNoteBFlat.hashCode() == n1.hashCode());
+        assertEquals(true, wholeNoteHighC.hashCode() == n2.hashCode());
+
+        assertEquals(false, quarterNoteBFlat.hashCode() == n2.hashCode());
+        assertEquals(false, halfNoteASharp.hashCode() == n1.hashCode());
+        assertEquals(false, wholeNoteHighC.hashCode() == halfNoteASharp.hashCode());
     }
 
     @Test
     public void testEqual() {
-        // TODO test note equal
-        assertEquals(halfNoteASharp, halfNoteASharpUnappliedNone);
+        Note n1 = new Note(new Pitch('B').accidentalTranspose(-1), new Fraction(1, 4));
+        Note n2 = new Note(PitchTest.highC, FractionTest.unitFraction);
+        assertEquals(true, halfNoteASharp.equals(halfNoteASharpUnappliedNone));
+        assertEquals(true, quarterNoteBFlat.equals(n1));
+        assertEquals(true, wholeNoteHighC.equals(n2));
+
+        assertEquals(false, quarterNoteBFlat.equals(n2));
+        assertEquals(false, halfNoteASharp.equals(n1));
+        assertEquals(false, wholeNoteHighC.equals(halfNoteASharp));
+
     }
 }

@@ -26,6 +26,11 @@ public class MeasureTest {
     // TODO: test measure with syllable list
     // TODO: test measure with key signature
 
+    /**
+     * Measures can contain Chords or Tuples. Additionally, getChords() in a
+     * Measure applies all accidentals, key signatures, and syllables to the
+     * chords and tuples in a measure.
+     */
     @Test
     public void testHashCode() {
         fail("Not yet implemented"); // TODO test measure hashcode
@@ -42,12 +47,13 @@ public class MeasureTest {
         Chord c3 = new Chord(FractionTest.oneFourth, new Note(PitchTest.highC, FractionTest.oneFourth), new Note(
                 PitchTest.lowG, FractionTest.oneFourth));
 
-        Measure m = new Measure(c1, c2, c3);
+        Measure m = new Measure(c1, c2, c3, TupletTest.highCTriplet);
 
         List<Chord> expected = new ArrayList<Chord>();
         expected.add(c1);
         expected.add(c2);
         expected.add(c3);
+        expected.addAll(TupletTest.highCTriplet.getChords());
 
         assertEquals(expected, m.getChords());
 
@@ -142,9 +148,23 @@ public class MeasureTest {
         fail("Not yet implemented"); // TODO test measure tostring
     }
 
+    /** Tests equality for a measure with only chords. **/
+
     @Test
     public void testEqualsObject() {
-        fail("Not yet implemented"); // TODO test measure equals
+
+        Chord c1 = new Chord(FractionTest.oneFourth, new Note(PitchTest.middleC, FractionTest.oneFourth), new Note(
+                PitchTest.lowG, FractionTest.oneFourth));
+        Chord c2 = new Chord(FractionTest.oneHalf, new Note(PitchTest.middleC, FractionTest.oneHalf), new Note(
+                PitchTest.highC, FractionTest.oneFourth));
+        Chord c3 = new Chord(FractionTest.oneFourth, new Note(PitchTest.highC, FractionTest.oneFourth), new Note(
+                PitchTest.lowG, FractionTest.oneFourth));
+
+        Measure m1 = new Measure(c1, c2, c3);
+        Measure m2 = new Measure(c1, c2, c3);
+
+        assertEquals(true, m1.equals(m2));
+
     }
 
 }
