@@ -58,8 +58,8 @@ public class MeasureTest {
     }
 
     /**
-     * Tests getChords() on a measure with both Chords and Tuplets. This measure
-     * has no accidentals, key signature, or syllables.
+     * Tests getChords() on a measure with Chords, Rests, and Tuplets. This
+     * measure has no accidentals, key signature, or syllables.
      */
     @Test
     public void testGetChords() {
@@ -70,12 +70,14 @@ public class MeasureTest {
                 PitchTest.highC, FractionTest.oneFourth));
         Chord c3 = new Chord(FractionTest.oneFourth, new Note(PitchTest.highC, FractionTest.oneFourth), new Note(
                 PitchTest.lowG, FractionTest.oneFourth));
+        Chord rest = new Chord(new Fraction(1, 2), new ArrayList<Note>());
 
-        Measure m = new Measure(c1, c2, c3, TupletTest.highCTriplet);
+        Measure m = new Measure(c1, c2, rest, c3, TupletTest.highCTriplet);
 
         List<Chord> expected = new ArrayList<Chord>();
         expected.add(c1);
         expected.add(c2);
+        expected.add(rest);
         expected.add(c3);
         expected.addAll(TupletTest.highCTriplet.getChords());
 
