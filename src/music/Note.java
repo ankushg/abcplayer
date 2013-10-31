@@ -19,7 +19,7 @@ public final class Note {
 
     /**
      * Instantiates a new note.
-     *
+     * 
      * @param pitch
      *            the pitch
      * @param duration
@@ -35,7 +35,7 @@ public final class Note {
 
     /**
      * Instantiates a new note.
-     *
+     * 
      * @param pitch
      *            the pitch
      * @param duration
@@ -49,7 +49,7 @@ public final class Note {
      * Multiply the duration of this note by a fraction. Only used for tuplets,
      * so preconditions are that numerator and denominator must be between 1 and
      * 10.
-     *
+     * 
      * @param numerator
      *            the numerator of the fraction
      * @param denominator
@@ -61,21 +61,23 @@ public final class Note {
     }
 
     /**
-     * Gets the letter for the pitch of this Note
-     *
-     * @return the letter
+     * Gets the letter corresponding to the pitch of the note, if it represents
+     * a white key on the piano. Otherwise, returns an error code.
+     * 
+     * @return the letter (one of 'A' through 'G'), or (char) 0 if the note
+     *         doesn't represent a white key
      */
     public char getLetter() {
         return getLetter(pitch);
     }
 
     /**
-     * Gets the letter associated with the given pitch
-     *
+     * Gets the letter corresponding to the given pitch, if it represents
+     * a white key on the piano. Otherwise, returns an error code.
+     * 
      * @param pitch
-     *            the pitch to check
-     * @return the letter for the note, or 0 if the note has an accidental
-     *         applied
+     * @return the letter (one of 'A' through 'G'), or (char) 0 if the note
+     *         doesn't represent a white key
      */
     public static char getLetter(Pitch pitch) {
         char[] scale = "CDEFGAB".toCharArray();
@@ -104,7 +106,7 @@ public final class Note {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -115,7 +117,7 @@ public final class Note {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -130,7 +132,7 @@ public final class Note {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
